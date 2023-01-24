@@ -38,9 +38,9 @@ class Home extends React.Component {
                 style={{ backgroundColor: "#F0FB8D", maxWidth: "400px" }}>
                 Hi, my name is James Hirst and I am a 24 year old <b>Software Engineer </b>
                 working at <b>Microsoft </b> in Enfield. I have coding experience
-                in Javascript, Java, Python and I am currently working on with Azure to
+                in Javascript, Java, Python and I am currently working on Azure to
                 manage telecommunication data for large telcos. Before working for Microsoft
-                I was gained my <b>Masters of Mathematics</b> at Jesus College, <b>Cambridge</b>.
+                I gained my <b>Masters of Mathematics</b> at Jesus College, <b>Cambridge</b>.
                 To find out more about my experience and qualifications please refer to my&nbsp;
                 <a href="https://github.com/James-Hirst-1998/james-hirst-website/blob/Main/src/CV.pdf" target="_blank" rel="noreferrer">CV</a>.
               </shared.paraBody>
