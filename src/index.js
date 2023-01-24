@@ -13,7 +13,7 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
-      <Route exact={true} path="/" element={<App />} />
+      <Route exact={true} path="/james-hirst-website" element={<App />} />
       <Route exact={true} path="/coding" element={<CodingPage />} />
       <Route exact={true} path="/education" element={<EducationPage />} />
       <Route

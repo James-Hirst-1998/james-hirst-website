@@ -17,7 +17,7 @@ const NavBar = () => {
         }}
       >
         <div className="Buttons">
-          <S.navButton onClick={() => navTo("/")}>Home</S.navButton>
+          <S.navButton onClick={() => navTo("/james-hirst-website")}>Home</S.navButton>
           <S.navButton onClick={() => navTo("/coding")}>Coding</S.navButton>
           <S.navButton onClick={() => navTo("/education")}>
             Education

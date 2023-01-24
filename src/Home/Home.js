@@ -2,7 +2,6 @@ import * as shared from "../shared/styles";
 import myImage from '../Cropped_me.jpg';
 import ScrollReveal from "scrollreveal";
 import React from "react";
-import CVPDF from "../CV.pdf"
 
 class Home extends React.Component {
   refs = React.createRef();
@@ -43,7 +42,7 @@ class Home extends React.Component {
                 manage telecommunication data for large telcos. Before working for Microsoft
                 I was gained my <b>Masters of Mathematics</b> at Jesus College, <b>Cambridge</b>.
                 To find out more about my experience and qualifications please refer to my&nbsp;
-                <a href={CVPDF} >CV</a>.
+                <a href="https://github.com/James-Hirst-1998/james-hirst-website/blob/Main/src/CV.pdf" target="_blank" rel="noreferrer">CV</a>.
               </shared.paraBody>
             </div>
 

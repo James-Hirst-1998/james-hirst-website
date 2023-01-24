@@ -11,7 +11,7 @@ function EducationPage() {
     >
       <NavBar></NavBar>
       <Education></Education>
-      <div style={{ position: "absolute", bottom: "0px", width: "100%" }}>
+      <div style={{ position: "fixed", bottom: "0px", width: "100%" }}>
         <Footer></Footer>
       </div>
     </div>
