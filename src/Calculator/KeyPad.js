@@ -1,0 +1,127 @@
+import NumberButton from "./Buttons/NumberButton";
+import OperationButton from "./Buttons/OperationButton";
+import SpecialButton from "./Buttons/SpecialButton";
+
+const KeyPad = ({ onNumberClick, onOperationClick, onSpecialClick }) => {
+  return (
+    <table
+      style={{
+        borderCollapse: "collapse",
+        margin: "auto",
+      }}
+    >
+      <tr>
+        <th>
+          <OperationButton
+            operation={"/"}
+            onOperationClick={onOperationClick}
+          ></OperationButton>
+        </th>
+        <th>
+          <SpecialButton
+            character={"C"}
+            onSpecialClick={onSpecialClick}
+          ></SpecialButton>
+        </th>
+        <th>
+          <SpecialButton
+            character={"."}
+            onSpecialClick={onSpecialClick}
+          ></SpecialButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"0"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <OperationButton
+            operation={"*"}
+            onOperationClick={onOperationClick}
+          ></OperationButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"1"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"2"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"3"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <OperationButton
+            operation={"+"}
+            onOperationClick={onOperationClick}
+          ></OperationButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"4"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"5"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"6"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+      </tr>
+      <tr>
+        <th>
+          <OperationButton
+            operation={"-"}
+            onOperationClick={onOperationClick}
+          ></OperationButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"7"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"8"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+        <th>
+          <NumberButton
+            value={"9"}
+            onNumberClick={onNumberClick}
+          ></NumberButton>
+        </th>
+      </tr>
+      <tr>
+        <OperationButton
+          operation={"="}
+          onOperationClick={onOperationClick}
+        ></OperationButton>
+      </tr>
+    </table>
+  );
+};
+
+export default KeyPad;
