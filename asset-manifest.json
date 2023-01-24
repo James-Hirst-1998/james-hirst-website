@@ -1,17 +1,17 @@
 {
   "files": {
-    "main.css": "/james-hirst-website/static/css/main.e6c13ad2.css",
-    "main.js": "/james-hirst-website/static/js/main.0c458a6a.js",
-    "static/js/787.3079504b.chunk.js": "/james-hirst-website/static/js/787.3079504b.chunk.js",
-    "static/media/Cropped_me.jpg": "/james-hirst-website/static/media/Cropped_me.42c65dd0096e28c7c87b.jpg",
-    "static/media/CV.pdf": "/james-hirst-website/static/media/CV.e258d22b6de8888e8d68.pdf",
-    "index.html": "/james-hirst-website/index.html",
-    "main.e6c13ad2.css.map": "/james-hirst-website/static/css/main.e6c13ad2.css.map",
-    "main.0c458a6a.js.map": "/james-hirst-website/static/js/main.0c458a6a.js.map",
-    "787.3079504b.chunk.js.map": "/james-hirst-website/static/js/787.3079504b.chunk.js.map"
+    "main.css": "/static/css/main.e6c13ad2.css",
+    "main.js": "/static/js/main.91fadca3.js",
+    "static/js/787.3079504b.chunk.js": "/static/js/787.3079504b.chunk.js",
+    "static/media/Cropped_me.jpg": "/static/media/Cropped_me.42c65dd0096e28c7c87b.jpg",
+    "static/media/CV.pdf": "/static/media/CV.e258d22b6de8888e8d68.pdf",
+    "index.html": "/index.html",
+    "main.e6c13ad2.css.map": "/static/css/main.e6c13ad2.css.map",
+    "main.91fadca3.js.map": "/static/js/main.91fadca3.js.map",
+    "787.3079504b.chunk.js.map": "/static/js/787.3079504b.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.e6c13ad2.css",
-    "static/js/main.0c458a6a.js"
+    "static/js/main.91fadca3.js"
   ]
 }
