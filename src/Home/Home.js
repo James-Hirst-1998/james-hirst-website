@@ -51,7 +51,7 @@ class Home extends React.Component {
               style={{ padding: "0px 20px" }}>
               <shared.paraBody ref="conservation_para"
                 style={{ backgroundColor: "#F3B7F8" }}>
-                I'm interested in coding for good with a passion to aid conservation efforts and the environment.
+                I'm interested in coding for good, with a passion to aid conservation efforts and the environment.
                 I am keen to use machine learning in the industry as I think this is relatively unexplored in the
                 field. I contributed to a paper using Facebook's Detectron2 to delineate
                 tree crowns in forest canopies from drone images. Then, I matched these to LiDAR images

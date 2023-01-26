@@ -1,12 +1,13 @@
 import Coding from "../Coding/Coding";
 import Footer from "../footer/Footer";
 import NavBar from "../navBar/NavBar";
+import * as shared from "../shared/styles";
+
 
 function CodingPage() {
   return (
-    <div
+    <shared.pageBackgroundDiv
       className="EducationPage"
-      style={{ backgroundColor: "lightblue", width: "100vw", height: "100vh" }}
     >
       <NavBar></NavBar>
 
@@ -15,7 +16,7 @@ function CodingPage() {
       <div style={{ position: "fixed", bottom: "0px", width: "100%" }}>
         <Footer></Footer>
       </div>
-    </div>
+    </shared.pageBackgroundDiv>
   );
 }
 
