@@ -6,7 +6,7 @@ import { Dimensions } from 'react-native';
 const screenDimensions = Dimensions.get('window');
 const footerStyles = () => {
   console.log(screenDimensions)
-  let positionValue = screenDimensions.height > 700 ? "absolute" : "relative";
+  let positionValue = screenDimensions.height > 700 && screenDimensions.width > 700 ? "absolute" : "relative";
   return { position: positionValue, bottom: "0px", width: "100%" }
 }
 
