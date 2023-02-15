@@ -3,10 +3,13 @@ import Footer from "../footer/Footer"
 import * as shared from "../shared/styles";
 import Home from "../Home/Home";
 import { Dimensions } from 'react-native';
+
 const screenDimensions = Dimensions.get('window');
-const footerStyles = () => {
+
+const FooterStyles = () => {
+
   console.log(screenDimensions)
-  let positionValue = screenDimensions.height > 700 ? "absolute" : "relative";
+  let positionValue = screenDimensions.height > 700 && screenDimensions.width > 700 ? "absolute" : "relative";
   return { position: positionValue, bottom: "0px", width: "100%" }
 }
 
@@ -18,7 +21,7 @@ function HomePage() {
 
       <Home></Home>
 
-      <div style={footerStyles()}>
+      <div style={FooterStyles()}>
         <Footer></Footer>
       </div>
     </shared.pageBackgroundDiv>
