@@ -24,8 +24,6 @@ class Education extends React.Component {
                     <University ref={"university"}></University>
                     <School ref={"school"}></School>
                 </div>
-
-
             </div >);
     };
 };

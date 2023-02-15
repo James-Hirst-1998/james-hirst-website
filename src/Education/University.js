@@ -8,7 +8,7 @@ const University = React.forwardRef((props, ref) => {
                 <h2><u>University</u></h2>
                 <h3>Grades</h3>
                 <ul>
-                    <li> MMath Mathematics Degree from Cambridge (2021-22)</li>
+                    <li> <b>MMath Mathematics Degree from Cambridge</b> (2021-22)</li>
                     <ul type="circle">
                         <li> Pass with Distinction (79%)</li>
                     </ul>
@@ -23,8 +23,9 @@ const University = React.forwardRef((props, ref) => {
                     During my four years at Jesus College I was involved in college rugby, football and lacrosse.
                     Also, I captained the freestyle team for the university ski club (CUSSC)
                     for a couple of years. My responsibilities included organising regular trips
-                    to snow domes and organising screenings of ski films which included setting up a partnership
-                    with Faction to premiere a film of theirs.
+                    to snow domes and coordinating screenings of ski films which included setting up a partnership
+                    with&nbsp; <a href="https://factionskis.com/?gclid=EAIaIQobChMIjs3Y_4GY_QIVgdPtCh1NJggMEAAYASAAEgKrgfD_BwE" target="_blank" rel="noreferrer">Faction</a>
+                    &nbsp;to premiere a film of theirs.
                 </p>
             </shared.paraBody>
         </div >
