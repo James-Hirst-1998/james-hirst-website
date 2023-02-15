@@ -9,7 +9,7 @@ class App extends React.Component {
     return (
       <div className="App">
         <Routes>
-          <Route exact={true} path="/james-hirst-website" element={<HomePage />}></Route>
+          <Route exact={true} path="/" element={<HomePage />}></Route>
           <Route exact={true} path="/coding" element={<CodingPage />}></Route>
           <Route exact={true} path="/education" element={<EducationPage />}></Route>
         </Routes>
