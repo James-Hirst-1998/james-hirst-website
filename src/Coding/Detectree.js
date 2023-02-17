@@ -4,7 +4,7 @@ import * as shared from "../shared/styles";
 const Detectree = React.forwardRef((props, ref) => {
     return (
         <div style={{ padding: "0px 20px" }}>
-            <shared.paraBody ref={ref} style={{ backgroundColor: "#87A96B", fontSize: "13px", maxWidth: "500px" }}>
+            <shared.paraBody ref={ref} style={{ backgroundColor: "#99e699", fontSize: "14px", maxWidth: "550px" }}>
                 <h3>Detectree Project</h3>
                 <p>
                     I have done some <b>machine learning</b> to help gather results for a paper with
