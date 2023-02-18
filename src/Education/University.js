@@ -4,7 +4,13 @@ import * as shared from "../shared/styles";
 const University = React.forwardRef((props, ref) => {
     return (
         <div style={{ padding: "0px 20px" }}>
-            <shared.paraBody ref={ref} style={{ backgroundColor: "#F08080", fontSize: "13px", maxWidth: "500px" }}>
+            <shared.paraBody ref={ref} style={{
+                backgroundColor: "#cc0000",
+                fontSize: "14px",
+                maxWidth: "450px",
+                color: "white",
+                borderColor: "black"
+            }}>
                 <h2><u>University</u></h2>
                 <h3>Grades</h3>
                 <ul>
@@ -21,11 +27,12 @@ const University = React.forwardRef((props, ref) => {
                 <h3> Interests</h3>
                 <p>
                     During my four years at Jesus College I was involved in college rugby, football and lacrosse.
-                    Also, I captained the freestyle team for the university ski club (CUSSC)
-                    for a couple of years. My responsibilities included organising regular trips
-                    to snow domes and coordinating screenings of ski films which included setting up a partnership
-                    with&nbsp; <a href="https://factionskis.com/?gclid=EAIaIQobChMIjs3Y_4GY_QIVgdPtCh1NJggMEAAYASAAEgKrgfD_BwE" target="_blank" rel="noreferrer">Faction</a>
-                    &nbsp;to premiere a film of theirs.
+                    I also captained the University Freestyle Team for the ski club (CUSSC)
+                    for two years. I was responsible for organising regular trips
+                    to snow domes and coordinating screenings of ski films. For this I set up a partnership
+                    with the ski company&nbsp;
+                    <a href="https://factionskis.com/?gclid=EAIaIQobChMIjs3Y_4GY_QIVgdPtCh1NJggMEAAYASAAEgKrgfD_BwE" target="_blank" rel="noreferrer">Faction</a>
+                    &nbsp;to premiere a film which they had produced.
                 </p>
             </shared.paraBody>
         </div >
