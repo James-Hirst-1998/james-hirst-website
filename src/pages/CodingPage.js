@@ -10,12 +10,8 @@ function CodingPage() {
       className="EducationPage"
     >
       <NavBar></NavBar>
-
       <Coding></Coding>
-
-      <div style={{ position: "fixed", bottom: "0px", width: "100%" }}>
-        <Footer></Footer>
-      </div>
+      <Footer></Footer>
     </shared.pageBackgroundDiv>
   );
 }

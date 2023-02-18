@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const footerDiv = styled.div`
+export const footerDiv = styled.footer`
     width: 100%;
     background-color:  #808080;
     margin-top: 20px;
@@ -11,4 +11,5 @@ export const footerDiv = styled.div`
     font-family: Plus Jakarta Sans ,sans-serif;
     text-align: center;
     vertical-align: center; 
+    margin-top: auto;
 `
