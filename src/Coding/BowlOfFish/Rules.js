@@ -18,9 +18,11 @@ const Rules = ({ onExitClick }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "100vw"
+            padding: "0px 20px 40px 20px"
         }}>
-            <shared.paraBody style={{ backgroundColor: "#b3b3ff", fontSize: "14px", maxWidth: "600px" }}>
+            <shared.mainStyledDiv style={{
+                backgroundColor: "#b3b3ff", fontSize: "14px", maxWidth: "600px"
+            }}>
                 <div className="Heading section" style={{
                     display: "flex",
                     flexDirection: "row",
@@ -36,19 +38,22 @@ const Rules = ({ onExitClick }) => {
                     depending on how many words you chose and how good you are at guessing.
                 </p>
                 <p>
-                    Each player is allowed to choose an equal number of words to put into the bowl. A round consists
-                    of all the words being guessed correctly from the bowl and then after it is complete all the words go back into
-                    the bowl for the next round (so if you remember what they are it makes it easier next go round). A
-                    turn in a round consists of one member completing the round theme to try get their team to guess the word
-                    they have, if the team guesses the word currently they keep getting new words until their time is up. The
-                    round themes are:
-                    <ol>
-                        <li> <b>Describe</b> - You can use any words (except the word you have) to try get your team to guess</li>
-                        <li> <b>Act</b> - Try and act out the word this time</li>
-                        <li> <b>Single Word</b> - You can only use one word to hint what you team need to guess</li>
-                        <li> <b>Be creative</b> - Think of any theme you want</li>
-                    </ol>
-                    During you turn you can skip as many times as you like but any that you do skip will go back into the bowl at the
+                    Each player is allowed to choose an equal number of words to put into the bowl. If a player tries to add a word
+                    to the bowl that is already in there it will not be added. A round consists
+                    of all the words being guessed correctly from the bowl and after it is completed all the words go back into
+                    the bowl for the next round (so if you remember what they are it makes the next round easier). A
+                    turn in a round consists of one member completing the round theme to try and get their team to guess the word
+                    they have. If the team guesses a word correctly the player gets a new word and this is repeated until their time is up.
+                    The round themes are:
+                </p>
+                <ol>
+                    <li> <b>Describe</b> - You can use any words (except the word you have) to try get your team to guess</li>
+                    <li> <b>Act</b> - Try and act out the word this time</li>
+                    <li> <b>Single Word</b> - You can only use one word to hint what you team need to guess</li>
+                    <li> <b>Be creative</b> - Think of any theme you want</li>
+                </ol>
+                <p>
+                    During you turn you can skip as many times as you like, but any that you do skip will go back into the bowl at the
                     end of your turn so they will still be played in the current round.
                 </p>
                 <h3>Set up</h3>
@@ -60,9 +65,10 @@ const Rules = ({ onExitClick }) => {
                 </p>
                 <p>
                     Finally select your settings - the default values are 30 second turns and 3 rounds but feel free to change it around.
-                    Now go and have some fun and play the game 😊
+                    You will need to input at least 10 words before you can start the game and there is a maximum of 60 allowed.
+                    Now close these instructions and go have some fun and play the game 😊
                 </p>
-            </shared.paraBody >
+            </shared.mainStyledDiv >
         </div >
     )
 }

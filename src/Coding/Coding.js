@@ -13,11 +13,11 @@ class Coding extends React.Component {
         ScrollReveal().reveal(this.refs.title,
             { delay: 100, origin: "left", distance: "100px", duration: 3000, easing: "ease" });
         ScrollReveal().reveal(this.refs.Microsoft,
-            { delay: 50, origin: "bottom", distance: "50px", duration: 2000, easing: "ease" });
+            { delay: 50, origin: "left", distance: "50px", duration: 2000, easing: "ease" });
         ScrollReveal().reveal(this.refs.Detectree,
             { delay: 50, origin: "right", distance: "50px", duration: 3000, easing: "ease" });
         ScrollReveal().reveal(this.refs.OtherCoding,
-            { delay: 50, origin: "bottom", distance: "70px", duration: 5000, easing: "ease" });
+            { delay: 50, origin: "bottom", distance: "50px", duration: 3500, easing: "ease" });
     }
 
     render() {
@@ -29,9 +29,9 @@ class Coding extends React.Component {
                 <div className="Uni info" style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
                     <Microsoft ref={"Microsoft"}></Microsoft>
                     <Detectree ref={"Detectree"}></Detectree>
+                </div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
                     <OtherCoding ref={"OtherCoding"}></OtherCoding>
-
-
                 </div>
             </div>);
     };

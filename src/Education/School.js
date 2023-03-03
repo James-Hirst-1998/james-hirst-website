@@ -3,8 +3,8 @@ import * as shared from "../shared/styles";
 
 const School = React.forwardRef((props, ref) => {
     return (
-        <div style={{ padding: "0px 20px" }}>
-            <shared.paraBody ref={ref} style={{
+        <div style={{ padding: "20px 20px" }}>
+            <shared.mainStyledDiv ref={ref} style={{
                 backgroundColor: "#b300b3",
                 fontSize: "14px",
                 maxWidth: "500px",
@@ -40,7 +40,7 @@ const School = React.forwardRef((props, ref) => {
                     for the school rugby 1st XV and achieved colours for my services to the team, as well as representing the school at
                     local and county level athletic events in the 800m.
                 </p>
-            </shared.paraBody>
+            </shared.mainStyledDiv>
         </div>
     )
 })

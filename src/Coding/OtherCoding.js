@@ -8,23 +8,28 @@ const OtherCoding = React.forwardRef((props, ref) => {
     const navTo = (page) => {
         navigate(page);
     };
+
+    const changePointer = (e) => {
+        e.target.style.cursor = "pointer"
+    }
+
     return (
-        <div style={{ padding: "0px 20px" }}>
-            <shared.paraBody ref={ref} style={{ backgroundColor: "#adebeb", fontSize: "13px", maxWidth: "500px" }}>
+        <div style={{ padding: "20px 20px" }}>
+            <shared.mainStyledDiv ref={ref} style={{ backgroundColor: "#adebeb", fontSize: "14px", maxWidth: "500px" }}>
                 <h3>Other Experience</h3>
                 <p>
-                    Throughout university I completed several projects in MATLAB which included analysing
-                    the gravitation radiation from black holes which were modelled as point masses and producing
+                    Throughout university I completed several projects in MATLAB. I analysed
+                    the gravitational radiation from black holes which were modelled as point masses and I produced
                     projections for the three body orbit problem.
                 </p>
                 <p>
                     I also really enjoy the game&nbsp;
-                    <a href onClick={() => navTo("/coding/bowl_of_fish")}><i><u>'bowl of fish'</u></i></a>
+                    <a href onMouseOver={changePointer} onClick={() => navTo("/coding/bowl_of_fish")}><i><u>'bowl of fish'</u></i></a>
                     &nbsp;so I have included a version of this for you to
                     play with your friends. If you do find a bug in it then email me and I will try
                     fix it ASAP.
                 </p>
-            </shared.paraBody>
+            </shared.mainStyledDiv>
         </div >
     )
 })

@@ -7,7 +7,7 @@ export const pageHeader = styled.h1`
   padding: 0px 0px 10px 0px;
 `;
 
-export const paraBody = styled.p`
+export const mainStyledDiv = styled.div`
   width: auto;
   height: auto;
   max-width: 650px;
