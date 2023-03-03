@@ -27,14 +27,14 @@ class Home extends React.Component {
         </shared.pageHeader>
         <div className="Section">
 
-          <div class="container" style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
-            <div class="child" style={{ padding: "0px 20px" }}>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
+            <div style={{ padding: "10px 20px" }}>
               <img src={myImage} alt="" ref="image_of_me" style={{ height: "auto", maxHeight: "250px" }} />
             </div>
 
-            <div className="Intro Para" class="child"
-              style={{ padding: "0px 20px" }}>
-              <shared.paraBody ref="intro_para"
+            <div className="Intro Para"
+              style={{ padding: "10px 20px" }}>
+              <shared.mainStyledDiv ref="intro_para"
                 style={{ backgroundColor: "#F0FB8D", maxWidth: "400px" }}>
                 Hi, my name is James Hirst and I am a 24 year old <b>Software Engineer </b>
                 working at <b>Microsoft </b> in Enfield. I have coding experience
@@ -43,13 +43,13 @@ class Home extends React.Component {
                 I gained my <b>Masters of Mathematics</b> at Jesus College, <b>Cambridge</b>.
                 To find out more about my experience and qualifications please refer to my&nbsp;
                 <a href="https://github.com/James-Hirst-1998/james-hirst-website/blob/Main/src/CV.pdf" target="_blank" rel="noreferrer">CV</a>.
-              </shared.paraBody>
+              </shared.mainStyledDiv>
             </div>
 
 
             <div className="Conservation Coding Para"
-              style={{ padding: "0px 20px" }}>
-              <shared.paraBody ref="conservation_para"
+              style={{ padding: "10px 20px" }}>
+              <shared.mainStyledDiv ref="conservation_para"
                 style={{ backgroundColor: "#F3B7F8" }}>
                 I'm interested in coding for good, with a passion to aid conservation efforts and the environment.
                 I am keen to use machine learning in the industry as I think this is relatively unexplored in the
@@ -59,12 +59,12 @@ class Home extends React.Component {
                 to provide improved checks on forest health.
                 To find out more about the paper please check it out:&nbsp;
                 <a href="https://www.biorxiv.org/content/10.1101/2022.07.10.499480v1.full.pdf" target="_blank" rel="noreferrer">Tree Crown Delineation</a>.
-              </shared.paraBody>
+              </shared.mainStyledDiv>
             </div>
 
             <div className="Contact Info Para"
-              style={{ padding: "0px 20px" }}>
-              <shared.paraBody ref="contact_para"
+              style={{ padding: "10px 20px" }}>
+              <shared.mainStyledDiv ref="contact_para"
                 style={{ backgroundColor: "#AEF5C9" }}>
                 If you wish to <b>contact me</b> regarding opportunities please reach me at&nbsp;
                 <a href="mailto:hirst.jj@googlemail.com">hirst.jj@googlemail.com</a>.
@@ -72,7 +72,7 @@ class Home extends React.Component {
                 <br></br>
                 This website is currently under construction and I hope to have it up and running
                 soon with more details about my experience and interests.
-              </shared.paraBody>
+              </shared.mainStyledDiv>
             </div>
 
           </div>

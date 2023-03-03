@@ -3,11 +3,10 @@ import Footer from "../footer/Footer";
 import NavBar from "../navBar/NavBar";
 import * as shared from "../shared/styles";
 
-
 function CodingPage() {
   return (
     <shared.pageBackgroundDiv
-      className="EducationPage"
+      className="CodingPage"
     >
       <NavBar></NavBar>
       <Coding></Coding>

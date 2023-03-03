@@ -3,8 +3,8 @@ import * as shared from "../shared/styles";
 
 const Tutoring = React.forwardRef((props, ref) => {
     return (
-        <div style={{ padding: "0px 20px 20px 20px" }}>
-            <shared.paraBody ref={ref} style={{
+        <div style={{ padding: "20px 20px 20px 20px" }}>
+            <shared.mainStyledDiv ref={ref} style={{
                 backgroundColor: "#e6b800",
                 fontSize: "14px",
                 maxWidth: "450px",
@@ -19,7 +19,7 @@ const Tutoring = React.forwardRef((props, ref) => {
                     gap year. I am open to taking on new students so please drop me an email if you are interested or would like
                     to find out more.
                 </p>
-            </shared.paraBody>
+            </shared.mainStyledDiv>
 
         </div >
     )
