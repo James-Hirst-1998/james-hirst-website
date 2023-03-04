@@ -31,7 +31,8 @@ const University = React.forwardRef((props, ref) => {
                     for two years. I was responsible for organising regular trips
                     to snow domes and coordinating screenings of ski films. For this I set up a partnership
                     with the ski company&nbsp;
-                    <a href="https://factionskis.com/?gclid=EAIaIQobChMIjs3Y_4GY_QIVgdPtCh1NJggMEAAYASAAEgKrgfD_BwE" target="_blank" rel="noreferrer">Faction</a>
+                    <a href="https://factionskis.com/?gclid=EAIaIQobChMIjs3Y_4GY_QIVgdPtCh1NJggMEAAYASAAEgKrgfD_BwE"
+                        style={{ color: "#fadaa5" }} target="_blank" rel="noreferrer">Faction</a>
                     &nbsp;to premiere a film which they had produced.
                 </p>
             </shared.mainStyledDiv>

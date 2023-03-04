@@ -14,8 +14,10 @@ class Home extends React.Component {
       { delay: 500, origin: "right", distance: "200px", duration: 2000, easing: "ease" })
     ScrollReveal().reveal(this.refs.conservation_para,
       { delay: 500, origin: "left", distance: "100px", duration: 2000, easing: "ease" })
-    ScrollReveal().reveal(this.refs.contact_para,
+    ScrollReveal().reveal(this.refs.general_para,
       { delay: 500, origin: "right", distance: "100px", duration: 2000, easing: "ease" })
+    ScrollReveal().reveal(this.refs.contact_para,
+      { delay: 500, origin: "left", distance: "100px", duration: 2000, easing: "ease" })
 
 
   }
@@ -35,7 +37,7 @@ class Home extends React.Component {
             <div className="Intro Para"
               style={{ padding: "10px 20px" }}>
               <shared.mainStyledDiv ref="intro_para"
-                style={{ backgroundColor: "#F0FB8D", maxWidth: "400px" }}>
+                style={{ backgroundColor: "#F0FB8D", maxWidth: "350px" }}>
                 Hi, my name is James Hirst and I am a 24 year old <b>Software Engineer </b>
                 working at <b>Microsoft </b> in Enfield. I have coding experience
                 in Javascript, Java, Python and I am currently working on Azure to
@@ -62,16 +64,24 @@ class Home extends React.Component {
               </shared.mainStyledDiv>
             </div>
 
-            <div className="Contact Info Para"
+            <div className="General Info Para"
               style={{ padding: "10px 20px" }}>
+              <shared.mainStyledDiv ref="general_para"
+                style={{ backgroundColor: "#f5c471" }}>
+                Another of my passions is skiing ⛷️ and I completed a ski season working as a restaurant manager in Val D'isere in
+                2017/18. I spent my days enjoying the mountains and I created a 'short'&nbsp;
+                <a href="https://www.youtube.com/watch?v=wZfKq0VAW_E" target="_blank" rel="noreferrer">edit</a> to show some of
+                the highlights of this adventure.
+              </shared.mainStyledDiv>
+            </div>
+
+            <div className="Contact Info Para"
+              style={{ padding: "10px 20px 20px 20px" }}>
               <shared.mainStyledDiv ref="contact_para"
                 style={{ backgroundColor: "#AEF5C9" }}>
-                If you wish to <b>contact me</b> regarding opportunities please reach me at&nbsp;
+                I am currently looking to do some volunteer work using coding to help out an animal charity or event.
+                If you wish to <b>contact me</b> regarding opportunities or want to find out more please reach me at&nbsp;
                 <a href="mailto:hirst.jj@googlemail.com">hirst.jj@googlemail.com</a>.
-                <br></br>
-                <br></br>
-                This website is currently under construction and I hope to have it up and running
-                soon with more details about my experience and interests.
               </shared.mainStyledDiv>
             </div>
 

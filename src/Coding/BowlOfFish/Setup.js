@@ -45,7 +45,6 @@ const Setup = ({ onStartGameClick }) => {
 
     const updateWords = () => {
         if (listOfWords.includes(input)) {
-            return
         }
         else {
             setWordCount(wordCount + 1)

@@ -67,7 +67,6 @@ width: 230px;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #c94d5b;
 
 &:active {

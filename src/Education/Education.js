@@ -9,13 +9,13 @@ class Education extends React.Component {
     refs = React.createRef();
     componentDidMount() {
         ScrollReveal().reveal(this.refs.title,
-            { delay: 100, origin: "left", distance: "100px", duration: 3000, easing: "ease" });
+            { delay: 100, origin: "left", distance: "100px", duration: 4000, easing: "ease" });
         ScrollReveal().reveal(this.refs.university,
-            { delay: 50, origin: "top", distance: "100px", duration: 2500, easing: "ease" });
+            { delay: 50, origin: "left", distance: "100px", duration: 2500, easing: "ease" });
         ScrollReveal().reveal(this.refs.school,
-            { delay: 0, origin: "right", distance: "100px", duration: 4000, easing: "ease" });
+            { delay: 0, origin: "right", distance: "100px", duration: 2500, easing: "ease" });
         ScrollReveal().reveal(this.refs.tutoring,
-            { delay: 0, origin: "bottom", distance: "50px", duration: 2500, easing: "ease" });
+            { delay: 0, origin: "bottom", distance: "50px", duration: 3000, easing: "ease" });
     }
     render() {
         return (

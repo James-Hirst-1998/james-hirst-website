@@ -28,9 +28,9 @@ const StartGameButton = ({ stopWatchState, setStopWatchState, handleStart }) => 
             >Start Turn</bofStyles.startGameButton>
         case StopWatchModes.Pause:
             return <bofStyles.startGameButton
-                style={{ width: "300px" }}
+                style={{ width: "300px", backgroundColor: "#4287f5" }}
                 onClick={startClick}
-            >Resume Turn</bofStyles.startGameButton>
+            > Resume Turn</bofStyles.startGameButton >
         case StopWatchModes.Active:
             return <bofStyles.activeGameButton disabled={true}
                 style={{ width: "300px" }}
