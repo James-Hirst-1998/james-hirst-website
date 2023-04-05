@@ -35,7 +35,7 @@ const Rules = ({ onExitClick }) => {
                 <p>
                     Bowl of fish is a fast-paced team guessing game which relies on how well you can describe, act,
                     and remember the words that come up. A typical game lasts around one hour but times may vary
-                    depending on how many words you chose and how good you are at guessing. You'll need at least 4 player
+                    depending on how many words you choose and how good you are at guessing. You'll need at least 4 player
                     and to be divided into equal size teams (if possible).
                 </p>
                 <p>

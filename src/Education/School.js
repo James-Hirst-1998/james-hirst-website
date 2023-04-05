@@ -22,7 +22,7 @@ const School = React.forwardRef((props, ref) => {
                 </ul>
                 <h3> Achievements</h3>
                 <p>
-                    While attending Colchester Royal Grammar School (CRGS 2010-2017) I co-led a team to win a global physics
+                    While attending Colchester Royal Grammar School (CRGS 2010-2017) I co-lead a team to win a global physics
                     competition called Beamline for Schools
                     (<a href="https://beamlineforschools.cern/" style={{ color: "#fadaa5" }}
                         target="_blank" rel="noreferrer">BL4S</a>).

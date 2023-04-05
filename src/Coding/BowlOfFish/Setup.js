@@ -8,7 +8,8 @@ const GameStartButton = (props) => {
     const settings = props.settings;
 
     return (
-        <bofStyles.startGameButton id="StartGameButton" onClick={() => onStartGameClick(settings)}>
+        <bofStyles.startGameButton id="StartGameButton"
+            onClick={() => onStartGameClick(settings)} style={{ width: "230px" }}>
             Start Game
         </bofStyles.startGameButton>
     )
@@ -51,7 +52,6 @@ const Setup = ({ onStartGameClick }) => {
             setListOfWords([...listOfWords, input.toLowerCase()])
         }
         setInput("")
-
     }
 
     const handleWordChange = e => {

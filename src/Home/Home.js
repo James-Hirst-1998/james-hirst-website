@@ -29,7 +29,7 @@ class Home extends React.Component {
         </shared.pageHeader>
         <div className="Section">
 
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "center", flexWrap: "wrap", alignItems: "center" }}>
             <div style={{ padding: "10px 20px" }}>
               <img src={myImage} alt="" ref="image_of_me" style={{ height: "auto", maxHeight: "250px" }} />
             </div>
