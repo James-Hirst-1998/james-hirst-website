@@ -17,7 +17,7 @@ class Coding extends React.Component {
         ScrollReveal().reveal(this.refs.Detectree,
             { delay: 50, origin: "right", distance: "50px", duration: 3000, easing: "ease" });
         ScrollReveal().reveal(this.refs.OtherCoding,
-            { delay: 50, origin: "bottom", distance: "50px", duration: 3500, easing: "ease" });
+            { delay: 50, origin: "bottom", distance: "50px", duration: 2000, easing: "ease" });
     }
 
     render() {

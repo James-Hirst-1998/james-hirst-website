@@ -63,11 +63,10 @@ export const startGameButton = styled.button`
 background-color: #f25a6b;
 font-size: 14px;
 height: 35px;
-width: 230px;
+width: 300px;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #c94d5b;
 
 &:active {
@@ -80,9 +79,8 @@ export const activeGameButton = styled.button`
 background-color: #c2f0ce;
 font-size: 14px;
 height: 35px;
-width: 230px;
+width: 300px;
 `
-
 
 export const correctButton = styled.button`
 background-color: #119c1a;

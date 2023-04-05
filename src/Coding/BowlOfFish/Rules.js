@@ -35,7 +35,8 @@ const Rules = ({ onExitClick }) => {
                 <p>
                     Bowl of fish is a fast-paced team guessing game which relies on how well you can describe, act,
                     and remember the words that come up. A typical game lasts around one hour but times may vary
-                    depending on how many words you chose and how good you are at guessing.
+                    depending on how many words you choose and how good you are at guessing. You'll need at least 4 player
+                    and to be divided into equal size teams (if possible).
                 </p>
                 <p>
                     Each player is allowed to choose an equal number of words to put into the bowl. If a player tries to add a word
@@ -60,7 +61,7 @@ const Rules = ({ onExitClick }) => {
                 <p>
                     Divide yourselves into two teams, then pass round the device and begin to enter your words in that will be used
                     in the game (note there are up to 60 words allowed so divide it equally between the players). The words can be
-                    whatever you like and examples include: dog, the eiffel tower, collywobbles, ... . Remember at some point you
+                    whatever you like and examples include: dog, the Eiffel Tower, collywobbles, ... . Remember at some point you
                     may be the one describing the word so maybe don't make them too unusual on your first game.
                 </p>
                 <p>

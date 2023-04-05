@@ -23,17 +23,15 @@ const StartGameButton = ({ stopWatchState, setStopWatchState, handleStart }) => 
     switch (stopWatchState) {
         case StopWatchModes.Reset:
             return <bofStyles.startGameButton
-                style={{ width: "300px" }}
                 onClick={startClick}
             >Start Turn</bofStyles.startGameButton>
         case StopWatchModes.Pause:
             return <bofStyles.startGameButton
-                style={{ width: "300px" }}
+                style={{ backgroundColor: "#4287f5" }}
                 onClick={startClick}
-            >Resume Turn</bofStyles.startGameButton>
+            > Resume Turn</bofStyles.startGameButton >
         case StopWatchModes.Active:
             return <bofStyles.activeGameButton disabled={true}
-                style={{ width: "300px" }}
             >Get guessing</bofStyles.activeGameButton>
         default:
             <></>
@@ -204,10 +202,9 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
             display: "flex",
             justifyContent: "center",
             alignItems: "center",
-            width: "100vw"
         }}>
             <shared.mainStyledDiv style={{
-                borderStyle: "None", fontSize: "17px", maxWidth: "600px", padding: "0px 0px 40px 0px"
+                borderStyle: "None", fontSize: "17px", maxWidth: "300px", padding: "0px 0px 40px 0px"
             }}>
                 <div style={{
                     display: "flex",
@@ -218,7 +215,7 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
                     <h2>Round {roundNumber} of {gameSettings.rounds}</h2>
                     <Quitbutton style={{ marginLeft: "auto" }} onExitClick={onExitClick}></Quitbutton>
                 </div>
-                <table style={{ borderCollapse: "collapse" }}>
+                <table style={{ borderCollapse: "collapse", width: "300px" }}>
                     <tr>
                         <th style={{ textAlign: "center", border: "1px solid black", minWidth: "150px" }}>{gameSettings.Team1}</th>
                         <th style={{ textAlign: "center", border: "1px solid black", minWidth: "150px" }}>{gameSettings.Team2}</th>
@@ -246,12 +243,11 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
                     <div style={{ float: "right" }}>
                         Left: {turnSkippedWords.length + roundWordList.length}
                     </div>
-
                 </div>
-                <p>
+                <div style={{ padding: "10px 0px 0px 0px", display: "flex", gap: "10px" }}>
                     <bofStyles.correctButton onClick={correctClick}>Correct</bofStyles.correctButton>
                     <bofStyles.skipButton onClick={skippedClick}>Skip</bofStyles.skipButton>
-                </p>
+                </div>
                 <p>
                     <StartGameButton
                         stopWatchState={stopWatchState}
