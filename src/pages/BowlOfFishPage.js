@@ -1,7 +1,6 @@
 import Footer from "../footer/Footer";
 import NavBar from "../navBar/NavBar";
 import * as shared from "../shared/styles";
-import { Dimensions } from 'react-native';
 import BowlOfFish from "../Coding/BowlOfFish/Controller";
 
 
