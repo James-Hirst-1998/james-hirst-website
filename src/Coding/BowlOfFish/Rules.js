@@ -1,5 +1,4 @@
 import React from "react";
-import * as shared from "../../shared/styles";
 import * as bofStyles from "./styles"
 
 const Exitbutton = (props) => {
@@ -20,7 +19,7 @@ const Rules = ({ onExitClick }) => {
             alignItems: "center",
             padding: "0px 20px 40px 20px"
         }}>
-            <shared.mainStyledDiv style={{
+            <bofStyles.mainStyledDiv style={{
                 backgroundColor: "#b3b3ff", fontSize: "14px", maxWidth: "600px"
             }}>
                 <div className="Heading section" style={{
@@ -69,7 +68,7 @@ const Rules = ({ onExitClick }) => {
                     You will need to input at least 10 words before you can start the game and there is a maximum of 60 allowed.
                     Now close these instructions and go have some fun and play the game 😊
                 </p>
-            </shared.mainStyledDiv >
+            </bofStyles.mainStyledDiv >
         </div >
     )
 }

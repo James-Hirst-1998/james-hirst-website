@@ -1,0 +1,26 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+
+body {
+    height: 100vh;
+    margin: 0;
+    background: linear-gradient(to bottom, #A9A79A, #7F7F7F);
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    padding: 0 8%;
+    font-family: 'Outfit', 'sans-serif';
+}
+
+.page-container {
+    width: 84%;
+    margin: 0 auto;
+}
+
+.fade-in-section {
+    opacity: 0;
+    transition: opacity 3s ease-in-out;
+}
+
+.fade-in-section.is-visible {
+    opacity: 1;
+}

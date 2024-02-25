@@ -1,5 +1,4 @@
 import React from "react";
-import * as shared from "../../shared/styles";
 import { useState, useEffect } from "react";
 import * as bofStyles from "./styles"
 
@@ -75,7 +74,7 @@ const Setup = ({ onStartGameClick }) => {
             alignItems: "center",
             width: "100vw"
         }}>
-            <shared.mainStyledDiv className="setup" style={{
+            <bofStyles.mainStyledDiv className="setup" style={{
                 borderStyle: "None", fontSize: "17px", maxWidth: "300px", padding: "0px 0px 40px 0px"
             }}>
                 <h2>Game Settings</h2>
@@ -123,7 +122,7 @@ const Setup = ({ onStartGameClick }) => {
                         }}
                     ></GameStartButton>
                 </p>
-            </shared.mainStyledDiv >
+            </bofStyles.mainStyledDiv >
         </div >
 
 

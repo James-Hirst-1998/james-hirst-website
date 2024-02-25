@@ -1,0 +1,78 @@
+/* Intro.css */
+.intro {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100vh;
+}
+ 
+.intro img {
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    margin-right: 30px;
+}
+
+@media screen and (min-width: 1500px) {
+    .intro img {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+.intro .text {
+    color: white;
+    text-align: center;
+    margin: 10px;
+}
+
+.intro .text .greeting {
+    display: flex;
+    align-items: baseline;
+}
+
+.intro .text .greeting .hi {
+    width: 10%;
+    font-size: 3em;
+    color: white;
+    text-align: left;
+}
+
+.intro .text .greeting .name {
+    margin-left: 5%;
+    font-size: 3em;
+    color: black;
+}
+
+.intro .text .description {
+    font-weight: 500;
+    justify-content: flex-end;
+    text-align: left;
+    margin-left: 15%;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    font-size: 1em;
+    width: 75%;
+}
+
+.intro .buttons {
+    display: flex;
+    justify-content: left;
+}
+
+.intro .buttons button {
+    width: 25%;
+    margin-left: 15%;
+    border-radius: 25px;
+    padding: 15px 0px;
+    font-size: 1em;
+    background-color: #a3a3a3;
+    border: none;
+    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.intro .buttons button:active {
+    background-color: rgb(255, 255, 255);
+    transform: translateY(2px);
+}
