@@ -1,0 +1,33 @@
+.personal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.personal .box {
+    width: 80%;
+    padding: 20px;
+    margin: 40px 0;
+    color: rgb(7, 0, 0);
+    border-radius: 50px;
+    text-align: center;
+}
+
+.personal .skiing {
+    background-color: rgb(47, 143, 175);
+}
+
+.personal .conversation {
+    background-color: rgb(204, 136, 9);
+}
+
+@media (min-width: 650px) {
+    .personal {
+        flex-direction: row;
+        justify-content: space-around;
+    }
+
+    .personal .box {
+        width: 40%;
+    }
+}

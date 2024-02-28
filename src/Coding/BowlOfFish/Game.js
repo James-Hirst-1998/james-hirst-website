@@ -1,8 +1,8 @@
-import * as shared from "../../shared/styles";
 import * as bofStyles from "./styles";
 import { useCallback, useState } from "react";
 import StopWatch from "./StopWatch";
 import { useEffect } from "react";
+import React from 'react';
 
 
 
@@ -34,7 +34,7 @@ const StartGameButton = ({ stopWatchState, setStopWatchState, handleStart }) => 
             return <bofStyles.activeGameButton disabled={true}
             >Get guessing</bofStyles.activeGameButton>
         default:
-            <></>
+            return null
     }
 }
 
@@ -203,7 +203,7 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
             justifyContent: "center",
             alignItems: "center",
         }}>
-            <shared.mainStyledDiv style={{
+            <bofStyles.mainStyledDiv style={{
                 borderStyle: "None", fontSize: "17px", maxWidth: "300px", padding: "0px 0px 40px 0px"
             }}>
                 <div style={{
@@ -254,7 +254,7 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
                         setStopWatchState={setStopWatchState}
                         handleStart={handleStart}></StartGameButton>
                 </p>
-            </shared.mainStyledDiv >
+            </bofStyles.mainStyledDiv >
         </div >
     )
 }

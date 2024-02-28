@@ -1,5 +1,4 @@
 import React from "react";
-import * as shared from "../../shared/styles";
 import * as bofStyles from "./styles"
 
 const Exitbutton = (props) => {
@@ -29,7 +28,7 @@ const Complete = ({ winner, onExitClick }) => {
             width: "100vw",
             padding: "0px 0px 40px 0px"
         }}>
-            <shared.mainStyledDiv style={{
+            <bofStyles.mainStyledDiv style={{
                 backgroundColor: "#b3b3ff", fontSize: "14px", maxWidth: "600px", minWidth: "200px"
             }}>
                 <div style={{
@@ -43,7 +42,7 @@ const Complete = ({ winner, onExitClick }) => {
                 </div>
                 <br></br>
                 <WinnerStatement winner={winner}></WinnerStatement>
-            </shared.mainStyledDiv >
+            </bofStyles.mainStyledDiv >
         </div >
     )
 }
