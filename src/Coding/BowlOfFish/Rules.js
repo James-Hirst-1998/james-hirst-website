@@ -66,7 +66,7 @@ const Rules = ({ onExitClick }) => {
                 <p>
                     Finally select your settings - the default values are 30 second turns and 3 rounds but feel free to change it around.
                     You will need to input at least 10 words before you can start the game and there is a maximum of 60 allowed.
-                    Now close these instructions and go have some fun and play the game 😊
+                    Now close these instructions and go have some fun and play the game <span role="img" aria-label="smile">😊</span>
                 </p>
             </bofStyles.mainStyledDiv >
         </div >

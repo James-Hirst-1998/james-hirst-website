@@ -6,7 +6,7 @@ const Personal = () => {
         <div className="personal">
             <div className="box skiing">
                 <h2>Skiing</h2>
-                <p>One of my passions is skiing ⛷️ and I completed a ski season working as a restaurant manager in Val D'isere in 2017/18. I spent my days enjoying the mountains and I created a 'short' <a href="https://www.youtube.com/watch?v=wZfKq0VAW_E">edit</a> to show some of the highlights of this adventure.</p>
+                <p>One of my passions is skiing <span role="img" aria-label="skiing">⛷️</span> and I completed a ski season working as a restaurant manager in Val D'isere in 2017/18. I spent my days enjoying the mountains and I created a 'short' <a href="https://www.youtube.com/watch?v=wZfKq0VAW_E">edit</a> to show some of the highlights of this adventure.</p>
             </div>
             <div className="box conversation">
                 <h2>Conversation</h2>
