@@ -35,12 +35,13 @@ export const School = () => (
             <strong>Grades</strong>
             <ul>
                 <li>5 A*'s at A-Level in Mathematics, Further Mathematics, Additional Further Maths, Physics and Chemistry</li>
+                <li>1 A in Economics AS Level</li>
                 <li>14 A*'s and an A at GCSE</li>
             </ul>
         </p>
         <p>
             <strong>Extras:</strong><br />
-            In my final year at Sixth Form, I served as Head Boy, representing the school in talks and assisting in event organization. I also led the Physics and Maths society, honing my presentation skills through regular research and discussion sessions. I was a member of the school rugby 1st XV, earning colours for my contributions, and represented the school in local and county level athletic events in the 800m.
+            In my final year at Sixth Form, I served as Head Boy, representing the school in talks and assisting in event organization. I also led the Physics and Maths society, honing my presentation skills through regular research and discussion sessions. I was a member of the school rugby 1st XV, earning colours for my contributions to the team, and I represented the school in local and county level athletic events in the 800m.
         </p>
     </div>
 );
@@ -49,7 +50,7 @@ export const CERN = () => (
     <div className='info-content'>
         <div className="subtitle">CERN</div>
         <p>
-            I co-led a team to win a global physics competition, Beamline for Schools (<a href='https://beamlineforschools.cern/'>BL4S</a>). I organized a team of 17 students to design an experiment using a particle accelerator at CERN. Our winning prize was the opportunity to carry out our proposed experiment, which aimed to validate Einstein's Theory of Special Relativity by measuring the time of flight of various particles and comparing the results to the calculated Lorentz factor predicted by the theory. We published a <a href="https://iopscience.iop.org/article/10.1088/1361-6552/aaccdb">paper</a> on our results and the overall experience in IOP Science.
+            I co-led a team to win a global physics competition, Beamline for Schools (<a href='https://beamlineforschools.cern/'>BL4S</a>). I organized a team of 17 students to design an experiment using a particle accelerator. Our winning prize was the opportunity to carry out our proposed experiment with CERN's third biggest particle accelerator. It aimed to validate Einstein's Theory of Special Relativity by measuring the time of flight of various particles and comparing the results to the calculated Lorentz factor predicted by the theory (spoiler, his theory is still correct!). We published a <a href="https://iopscience.iop.org/article/10.1088/1361-6552/aaccdb">paper</a> on our results and the overall experience in IOP Science.
         </p>
     </div>
 );
@@ -58,7 +59,7 @@ export const Tutoring = () => (
     <div className='info-content'>
         <div className="subtitle">Tutoring</div>
         <p>
-            I have tutored people of many ages and in a variety of subjects. I have helped students with A-Level Maths, A-Level Physics, secondary school entrance exams and maths skills for an MBA. I also worked for Explore Learning in Colchester as a tutor during my gap year. I am open to taking on new students so please drop me an email if you are interested or would like to find out more.
+            I have tutored people of many ages in a variety of subjects. I have helped students with A-Level Maths, A-Level Physics, secondary school entrance exams and maths skills for an MBA. I also worked for Explore Learning in Colchester as a tutor during my gap year. I am open to taking on new students so please drop me an email if you are interested or would like to find out more.
         </p>
     </div>
 );

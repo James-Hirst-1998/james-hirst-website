@@ -20,7 +20,7 @@ const HomePage = () => {
                 <Intro />
                 <VisibilitySensor
                     partialVisibility
-                    offset={{ top: 1550 }}
+                    offset={{ top: 600 }}
                     active={!isVisibleExperience}
                     onChange={(isVisible) => setIsVisibleExperience(isVisible)}
                 >

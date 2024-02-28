@@ -91,5 +91,16 @@
     .intro .buttons button {
         margin-bottom: 30px;
         width: 30vw;
-}
+    }
+
+    .intro .text .greeting .name{
+        font-size: 2em;
+        font-weight: 600;
+    }
+
+    .intro .text .greeting .hi{
+        font-size: 2em;
+        font-weight: 600;
+    }
+
 }

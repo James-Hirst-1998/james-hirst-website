@@ -10,7 +10,7 @@ const Personal = () => {
             </div>
             <div className="box conversation">
                 <h2>Conversation</h2>
-                <p>I am hugely passionate about the environment and all animals. I'm particularly captivated by marine animals, having completed my PADI open water qualification. If you have any conversation opportunities please contact me as I would love to be involved.</p>
+                <p>I am hugely passionate about the environment and the natural world. I'm particularly invested in marine animals, having completed my PADI open water qualification. If you have any conversation opportunities please contact me as I would love to get involved.</p>
             </div>
         </div>
     );

@@ -27,7 +27,7 @@ const Intro = () => {
                     <div className="hi">Hi,</div>
                     <div className="name">I'm James Hirst</div>
                 </div>
-                <div className="description">I’m a {calculateAge('1998-11-07')} year old Software Engineer working at Microsoft. I have a Masters of Mathematics from Jesus College, Cambridge. I'm passionate about the environment and conservation, and I'm always eager to discover new opportunities to make a positive impact.</div>
+                <div className="description">I’m a {calculateAge('1998-11-07')} year old Software Engineer working at Microsoft. I have a Masters of Mathematics from Jesus College, Cambridge. I'm passionate about wildlife conservation and I'm  eager to discover new opportunities to make a positive impact.</div>
                 <div className="buttons">
                     <button onClick={() => window.open(process.env.PUBLIC_URL + '/CV.pdf')}>CV</button>
                     <button onClick={handleEmail}>Contact Me</button>
