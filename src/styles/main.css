@@ -12,7 +12,8 @@ body {
 }
 
 .page-container {
-    width: 84%;
+    width: 100%;
+    max-width: 1200px;
     margin: 0 auto;
 }
 
@@ -20,6 +21,7 @@ body {
     opacity: 0;
     transition: opacity 3s ease-in-out;
 }
+
 
 .fade-in-section.is-visible {
     opacity: 1;

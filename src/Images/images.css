@@ -6,7 +6,15 @@
 .image {
     width: 200px;
     height: 200px;
+    max-width: 20vw;
+    max-height: 20vw;
     margin-right: 30px;
     border: 1px solid black;
     margin: 10px 10px 100px 10px;
+}
+
+@media (max-width: 650px) {
+    .image {
+        margin: 10px 10px 50px 10px;
+    }   
 }

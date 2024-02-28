@@ -3,7 +3,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 100vh;
+    min-height: 100vh;
 }
  
 .intro img {
@@ -11,13 +11,6 @@
     width: 200px;
     height: 200px;
     margin-right: 30px;
-}
-
-@media screen and (min-width: 1500px) {
-    .intro img {
-        width: 300px;
-        height: 300px;
-    }
 }
 
 .intro .text {
@@ -29,10 +22,11 @@
 .intro .text .greeting {
     display: flex;
     align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .intro .text .greeting .hi {
-    width: 10%;
+    min-width: 10%;
     font-size: 3em;
     color: white;
     text-align: left;
@@ -61,7 +55,8 @@
 }
 
 .intro .buttons button {
-    width: 25%;
+    width: 10vw;
+    max-width: 30vw;
     margin-left: 15%;
     border-radius: 25px;
     padding: 15px 0px;
@@ -75,4 +70,26 @@
 .intro .buttons button:active {
     background-color: rgb(255, 255, 255);
     transform: translateY(2px);
+}
+
+@media screen and (min-width: 1500px) {
+    .intro img {
+        width: 300px;
+        height: 300px;
+    }
+}
+
+@media (max-width: 650px) {
+    .intro {
+        flex-direction: column;
+    }
+
+    .intro img {
+        margin-top: 20px;
+    }
+
+    .intro .buttons button {
+        margin-bottom: 30px;
+        width: 30vw;
+}
 }
