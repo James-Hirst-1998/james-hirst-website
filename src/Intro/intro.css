@@ -65,6 +65,7 @@
     border: none;
     box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
+    color: black;
 }
 
 .intro .buttons button:active {
@@ -82,10 +83,12 @@
 @media (max-width: 650px) {
     .intro {
         flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .intro img {
-        margin-top: 20px;
+        margin-bottom: 50px;
     }
 
     .intro .buttons button {
@@ -102,5 +105,4 @@
         font-size: 2em;
         font-weight: 600;
     }
-
 }
