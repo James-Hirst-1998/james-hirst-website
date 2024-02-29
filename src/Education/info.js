@@ -17,7 +17,8 @@ export const University = () => (
                 <li>BA Mathematics Degree from Cambridge (2018-2021)</li>
                 <ul>
                     <li>1st Class in third year (position: 14/222, percentage: 86%)</li>
-                    <li>Jesus College Mathematics Award in second year for being top performer</li>
+                    <li>1st Class in second year and Jesus College Mathematics Award as I was the college top performer</li>
+                    <li>1st Class in first year</li>
                 </ul>
             </ul>
         </p>

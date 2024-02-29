@@ -1,24 +1,29 @@
 import styled from "styled-components";
 
 export const rulesExitButton = styled.button`
-border: solid;
-background-color: #B1DAE7;
-border-radius: 100%;
-font-size: 18px;
-height: 35px;
-width: 35px;
-
-
-&:hover {
-    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: solid;
+    background-color: #B1DAE7;
+    border-radius: 50%;
+    font-size: 18px;
+    height: 35px;
+    width: 35px;
     color: black;
-    background-color: #B8B8B8;
+    box-sizing: border-box;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #B8B8B8;
+    }
 `;
 
 export const gameQuitButton = styled.button`
 border: transparent;
-background-color: #B1DAE7;
-font-size: 16px;
+background-color: transparent;
+font-size: 14px;
+color: blue;
 
 &:hover {
     cursor: pointer;
@@ -30,10 +35,10 @@ background-color: #32a83c;
 font-size: 14px;
 height: 35px;
 width: 77px;
+color: black;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #B8B8B8;
 
 &:active {
@@ -50,10 +55,10 @@ width: 100px;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #989d9e;
 
 &:active {
+        color: black;
         background-color: #878b8c;
         box-shadow: 0 5px #666;
         transform: translateY(2px);
@@ -70,6 +75,7 @@ width: 300px;
     background-color: #c94d5b;
 
 &:active {
+        color: black;
         background-color: #f5162f;
         box-shadow: 0 5px #666;
         transform: translateY(2px);
@@ -80,6 +86,7 @@ background-color: #c2f0ce;
 font-size: 14px;
 height: 35px;
 width: 300px;
+color: black;
 `
 
 export const correctButton = styled.button`
@@ -87,10 +94,10 @@ background-color: #119c1a;
 font-size: 14px;
 height: 35px;
 width: 150px;
+color: black;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #14c920;
 
 &:active {
@@ -104,10 +111,10 @@ background-color: #cc861d;
 font-size: 14px;
 height: 35px;
 width: 150px;
+color: black;
 
 &:hover {
     cursor: pointer;
-    color: black;
     background-color: #e69722;
 
 &:active {
