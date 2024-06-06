@@ -6,14 +6,15 @@ import '../InfoSlider/infoslider.css';
 export const Microsoft = () => (
     <div className='info-content'>
         <div className="subtitle">Microsoft</div>
-        <p>I work on implementing a highly reliable voicemail solution in Azure, achieving five 9s (99.999%) uptime, which translates to less than 5 minutes of downtime per year. I use Kubernetes for resource management and interact with popular tools such as Grafana, Prometheus, and Terraform. I spearhead initiatives to reduce the ongoing costs of the product and I have designed and currently maintain a security bot to combat security threats.</p>
+        <p>I develop a Rust based solution for configuration translation to be used in a session border controller at the edge of telco networks. It includes an extensive testing framework that has automated mechanisms for overwriting the test cases expected output as the translation expands. Previously, I worked on implementing a highly reliable voicemail solution in Azure. I used Kubernetes for resource management and interacted with popular tools such as Grafana, Prometheus, and Terraform. I also spearheaded initiatives to reduce the ongoing costs of the product and designed and owned a security bot to combat threats.</p>
         <p>Other experiences:</p>
         <ul>
-            <li>Copilot champ, educating other engineers on features and best practices</li>
+            <li>GitHub Copilot Champion, educating other engineers on features and best practices</li>
             <li>End to end testing in QA</li>
             <li>Redesigning CI and solution architecture</li>
             <li>Scrum master for a team of 10 people</li>
             <li>Maintaining a message app using React front-end and java back-end</li>
+            <li>Running a sustainability series, personally giving talks on fishing and carbon removal companies</li>
         </ul>
     </div>
 );
@@ -39,10 +40,10 @@ export const SharkTrust = () => (
     <div className='info-content'>
         <div className="subtitle">Shark Trust</div>
         <p>
-            As a passionate conservationist, I volunteer my technical skills to aid environmental protection. I completed a project using Convolutional Neural Networks (CNNs) to automate shark species identification from eggcases, contributing to the <a href="https://www.sharktrust.org/greateggcasehunt">Great Eggcase Hunt</a> by the Shark Trust.
+            As a passionate conservationist, I volunteer my technical skills to aid environmental protection. I am doing a project using Convolutional Neural Networks (CNNs) to automate shark and ray species classification from eggcases, contributing to the <a href="https://www.sharktrust.org/greateggcasehunt">Great Eggcase Hunt</a> by the Shark Trust.
         </p>
         <p>
-            My role involves data collection, data cleaning and model training. Despite being in its infancy, the project has had good results. We aim to integrate this model into the app for efficient image classification, facilitating global expansion while maintaining manageable workloads for the Trust.
+            My role involves model training, data collection and data cleaning. Despite being in its infancy, the project has had good results. We aim to integrate this model into the app for efficient image classification, facilitating global expansion while maintaining manageable workloads for the Trust.
         </p>
     </div>
 );
