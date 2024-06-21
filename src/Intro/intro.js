@@ -1,7 +1,7 @@
 // Intro.js
 import React from 'react';
 import './intro.css';
-import image from './cropped_me.jpg'; // Import the image
+import image from './cropped_smart.jpg';
 
 const Intro = () => {
     const handleEmail = () => {

@@ -10,7 +10,7 @@ const Skills = () => {
                     <ul>
                         <li>Python</li>
                         <li>Rust</li>
-                        <li>JavaScript</li>
+                        <li>TypeScript</li>
                         <li>React</li>
                         <li>MATLAB</li>
                     </ul>
@@ -21,7 +21,7 @@ const Skills = () => {
                         <li>Azure</li>
                         <li>Kubernetes</li>
                         <li>Terraform</li>
-                        <li>Istio</li>
+                        <li>Docker</li>
                         <li>CI integration</li>
                     </ul>
                 </div>
@@ -29,10 +29,10 @@ const Skills = () => {
                     <h2>Other</h2>
                     <ul>
                         <li>Copilot</li>
-                        <li>CNNs</li>
+                        <li>TensorFlow</li>
                         <li>Detectron2</li>
                         <li>Figma</li>
-                        <li>CSS</li>
+                        <li>HTML/CSS</li>
                     </ul>
                 </div>
             </div>
