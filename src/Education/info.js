@@ -60,7 +60,10 @@ export const Tutoring = () => (
     <div className='info-content'>
         <div className="subtitle">Tutoring</div>
         <p>
-            I have tutored people of many ages in a variety of subjects. I have helped students with A-Level Maths, A-Level Physics, secondary school entrance exams and maths skills for an MBA. I also worked for Explore Learning in Colchester as a tutor during my gap year. I am open to taking on new students so please drop me an email if you are interested or would like to find out more.
+            I have tutored people of many ages in a variety of subjects. I have helped students with A-Level Maths, A-Level Physics, secondary school entrance exams and maths skills for an MBA. I also worked for Explore Learning in Colchester as a tutor during my gap year.
+        </p>
+        <p>
+            I am open to taking on new students so please drop me an email if you are interested or would like to find out more.
         </p>
     </div>
 );
