@@ -1,4 +1,9 @@
 /* Intro.css */
+html,
+body {
+  overflow-x: hidden;
+}
+
 .intro {
   display: flex;
   align-items: center;
@@ -46,10 +51,11 @@
 
 .animation-container {
   position: absolute;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  width: 90%;
+  height: 90%;
+  transform: translate(-50%, -50%);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.5s ease;
@@ -66,7 +72,6 @@
   width: 100% !important;
   height: 100% !important;
   transform: scale(1.2);
-  object-fit: contain;
 }
 
 .intro-content:hover .animation-container {
@@ -151,6 +156,7 @@
 @media (max-width: 900px) {
   .intro {
     min-height: 100vh;
+    width: 100%;
     padding: 4rem 0;
   }
 
@@ -209,6 +215,14 @@
 }
 
 @media (max-width: 480px) {
+  .intro-content {
+    flex-direction: column;
+    width: 100%;
+    max-width: 100vw;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
   .image-container {
     width: 200px;
     height: 200px;
@@ -226,14 +240,37 @@
 
   .description {
     font-size: 1em;
+    padding: 0 1rem;
+    margin: 1rem 0;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
   }
 
   .buttons {
     flex-direction: column;
     align-items: stretch;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    width: 100%;
   }
 
   .buttons button {
+    width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .text {
+    padding: 0 1rem;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .intro {
+    padding: 4rem 1rem;
+    box-sizing: border-box;
     width: 100%;
   }
 }
