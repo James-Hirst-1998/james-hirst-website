@@ -1,5 +1,5 @@
 // Intro.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./intro.css";
 import image from "./cropped_smart.jpg";
 import Lottie from "lottie-react";
@@ -12,14 +12,17 @@ import snakeAnimation from "./lotties/snake.json";
 
 const Intro = () => {
   // Array of all animations
-  const animations = [
-    sharkAnimation,
-    coralAnimation,
-    monsterAnimation,
-    plantAnimation,
-    codingAnimation,
-    snakeAnimation,
-  ];
+  const animations = useMemo(
+    () => [
+      sharkAnimation,
+      coralAnimation,
+      monsterAnimation,
+      plantAnimation,
+      codingAnimation,
+      snakeAnimation,
+    ],
+    []
+  );
 
   // State for tracking current animation index and shuffled order
   const [currentAnimationIndex, setCurrentAnimationIndex] = useState(0);
@@ -38,7 +41,7 @@ const Intro = () => {
   // Initialize shuffled animations on component mount
   useEffect(() => {
     setShuffledAnimations(shuffleArray(animations));
-  }, []);
+  }, [animations]);
 
   // Handle hover to cycle through animations
   const handleImageHover = () => {

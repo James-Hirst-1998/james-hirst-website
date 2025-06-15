@@ -4,23 +4,11 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Deployment
 
-This project is deployed via [GitHub Pages](https://pages.github.com/).
+This project is hosted via [Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/overview).
 
-To deploy the latest version:
+Deployment is triggered automatically whenever changes are merged into the `main` branch.
 
-1. Ensure the latest code is committed and pushed to the `main` (or `master`) branch.
-2. Run the following command to build the project:
-   ```
-   npm run build
-   ```
-3. Deploy the build directory using the `gh-pages` package or your chosen method. If using `gh-pages`, run:
-   ```
-   npm install --save-dev gh-pages
-   npm run deploy
-   ```
-   _(Make sure your `package.json` includes the correct `homepage` field and deploy script.)_
-
-The site will be available at `https://<your-github-username>.github.io/<repo-name>/`.
+Azure picks up the latest commit, builds the project, and serves the updated version at the configured site URL. No manual steps are required to deploy.
 
 ## `npm start`
 
