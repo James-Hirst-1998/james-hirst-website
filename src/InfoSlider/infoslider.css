@@ -29,6 +29,8 @@
   margin: 20px 0;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: background-color 0.3s ease;
+  touch-action: pan-y pinch-zoom;
+  user-select: none;
 }
 
 .info-box:hover {
@@ -128,7 +130,16 @@
   }
 
   .info-box {
-    padding: 1.5rem 0.5rem;
+    padding: 1.5rem 1.25rem;
+    cursor: grab;
+  }
+
+  .info-box:active {
+    cursor: grabbing;
+  }
+
+  .arrow-button {
+    display: none;
   }
 
   .info-box img {
@@ -140,5 +151,32 @@
 
   .info-content {
     padding: 0 0.5rem;
+  }
+
+  /* Add a subtle hint for swipe functionality */
+  .info-box::before {
+    content: "";
+    position: absolute;
+    right: 0;
+    width: 4px;
+    height: 40px;
+    background: rgba(74, 158, 255, 0.3);
+    border-radius: 0 4px 4px 0;
+    animation: swipeHint 1.5s ease-in-out infinite;
+  }
+
+  @keyframes swipeHint {
+    0% {
+      opacity: 0;
+      transform: translateX(0);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-8px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(0);
+    }
   }
 }

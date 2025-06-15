@@ -13,7 +13,7 @@ const Education = () => {
 
   return (
     <div className="education-container">
-      <h1 className="title">Education</h1>
+      <h1 className="title">Academics</h1>
       <div className="education-content">
         <nav className="education-nav">
           {Object.entries(sections).map(([key, section]) => (
