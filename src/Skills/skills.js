@@ -6,33 +6,36 @@ const Skills = () => {
     <div className="skills-container">
       <div className="skills-grid">
         <div className="skills-column">
-          <h2>Languages</h2>
+          <h2>Coding</h2>
           <ul>
             <li>Python</li>
+            <li>TypeScript / React</li>
             <li>Rust</li>
-            <li>TypeScript</li>
-            <li>React</li>
             <li>SQL</li>
+            <li>Dart / Flutter</li>
+            <li>HTML / CSS</li>
           </ul>
         </div>
         <div className="skills-column">
-          <h2>Cloud</h2>
+          <h2>Cloud & DevOps</h2>
           <ul>
             <li>Azure</li>
             <li>Kubernetes</li>
             <li>Terraform</li>
             <li>Docker</li>
-            <li>CI integration</li>
+            <li>GCP</li>
+            <li>CI/CD</li>
           </ul>
         </div>
         <div className="skills-column">
-          <h2>Other</h2>
+          <h2>Tools & Platforms</h2>
           <ul>
-            <li>Copilot</li>
             <li>Supabase</li>
-            <li>TensorFlow</li>
+            <li>Retool</li>
             <li>Figma</li>
-            <li>HTML/CSS</li>
+            <li>ML Model Hosting</li>
+            <li>FastAPI</li>
+            <li>TensorFlow</li>
           </ul>
         </div>
       </div>

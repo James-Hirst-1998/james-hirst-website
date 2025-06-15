@@ -1,21 +1,27 @@
 .footer {
-    margin-top: 50px;
-    background-color: rgb(161, 161, 161);
-    opacity: 0.8;
-    padding: 20px 0px;
-    width: 100%;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    gap: 100px;
+  margin-top: 50px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  padding: 1.5rem 0;
+  width: 100%;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-link {
-    color: black;
-    text-decoration: none;
-    font-weight: bold;
+  color: #e6e6e6;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
 }
 
 .footer-link:hover {
-    text-decoration: underline;
+  color: #4a9eff;
+  background: rgba(74, 158, 255, 0.1);
+  transform: translateY(-2px);
 }

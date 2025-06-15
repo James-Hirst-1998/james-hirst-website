@@ -7,25 +7,39 @@ export const Mozaic = () => (
   <div className="info-content">
     <div className="subtitle">Mozaic Earth</div>
     <p>
-      I am working as a founding engineer for&nbsp;
-      <a href="https://www.mozaic.earth/">Mozaic Earth</a> to build a platform
-      to allow for ecological surveys to be carried out at scale. We are an
-      early stage start up but have already got some good traction which you can
-      view on our&nbsp;
+      I am a founding engineer at&nbsp;
+      <a href="https://www.mozaic.earth/">Mozaic Earth</a>, an early-stage
+      startup building a platform that enables anyone with a mobile phone to
+      collect biodiversity data through our intuitive app. This data is then
+      interpreted by ecologist on our web platform who are super-charged by our
+      AI tools. We're gaining momentum quickly, which you can follow on
+      our&nbsp;
       <a href="https://www.linkedin.com/company/mozaicearth/posts/?feedView=all">
         LinkedIn.
       </a>
     </p>
-    <p>My contributions:</p>
+    <p>My responsibilities:</p>
     <ul>
-      <li>Managing the supabase database and designing the schema structure</li>
-      <li>Producing reports using SQL queries for clients</li>
-      <li>Building front-end components via React</li>
       <li>
-        Defining requirements and creating Figma wireframes for other developers
-        to implement
+        Architecting and managing the Supabase database, including functions,
+        triggers, and edge functions
       </li>
-      <li>Leading AI integration initiatives</li>
+      <li>
+        Leading the design and development of the web platform, including
+        overseeing a small team to define, scope, and review work
+      </li>
+      <li>
+        Owning all AI initiatives—building models and data pipelines, and
+        researching new technologies
+      </li>
+      <li>
+        Delivering full-stack features across Figma, Supabase, React (web),
+        Flutter (mobile), and Retool (internal tools)
+      </li>
+      <li>
+        Collaborating with clients on project delivery and producing
+        insight-rich reports using custom SQL workflows
+      </li>
     </ul>
   </div>
 );
@@ -50,7 +64,6 @@ export const Microsoft = () => (
         GitHub Copilot Champion, educating other engineers on features and best
         practices
       </li>
-      <li>End to end testing in QA</li>
       <li>Redesigning CI and solution architecture</li>
       <li>Scrum master for a team of 10 people</li>
       <li>Maintaining a message app using React front-end and java back-end</li>

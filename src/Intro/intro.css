@@ -1,108 +1,239 @@
 /* Intro.css */
 .intro {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 100vh;
+  padding: 2rem 0;
+  position: relative;
+  width: 100%;
 }
- 
+
+.intro-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4rem;
+  width: 100%;
+}
+
+.image-container {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
+}
+
 .intro img {
-    border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.intro img:hover {
+  transform: scale(1.05);
+  border-color: #4a9eff;
+  opacity: 0;
+}
+
+.animation-container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.animation-container svg {
+  width: 100% !important;
+  height: 100% !important;
+  transform: scale(1.2);
+  object-fit: contain;
+}
+
+.intro-content:hover .animation-container {
+  opacity: 1;
+}
+
+.text {
+  flex: 1;
+  color: #e6e6e6;
+  text-align: left;
+  margin: 10px;
+}
+
+.greeting {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+}
+
+.hi {
+  min-width: 10%;
+  font-size: 3em;
+  color: #e6e6e6;
+  text-align: left;
+  font-weight: 600;
+}
+
+.name {
+  margin-left: 5%;
+  font-size: 3em;
+  color: #4a9eff;
+  font-weight: 700;
+}
+
+.description {
+  font-weight: 400;
+  justify-content: flex-end;
+  text-align: left;
+  margin-left: 15%;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+  width: 75%;
+  line-height: 1.6;
+}
+
+.buttons {
+  display: flex;
+  justify-content: left;
+  gap: 1rem;
+}
+
+.buttons button {
+  min-width: 120px;
+  margin-left: 15%;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-size: 1em;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e6e6e6;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+}
+
+.buttons button:hover {
+  background: rgba(74, 158, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.buttons button.copied {
+  background: rgba(74, 158, 255, 0.3);
+  border-color: #4a9eff;
+  color: #4a9eff;
+}
+
+.buttons button:active {
+  transform: translateY(1px);
+}
+
+@media (max-width: 900px) {
+  .intro {
+    min-height: 100vh;
+    padding: 4rem 0;
+  }
+
+  .intro-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+
+  .image-container {
     width: 200px;
     height: 200px;
-    margin-right: 30px;
-}
+  }
 
-.intro .text {
-    color: white;
+  .intro img {
+    width: 200px;
+    height: 200px;
+  }
+
+  .text {
     text-align: center;
-    margin: 10px;
+    margin: 0;
+    padding: 0 2rem;
+  }
+
+  .greeting {
+    justify-content: center;
+  }
+
+  .hi,
+  .name {
+    font-size: 2.5em;
+    min-width: unset;
+    margin: 0;
+  }
+
+  .name {
+    margin-left: 0.5rem;
+  }
+
+  .description {
+    margin: 2rem auto;
+    width: 100%;
+    text-align: center;
+  }
+
+  .buttons {
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .buttons button {
+    margin: 0;
+    min-width: 140px;
+  }
 }
 
-.intro .text .greeting {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-}
+@media (max-width: 480px) {
+  .image-container {
+    width: 200px;
+    height: 200px;
+  }
 
-.intro .text .greeting .hi {
-    min-width: 10%;
-    font-size: 3em;
-    color: white;
-    text-align: left;
-}
+  .intro img {
+    width: 200px;
+    height: 200px;
+  }
 
-.intro .text .greeting .name {
-    margin-left: 5%;
-    font-size: 3em;
-    color: black;
-}
+  .hi,
+  .name {
+    font-size: 2em;
+  }
 
-.intro .text .description {
-    font-weight: 500;
-    justify-content: flex-end;
-    text-align: left;
-    margin-left: 15%;
-    margin-top: 20px;
-    margin-bottom: 20px;
+  .description {
     font-size: 1em;
-    width: 75%;
-}
+  }
 
-.intro .buttons {
-    display: flex;
-    justify-content: left;
-}
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
 
-.intro .buttons button {
-    width: 10vw;
-    max-width: 30vw;
-    margin-left: 15%;
-    border-radius: 25px;
-    padding: 15px 0px;
-    font-size: 1em;
-    background-color: #a3a3a3;
-    border: none;
-    box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
-    color: black;
-}
-
-.intro .buttons button:active {
-    background-color: rgb(255, 255, 255);
-    transform: translateY(2px);
-}
-
-@media screen and (min-width: 1500px) {
-    .intro img {
-        width: 300px;
-        height: 300px;
-    }
-}
-
-@media (max-width: 650px) {
-    .intro {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .intro img {
-        margin-bottom: 50px;
-    }
-
-    .intro .buttons button {
-        margin-bottom: 30px;
-        width: 30vw;
-    }
-
-    .intro .text .greeting .name{
-        font-size: 2em;
-        font-weight: 600;
-    }
-
-    .intro .text .greeting .hi{
-        font-size: 2em;
-        font-weight: 600;
-    }
+  .buttons button {
+    width: 100%;
+  }
 }
