@@ -1,33 +1,114 @@
+.personal-section {
+  margin-top: 6rem;
+  padding: 0 2rem;
+}
+
+.personal-section .title {
+  text-align: center;
+  font-size: 1.4em;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  display: inline-block;
+  margin: 0 auto 3rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .personal {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  margin: 2rem 0;
 }
 
 .personal .box {
-    width: 80%;
-    padding: 20px;
-    margin: 40px 0;
-    color: rgb(7, 0, 0);
-    border-radius: 50px;
-    text-align: center;
+  width: 80%;
+  padding: 2rem;
+  color: #e6e6e6;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  position: relative;
+  overflow: hidden;
 }
 
-.personal .skiing {
-    background-color: rgb(47, 143, 175);
+.personal .box::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.1;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
 }
 
-.personal .conservation {
-    background-color: rgb(204, 136, 9);
+.personal .skiing::before {
+  background: linear-gradient(135deg, #4a9eff, #2d6bb7);
+}
+
+.personal .conservation::before {
+  background: linear-gradient(135deg, #4caf50, #2e7d32);
+}
+
+.personal .box:hover {
+  transform: translateY(-5px);
+}
+
+.personal .box:hover::before {
+  opacity: 0.2;
+}
+
+.personal .box h2 {
+  font-size: 1.6em;
+  margin-bottom: 1rem;
+  color: #4a9eff;
+}
+
+.personal .conservation h2 {
+  color: #4caf50;
+}
+
+.personal .box p {
+  line-height: 1.6;
+  margin: 0;
+}
+
+.personal .box a {
+  color: #4a9eff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.personal .conservation a {
+  color: #4caf50;
+}
+
+.personal .box a:hover {
+  text-decoration: underline;
 }
 
 @media (min-width: 650px) {
-    .personal {
-        flex-direction: row;
-        justify-content: space-around;
-    }
+  .personal {
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 3rem;
+  }
 
-    .personal .box {
-        width: 40%;
-    }
+  .personal .box {
+    width: 45%;
+  }
+}
+
+@media (max-width: 768px) {
+  .personal-section {
+    padding: 0 1rem;
+  }
 }
