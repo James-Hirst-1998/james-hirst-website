@@ -1,7 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { scroll, pointer, deviceLook, depthToWorldY } from "./scrollState";
+import { scroll, pointer, look, depthToWorldY } from "./scrollState";
 import { depthColor } from "./palette";
 import { WaterSurface, GodRays } from "./Surface";
 import { MarineSnow, Bubbles } from "./Ambience";
@@ -35,11 +35,14 @@ const CameraRig = () => {
     camera.position.y += (goalY - camera.position.y) * ease;
     camera.position.x += (0 - camera.position.x) * ease * 0.6;
 
-    if (deviceLook.active) {
-      // Phone: the gyroscope gives absolute yaw/pitch targets — ease onto them.
-      r.yaw += (deviceLook.yaw - r.yaw) * ease;
-      r.pitch += (deviceLook.pitch - r.pitch) * ease;
-      camera.rotation.set(r.pitch, r.yaw, 0, "YXZ");
+    if (look.active) {
+      // Phone: swipes and/or the gyroscope set yaw/pitch targets — ease onto
+      // them, banking slightly into the turn for a touch of submersible feel.
+      const prevYaw = r.yaw;
+      r.yaw += (look.yaw - r.yaw) * ease;
+      r.pitch += (look.pitch - r.pitch) * ease;
+      const bank = (r.yaw - prevYaw) * 2.2;
+      camera.rotation.set(r.pitch, r.yaw, bank, "YXZ");
     } else {
       const overshoot = Math.abs(pointer.x) - YAW_DEADZONE;
       const drive =

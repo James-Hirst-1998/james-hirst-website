@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { scroll, pointer, deviceLook } from "../experience/scrollState";
+import { scroll, pointer, look } from "../experience/scrollState";
 import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
@@ -114,6 +114,30 @@ const NavDots = () => {
         </button>
       ))}
     </nav>
+  );
+};
+
+// One-off nudge on phones that the view can be steered. Fades itself out
+// after a few seconds, or the moment the first touch lands.
+const LookHint = () => {
+  const [show, setShow] = useState(
+    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches
+  );
+  useEffect(() => {
+    if (!show) return undefined;
+    const hide = () => setShow(false);
+    const timer = setTimeout(hide, 6000);
+    window.addEventListener("touchstart", hide, { once: true, passive: true });
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("touchstart", hide);
+    };
+  }, [show]);
+  if (!show) return null;
+  return (
+    <div className="look-hint" aria-hidden="true">
+      Swipe or tilt your phone to look around
+    </div>
   );
 };
 
@@ -308,11 +332,45 @@ const DivePage = () => {
     };
   }, []);
 
-  // Phone look-around: point the phone and the view follows, while normal
-  // touch scrolling still drives the descent.
+  // Phone look-around. Two inputs steer the same view so there's always a way
+  // to look: swipe sideways to turn (vertical touches still scroll/dive), and
+  // — where the sensor allows — tilt or pan the phone via the gyroscope.
   useEffect(() => {
     if (!show3D || !window.matchMedia("(pointer: coarse)").matches) return undefined;
+    const clamp = (v) => Math.min(Math.max(v, -0.75), 0.75);
+    // Enable the look camera up front so swipes work even if the gyroscope
+    // never reports (permission denied, no sensor, insecure origin).
+    look.active = true;
 
+    // --- Swipe to look: horizontal drag turns the view; a clearly sideways
+    // drag also tilts it. Vertical drags fall through to the page scroll. ---
+    let lastX = null;
+    let lastY = null;
+    const onTouchStart = (e) => {
+      lastX = e.touches[0].clientX;
+      lastY = e.touches[0].clientY;
+    };
+    const onTouchMove = (e) => {
+      if (lastX === null) return;
+      const x = e.touches[0].clientX;
+      const y = e.touches[0].clientY;
+      const dx = x - lastX;
+      const dy = y - lastY;
+      lastX = x;
+      lastY = y;
+      look.yaw += dx * 0.005;
+      if (Math.abs(dx) > Math.abs(dy)) look.pitch = clamp(look.pitch + dy * 0.003);
+    };
+    const onTouchEnd = () => {
+      lastX = null;
+      lastY = null;
+    };
+    window.addEventListener("touchstart", onTouchStart, { passive: true });
+    window.addEventListener("touchmove", onTouchMove, { passive: true });
+    window.addEventListener("touchend", onTouchEnd, { passive: true });
+
+    // --- Gyroscope: layered on top of swipes, relative to where you started
+    // so the view begins facing forward rather than at some compass heading. ---
     let lastAlpha = null;
     let baseBeta = null;
     const onOrientation = (e) => {
@@ -320,16 +378,14 @@ const DivePage = () => {
       if (lastAlpha === null) {
         lastAlpha = e.alpha;
         baseBeta = e.beta;
-        deviceLook.active = true;
       }
       // Unwrap alpha so turning right around keeps rotating instead of snapping.
       let step = e.alpha - lastAlpha;
       if (step > 180) step -= 360;
       if (step < -180) step += 360;
       lastAlpha = e.alpha;
-      deviceLook.yaw += (step * Math.PI) / 180;
-      const pitch = ((e.beta - baseBeta) * Math.PI) / 180;
-      deviceLook.pitch = Math.min(Math.max(pitch, -0.7), 0.7);
+      look.yaw += (step * Math.PI) / 180;
+      look.pitch = clamp(((e.beta - baseBeta) * Math.PI) / 180);
     };
 
     const listen = () => window.addEventListener("deviceorientation", onOrientation);
@@ -355,9 +411,12 @@ const DivePage = () => {
     }
 
     return () => {
+      window.removeEventListener("touchstart", onTouchStart);
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend", onTouchEnd);
       cleanupGesture();
       window.removeEventListener("deviceorientation", onOrientation);
-      deviceLook.active = false;
+      look.active = false;
     };
   }, [show3D]);
 
@@ -374,6 +433,7 @@ const DivePage = () => {
       )}
       <DepthMeter />
       <NavDots />
+      <LookHint />
       <main>
         <Hero />
         {contentSections.map((s) => (
