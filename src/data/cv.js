@@ -25,7 +25,7 @@ export const sections = [
   {
     id: "mozaic",
     nav: "Mozaic Earth",
-    depth: 25,
+    depth: 40,
     zone: "Sunlight zone",
     kicker: "Now · Founding engineer",
     title: "Mozaic Earth",
@@ -45,7 +45,7 @@ export const sections = [
   {
     id: "microsoft",
     nav: "Microsoft",
-    depth: 50,
+    depth: 150,
     zone: "Sunlight zone",
     kicker: "Previously · Software engineer",
     title: "Microsoft",
@@ -63,7 +63,7 @@ export const sections = [
   {
     id: "research",
     nav: "Research",
-    depth: 75,
+    depth: 450,
     zone: "Twilight zone",
     kicker: "Machine learning · University of Cambridge",
     title: "Tree crown delineation",
@@ -84,7 +84,7 @@ export const sections = [
   {
     id: "sharktrust",
     nav: "Shark Trust",
-    depth: 100,
+    depth: 850,
     zone: "Twilight zone",
     kicker: "Volunteering · Conservation tech",
     title: "The Shark Trust",
@@ -101,13 +101,32 @@ export const sections = [
   {
     id: "education",
     nav: "Education",
-    depth: 125,
-    zone: "Twilight zone",
+    depth: 1800,
+    zone: "Midnight zone",
     kicker: "Education",
     title: "Cambridge mathematics",
-    body: [
-      "MMath and BA in Mathematics from Jesus College, Cambridge (2018–2022). Masters passed with Distinction (79%); first class in every undergraduate year, placing 14th of 222 in third year and top of college in second year, earning the Jesus College Mathematics Award.",
-      "Before that: five A*s at A-Level (Maths, Further Maths, Additional Further Maths, Physics, Chemistry) and Head Boy in my final year of sixth form.",
+    education: [
+      {
+        title: "University of Cambridge · Jesus College",
+        period: "2018 – 2022",
+        detail:
+          "MMath & BA in Mathematics — Masters passed with Distinction, first class in every undergraduate year.",
+        stats: [
+          { value: "79%", label: "Masters — Distinction" },
+          { value: "14th of 222", label: "third-year ranking" },
+          { value: "Top of college", label: "Jesus College Mathematics Award" },
+        ],
+      },
+      {
+        title: "Sixth form",
+        period: "A-Levels",
+        detail:
+          "Maths, Further Maths, Additional Further Maths, Physics and Chemistry — plus Head Boy in my final year.",
+        stats: [
+          { value: "5 A*s", label: "A-Level results" },
+          { value: "Head Boy", label: "final year" },
+        ],
+      },
     ],
     highlight: {
       title: "CERN — Beamline for Schools",
@@ -118,7 +137,7 @@ export const sections = [
   {
     id: "skills",
     nav: "Skills",
-    depth: 150,
+    depth: 3500,
     zone: "Midnight zone",
     kicker: "Toolkit",
     title: "Skills",
@@ -140,8 +159,8 @@ export const sections = [
   {
     id: "beyond",
     nav: "Beyond code",
-    depth: 175,
-    zone: "Midnight zone",
+    depth: 5500,
+    zone: "Abyssal zone",
     kicker: "Beyond the code",
     title: "Off duty",
     cards: [
@@ -164,9 +183,29 @@ export const sections = [
   {
     id: "seabed",
     nav: "Seabed",
-    depth: 200,
-    zone: "The seabed",
+    depth: 10935,
+    zone: "Challenger Deep",
   },
 ];
 
-export const MAX_DEPTH = 200;
+export const MAX_DEPTH = 10935;
+
+// Sections are evenly spaced in scroll but their real-world depths are not,
+// so the live meter piecewise-interpolates between section depths.
+export const depthAtProgress = (progress) => {
+  const p = Math.min(Math.max(progress, 0), 1);
+  const spans = sections.length - 1;
+  const idx = Math.min(Math.floor(p * spans), spans - 1);
+  const frac = p * spans - idx;
+  return sections[idx].depth + (sections[idx + 1].depth - sections[idx].depth) * frac;
+};
+
+export const zoneAtDepth = (depth) => {
+  if (depth < 5) return "the surface";
+  if (depth < 200) return "sunlight zone";
+  if (depth < 1000) return "twilight zone";
+  if (depth < 4000) return "midnight zone";
+  if (depth < 6000) return "abyssal zone";
+  if (depth < 10900) return "hadal zone";
+  return "challenger deep";
+};

@@ -203,3 +203,112 @@ export const JellyfishBloom = () => (
     <Jellyfish position={[2, -80, -16]} phase={3.3} tint="#c9a2e8" />
   </group>
 );
+
+// An anglerfish stalking the abyssal dark, all but invisible except for the
+// glowing lure bobbing ahead of its jaws.
+export const Anglerfish = ({ center = [0, -86, -8], radius = 6, speed = 0.16 }) => {
+  const group = useRef();
+  const lure = useRef();
+  const lureLight = useRef();
+  const target = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const a = t * speed;
+    const x = center[0] + Math.cos(a) * radius;
+    const z = center[2] + Math.sin(a) * radius * 0.6;
+    const y = center[1] + Math.sin(t * 0.7) * 0.8;
+    group.current.position.set(x, y, z);
+    const ahead = a + 0.12;
+    target.set(
+      center[0] + Math.cos(ahead) * radius,
+      y + Math.sin(t * 0.7 + 0.3) * 0.8,
+      center[2] + Math.sin(ahead) * radius * 0.6
+    );
+    group.current.lookAt(target);
+    if (lure.current) lure.current.position.y = 0.78 + Math.sin(t * 2.6) * 0.06;
+    if (lureLight.current)
+      lureLight.current.intensity = 5.5 + Math.sin(t * 5.3) * 1.4 + Math.sin(t * 11.7) * 0.6;
+  });
+
+  return (
+    <group ref={group}>
+      <mesh scale={[0.55, 0.62, 0.85]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#131b22" flatShading roughness={0.85} />
+      </mesh>
+      <mesh position={[0, -0.18, 0.62]} rotation-x={0.5} scale={[0.42, 0.2, 0.35]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0c1218" flatShading roughness={0.9} />
+      </mesh>
+      <mesh position={[0, 0.1, -0.95]} rotation-x={Math.PI / 2} scale={[0.16, 1, 1]}>
+        <coneGeometry args={[0.45, 0.8, 4]} />
+        <meshStandardMaterial color="#131b22" flatShading roughness={0.85} />
+      </mesh>
+      {/* the lure: a curved stalk with the light at its tip */}
+      <group position={[0, 0.45, 0.55]} rotation-x={-0.7}>
+        <mesh position={[0, 0.25, 0]}>
+          <cylinderGeometry args={[0.015, 0.03, 0.6, 4]} />
+          <meshStandardMaterial color="#1a232c" roughness={0.9} />
+        </mesh>
+        <group ref={lure} position={[0, 0.78, 0]}>
+          <pointLight ref={lureLight} color="#a8f2ff" intensity={5.5} distance={9} />
+          <mesh>
+            <sphereGeometry args={[0.09, 8, 6]} />
+            <meshStandardMaterial
+              color="#d9fbff"
+              emissive="#9beeff"
+              emissiveIntensity={3.2}
+              toneMapped={false}
+            />
+          </mesh>
+        </group>
+      </group>
+    </group>
+  );
+};
+
+// A whale crossing far in the twilight haze — mostly silhouette, felt more
+// than seen. It swims a long straight pass, then loops around off-screen.
+export const Whale = ({ y = -40, z = -32, span = 110, speed = 3.2 }) => {
+  const group = useRef();
+  const tail = useRef();
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const cycle = (span * 2) / speed;
+    const phase = (t % cycle) / cycle;
+    // Out along the pass, then teleport back while hidden in the fog.
+    const x = -span + phase * span * 2;
+    group.current.position.set(x, y + Math.sin(t * 0.3) * 2.2, z);
+    group.current.rotation.z = Math.sin(t * 0.3) * 0.05;
+    if (tail.current) tail.current.rotation.x = Math.sin(t * 1.1) * 0.22;
+  });
+
+  return (
+    <group ref={group} rotation-y={Math.PI / 2} scale={2.6}>
+      <mesh scale={[0.62, 0.68, 2.6]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        <meshStandardMaterial color="#16303f" flatShading roughness={0.7} />
+      </mesh>
+      <mesh position={[0, -0.3, 1.4]} scale={[0.5, 0.4, 1.3]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#1d3c4e" flatShading roughness={0.7} />
+      </mesh>
+      <mesh position={[0.7, -0.1, 0.9]} rotation-z={-2.2} rotation-y={0.3} scale={[0.12, 0.9, 0.45]}>
+        <sphereGeometry args={[1, 6, 5]} />
+        <meshStandardMaterial color="#16303f" flatShading roughness={0.7} />
+      </mesh>
+      <mesh position={[-0.7, -0.1, 0.9]} rotation-z={2.2} rotation-y={-0.3} scale={[0.12, 0.9, 0.45]}>
+        <sphereGeometry args={[1, 6, 5]} />
+        <meshStandardMaterial color="#16303f" flatShading roughness={0.7} />
+      </mesh>
+      <group ref={tail} position={[0, 0.05, -2.5]}>
+        <mesh rotation-y={Math.PI / 2} scale={[0.5, 0.1, 1.5]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          <meshStandardMaterial color="#16303f" flatShading roughness={0.7} />
+        </mesh>
+      </group>
+    </group>
+  );
+};

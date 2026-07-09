@@ -1,13 +1,16 @@
 import * as THREE from "three";
 
+// Keyed to the section spacing: sunlight fades fast, twilight from ~0.4,
+// midnight by ~0.65 and near-black hadal water for the last stretch.
 const stops = [
   [0.0, new THREE.Color("#63bfe4")],
-  [0.16, new THREE.Color("#3d9ac6")],
-  [0.36, new THREE.Color("#206d99")],
-  [0.56, new THREE.Color("#114a75")],
-  [0.76, new THREE.Color("#082c50")],
-  [0.92, new THREE.Color("#041a30")],
-  [1.0, new THREE.Color("#020f1e")],
+  [0.12, new THREE.Color("#3d9ac6")],
+  [0.28, new THREE.Color("#206d99")],
+  [0.44, new THREE.Color("#114a75")],
+  [0.6, new THREE.Color("#082c50")],
+  [0.74, new THREE.Color("#041a30")],
+  [0.86, new THREE.Color("#020f1e")],
+  [1.0, new THREE.Color("#01060d")],
 ];
 
 export const depthColor = (progress, out) => {

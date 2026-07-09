@@ -1,19 +1,7 @@
-import * as bofStyles from "./styles";
 import { useCallback, useState } from "react";
 import StopWatch from "./StopWatch";
 import { useEffect } from "react";
 import React from 'react';
-
-
-
-const Quitbutton = (props) => {
-    const onExitClick = props.onExitClick;
-    return (
-        <bofStyles.gameQuitButton onClick={() => onExitClick()}>
-            <b>Quit </b>
-        </bofStyles.gameQuitButton>
-    )
-}
 
 const StartGameButton = ({ stopWatchState, setStopWatchState, handleStart }) => {
     const startClick = () => {
@@ -22,17 +10,11 @@ const StartGameButton = ({ stopWatchState, setStopWatchState, handleStart }) => 
     }
     switch (stopWatchState) {
         case StopWatchModes.Reset:
-            return <bofStyles.startGameButton
-                onClick={startClick}
-            >Start Turn</bofStyles.startGameButton>
+            return <button className="bof-btn bof-btn--solid bof-btn--full" onClick={startClick}>Start turn</button>
         case StopWatchModes.Pause:
-            return <bofStyles.startGameButton
-                style={{ backgroundColor: "#4287f5" }}
-                onClick={startClick}
-            > Resume Turn</bofStyles.startGameButton >
+            return <button className="bof-btn bof-btn--solid bof-btn--full" onClick={startClick}>Resume turn</button>
         case StopWatchModes.Active:
-            return <bofStyles.activeGameButton disabled={true}
-            >Get guessing</bofStyles.activeGameButton>
+            return <button className="bof-btn bof-btn--full" disabled={true}>Get guessing…</button>
         default:
             return null
     }
@@ -45,9 +27,6 @@ const StopWatchModes = {
 }
 
 const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
-
-
-    // const gameSettings = { rounds: 3, time: 30, words: ["james", "lara", "BOF"], Team1: "Me", Team2: "You" }
 
     const [team1Score, setTeam1Score] = useState(0);
     const [team2Score, setTeam2Score] = useState(0);
@@ -196,69 +175,57 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
         }
     }, [time, handleReset])
 
+    const wordsLeft = turnSkippedWords.length + roundWordList.length;
 
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-        }}>
-            <bofStyles.mainStyledDiv style={{
-                borderStyle: "None", fontSize: "17px", maxWidth: "300px", padding: "0px 0px 40px 0px"
-            }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap"
-                }}>
-                    <h2>Round {roundNumber} of {gameSettings.rounds}</h2>
-                    <Quitbutton style={{ marginLeft: "auto" }} onExitClick={onExitClick}></Quitbutton>
+        <div className="bof-panel">
+            <div className="bof-panel__header">
+                <div>
+                    <p className="bof-kicker">Round {roundNumber} of {gameSettings.rounds}</p>
+                    <h2>Bowl of Fish</h2>
                 </div>
-                <table style={{ borderCollapse: "collapse", width: "300px" }}>
-                    <tr>
-                        <th style={{ textAlign: "center", border: "1px solid black", minWidth: "150px" }}>{gameSettings.Team1}</th>
-                        <th style={{ textAlign: "center", border: "1px solid black", minWidth: "150px" }}>{gameSettings.Team2}</th>
-                    </tr>
-                    <tr>
-                        <th style={{ textAlign: "center", border: "1px solid black" }}>{team1Score}</th>
-                        <th style={{ textAlign: "center", border: "1px solid black" }}>{team2Score}</th>
-                    </tr>
-                </table>
-                <h3>Turn: {teamTurn}</h3>
-                <StopWatch
-                    time={time}
-                    stopWatchState={stopWatchState}
-                    isActive={isActive}
-                    isPaused={isPaused}
-                    setTime={setTime}
-                ></StopWatch>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap"
-                }}>
-                    Word: {currentWord}
-                    <div style={{ float: "right" }}>
-                        Left: {turnSkippedWords.length + roundWordList.length}
-                    </div>
+                <button className="bof-quit" onClick={() => onExitClick()}>Quit</button>
+            </div>
+
+            <div className="bof-scoreboard">
+                <div className={`bof-team ${teamTurn === gameSettings.Team1 ? "is-up" : ""}`}>
+                    <span className="bof-team__name">{gameSettings.Team1}</span>
+                    <span className="bof-team__score">{team1Score}</span>
                 </div>
-                <div style={{ padding: "10px 0px 0px 0px", display: "flex", gap: "10px" }}>
-                    <bofStyles.correctButton onClick={correctClick}>Correct</bofStyles.correctButton>
-                    <bofStyles.skipButton onClick={skippedClick}>Skip</bofStyles.skipButton>
+                <div className={`bof-team ${teamTurn === gameSettings.Team2 ? "is-up" : ""}`}>
+                    <span className="bof-team__name">{gameSettings.Team2}</span>
+                    <span className="bof-team__score">{team2Score}</span>
                 </div>
-                <p>
-                    <StartGameButton
-                        stopWatchState={stopWatchState}
-                        setStopWatchState={setStopWatchState}
-                        handleStart={handleStart}></StartGameButton>
-                </p>
-            </bofStyles.mainStyledDiv >
-        </div >
+            </div>
+            <p className="bof-turn">
+                Up now: <b>{teamTurn}</b>
+            </p>
+
+            <StopWatch
+                time={time}
+                totalTime={gameSettings.time}
+                stopWatchState={stopWatchState}
+                isActive={isActive}
+                isPaused={isPaused}
+                setTime={setTime}
+            ></StopWatch>
+
+            <div className="bof-word">
+                <span className="bof-word__label">Word</span>
+                <span className="bof-word__value">{currentWord || "—"}</span>
+                <span className="bof-word__left">{wordsLeft} left in the bowl</span>
+            </div>
+
+            <div className="bof-action-row">
+                <button className="bof-btn bof-btn--correct" onClick={correctClick}>Correct</button>
+                <button className="bof-btn bof-btn--skip" onClick={skippedClick}>Skip</button>
+            </div>
+            <StartGameButton
+                stopWatchState={stopWatchState}
+                setStopWatchState={setStopWatchState}
+                handleStart={handleStart}></StartGameButton>
+        </div>
     )
 }
-
-
 
 export default Game

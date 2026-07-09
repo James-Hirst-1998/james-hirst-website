@@ -63,7 +63,8 @@ const Fishbowl = () => {
 
 export const Seabed = () => {
   const floorGeometry = useMemo(() => {
-    const geo = new THREE.PlaneGeometry(180, 90, 48, 24);
+    // Big enough that a full 360° look-around never reveals an edge.
+    const geo = new THREE.PlaneGeometry(220, 220, 56, 56);
     const pos = geo.attributes.position;
     for (let i = 0; i < pos.count; i++) {
       const x = pos.getX(i);
@@ -90,7 +91,7 @@ export const Seabed = () => {
 
   return (
     <group>
-      <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, -12]}>
+      <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
         <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
       </mesh>
       {kelp.map((k, i) => (

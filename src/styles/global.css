@@ -40,12 +40,13 @@ a {
   position: absolute;
   background: linear-gradient(
     #63bfe4 0%,
-    #3d9ac6 16%,
-    #206d99 36%,
-    #114a75 56%,
-    #082c50 76%,
-    #041a30 92%,
-    #020f1e 100%
+    #3d9ac6 12%,
+    #206d99 28%,
+    #114a75 44%,
+    #082c50 60%,
+    #041a30 74%,
+    #020f1e 86%,
+    #01060d 100%
   );
 }
 
@@ -197,6 +198,77 @@ a {
   font-size: 14px;
   font-weight: 600;
   text-decoration: none;
+}
+
+.panel__edu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.panel__edu-item {
+  background: rgba(127, 227, 255, 0.06);
+  border: 1px solid rgba(127, 227, 255, 0.14);
+  border-radius: 16px;
+  padding: 18px 20px;
+}
+
+.panel__edu-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.panel__edu-head h3 {
+  font-size: 16px;
+  color: #aeeaff;
+}
+
+.panel__edu-head span {
+  font-size: 12.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(210, 240, 255, 0.6);
+  white-space: nowrap;
+}
+
+.panel__edu-item > p {
+  color: #c8dfec;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+
+.panel__edu-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+}
+
+.panel__edu-stat {
+  border: 1px solid rgba(150, 220, 255, 0.14);
+  background: rgba(4, 22, 42, 0.4);
+  border-radius: 12px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.panel__edu-stat strong {
+  font-family: "Sora", sans-serif;
+  font-size: 16px;
+  color: #eaf6fb;
+}
+
+.panel__edu-stat span {
+  font-size: 12px;
+  line-height: 1.4;
+  color: rgba(200, 223, 236, 0.75);
 }
 
 .panel__skills {

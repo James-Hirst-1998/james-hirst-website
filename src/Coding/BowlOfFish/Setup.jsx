@@ -1,19 +1,8 @@
 import React from "react";
-import { useState, useEffect } from "react";
-import * as bofStyles from "./styles"
+import { useState } from "react";
 
-const GameStartButton = (props) => {
-    const onStartGameClick = props.onStartGameClick;
-    const settings = props.settings;
-
-    return (
-        <bofStyles.startGameButton id="StartGameButton"
-            onClick={() => onStartGameClick(settings)} style={{ width: "230px" }}>
-            Start Game
-        </bofStyles.startGameButton>
-    )
-}
-
+const minNumberOfWords = 10;
+const maxNumberOfWords = 60;
 
 const Setup = ({ onStartGameClick }) => {
     const [roundTime, setRoundTime] = useState(30);
@@ -23,112 +12,137 @@ const Setup = ({ onStartGameClick }) => {
     const [input, setInput] = useState("");
     const [team1, setTeam1] = useState("");
     const [team2, setTeam2] = useState("");
-    const minNumberOfWords = 10;
-    const maxNumberOfWords = 60;
 
-
-    useEffect(() => {
-        if (!input || wordCount === maxNumberOfWords) {
-            document.getElementById("AddWordButton").disabled = true;
-        }
-        else {
-            document.getElementById("AddWordButton").disabled = false;
-        }
-
-        if (wordCount < minNumberOfWords) {
-            document.getElementById("StartGameButton").disabled = true;
-        }
-        else {
-            document.getElementById("StartGameButton").disabled = false;
-        }
-    })
+    const canAddWord = Boolean(input) && wordCount < maxNumberOfWords;
+    const canStart = wordCount >= minNumberOfWords;
 
     const updateWords = () => {
-        if (listOfWords.includes(input)) {
+        if (!canAddWord) return;
+        if (!listOfWords.includes(input.toLowerCase())) {
+            setWordCount(wordCount + 1);
+            setListOfWords([...listOfWords, input.toLowerCase()]);
         }
-        else {
-            setWordCount(wordCount + 1)
-            setListOfWords([...listOfWords, input.toLowerCase()])
-        }
-        setInput("")
-    }
-
-    const handleWordChange = e => {
-        setInput(e.target.value)
-    }
+        setInput("");
+    };
 
     const handleKeyDown = (e) => {
         if (e.key === "Enter") {
-            updateWords()
+            updateWords();
         }
-    }
-
-    const handleTeamChange = e => {
-        e.target.id === "Team1" ? setTeam1(e.target.value) : setTeam2(e.target.value)
-    }
+    };
 
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100vw"
-        }}>
-            <bofStyles.mainStyledDiv className="setup" style={{
-                borderStyle: "None", fontSize: "17px", maxWidth: "300px", padding: "0px 0px 40px 0px"
-            }}>
-                <h2>Game Settings</h2>
-                <label for="Team 1">Team 1: </label>
-                <input value={team1} type="text" id="Team1" maxLength="20" onChange={handleTeamChange} placeholder="Knot Again..."></input>
-                <br></br>
-                <label for="Team 2">Team 2: </label>
-                <input value={team2} type="text" id="Team2" maxLength="20" onChange={handleTeamChange} placeholder="Reel Naturals..."></input>
-                <p>
-                    Turn Time:&nbsp; {roundTime}s
-                    <br></br>
-                    <bofStyles.settingsToggleButton onClick={() => setRoundTime(30)}>30s</bofStyles.settingsToggleButton>
-                    <bofStyles.settingsToggleButton onClick={() => setRoundTime(45)}>45s</bofStyles.settingsToggleButton>
-                    <bofStyles.settingsToggleButton onClick={() => setRoundTime(60)}>60s</bofStyles.settingsToggleButton>
-                </p>
-                <p>
-                    Number of Rounds:&nbsp; {numberofRounds}
-                    <br></br>
-                    <bofStyles.settingsToggleButton onClick={() => setNumberOfRounds(3)}>3</bofStyles.settingsToggleButton>
-                    <bofStyles.settingsToggleButton onClick={() => setNumberOfRounds(4)}>4</bofStyles.settingsToggleButton>
-                    <bofStyles.settingsToggleButton onClick={() => setNumberOfRounds(5)}>5</bofStyles.settingsToggleButton>
+        <div className="bof-panel">
+            <div className="bof-panel__header">
+                <div>
+                    <p className="bof-kicker">Bowl of Fish</p>
+                    <h2>Game settings</h2>
+                </div>
+            </div>
 
-                </p>
-                <p>
-                    Words:&nbsp;
-                    <input value={input} type="text" placeholder="Enter word..." onChange={handleWordChange} onKeyDown={handleKeyDown} />
-                </p>
-                <p>
-                    <bofStyles.addWordButton id="AddWordButton" onClick={() => updateWords()}>Add Word</bofStyles.addWordButton>&nbsp;
-                    Word count:&nbsp; {wordCount}
-                    <br />
-                    {wordCount === maxNumberOfWords &&
-                        <div style={{ fontSize: "12px", color: "red" }}>You've hit the word limit! Start the game.</div>
-                    }
-                </p>
-                <p>
-                    <GameStartButton
-                        onStartGameClick={onStartGameClick}
-                        settings={{
-                            Team1: team1 ? team1 : "Knot Again",
-                            Team2: team2 ? team2 : "Reel Naturals",
-                            time: roundTime,
-                            rounds: numberofRounds,
-                            words: listOfWords
-                        }}
-                    ></GameStartButton>
-                </p>
-            </bofStyles.mainStyledDiv >
-        </div >
+            <div className="bof-field">
+                <label htmlFor="Team1">Team 1</label>
+                <input
+                    className="bof-input"
+                    value={team1}
+                    type="text"
+                    id="Team1"
+                    maxLength="20"
+                    onChange={(e) => setTeam1(e.target.value)}
+                    placeholder="Knot Again…"
+                />
+            </div>
+            <div className="bof-field">
+                <label htmlFor="Team2">Team 2</label>
+                <input
+                    className="bof-input"
+                    value={team2}
+                    type="text"
+                    id="Team2"
+                    maxLength="20"
+                    onChange={(e) => setTeam2(e.target.value)}
+                    placeholder="Reel Naturals…"
+                />
+            </div>
 
+            <div className="bof-field">
+                <label>Turn time</label>
+                <div className="bof-toggle-row">
+                    {[30, 45, 60].map((t) => (
+                        <button
+                            key={t}
+                            className={`bof-toggle ${roundTime === t ? "is-active" : ""}`}
+                            onClick={() => setRoundTime(t)}
+                        >
+                            {t}s
+                        </button>
+                    ))}
+                </div>
+            </div>
 
-    )
-}
+            <div className="bof-field">
+                <label>Rounds</label>
+                <div className="bof-toggle-row">
+                    {[3, 4, 5].map((r) => (
+                        <button
+                            key={r}
+                            className={`bof-toggle ${numberofRounds === r ? "is-active" : ""}`}
+                            onClick={() => setNumberOfRounds(r)}
+                        >
+                            {r}
+                        </button>
+                    ))}
+                </div>
+            </div>
 
+            <div className="bof-field">
+                <label htmlFor="WordInput">
+                    Words in the bowl
+                    <span className="bof-field__count">
+                        {wordCount} / {maxNumberOfWords}
+                    </span>
+                </label>
+                <div className="bof-word-row">
+                    <input
+                        className="bof-input"
+                        id="WordInput"
+                        value={input}
+                        type="text"
+                        placeholder="Enter a word…"
+                        onChange={(e) => setInput(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <button className="bof-btn" onClick={updateWords} disabled={!canAddWord}>
+                        Add
+                    </button>
+                </div>
+                {wordCount === maxNumberOfWords && (
+                    <p className="bof-hint">You've hit the word limit — start the game!</p>
+                )}
+                {!canStart && (
+                    <p className="bof-hint bof-hint--muted">
+                        Add {minNumberOfWords - wordCount} more word{minNumberOfWords - wordCount === 1 ? "" : "s"} to start.
+                    </p>
+                )}
+            </div>
 
+            <button
+                className="bof-btn bof-btn--solid bof-btn--full"
+                disabled={!canStart}
+                onClick={() =>
+                    onStartGameClick({
+                        Team1: team1 ? team1 : "Knot Again",
+                        Team2: team2 ? team2 : "Reel Naturals",
+                        time: roundTime,
+                        rounds: numberofRounds,
+                        words: listOfWords,
+                    })
+                }
+            >
+                Start game
+            </button>
+        </div>
+    );
+};
 
-export default Setup
+export default Setup;

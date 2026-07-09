@@ -1,52 +1,27 @@
 import React from "react";
-import * as bofStyles from "./styles"
-
-const Exitbutton = (props) => {
-    const onExitClick = props.onExitClick;
-    return (
-        <bofStyles.rulesExitButton onClick={() => onExitClick()}>
-            <b>x </b>
-        </bofStyles.rulesExitButton>
-    )
-}
 
 const WinnerStatement = ({ winner }) => {
     if (winner) {
-        return <p>The winner is <b>{winner}</b></p>
+        return (
+            <p className="bof-winner">
+                <span role="img" aria-label="trophy">🏆</span> The winner is <b>{winner}</b>
+            </p>
+        );
     }
-    else {
-        return <p>The game ended a tie</p>
-    }
-}
+    return <p className="bof-winner">The game ended in a tie</p>;
+};
 
 const Complete = ({ winner, onExitClick }) => {
     return (
-        <div style={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            width: "100vw",
-            padding: "0px 0px 40px 0px"
-        }}>
-            <bofStyles.mainStyledDiv style={{
-                backgroundColor: "#b3b3ff", fontSize: "14px", maxWidth: "600px", minWidth: "200px"
-            }}>
-                <div style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    flexWrap: "wrap"
-                }}>
-                    Game Over
-                    <Exitbutton style={{ marginLeft: "auto" }} onExitClick={onExitClick}></Exitbutton>
-                </div>
-                <br></br>
-                <WinnerStatement winner={winner}></WinnerStatement>
-            </bofStyles.mainStyledDiv >
-        </div >
-    )
-}
+        <div className="bof-panel bof-panel--center">
+            <p className="bof-kicker">Game over</p>
+            <h2>That's the bowl emptied</h2>
+            <WinnerStatement winner={winner} />
+            <button className="bof-btn bof-btn--solid bof-btn--full" onClick={() => onExitClick()}>
+                Play again
+            </button>
+        </div>
+    );
+};
 
-
-
-export default Complete
+export default Complete;

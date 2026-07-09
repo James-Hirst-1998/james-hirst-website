@@ -1,7 +1,7 @@
 import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { scroll, pointer } from "../experience/scrollState";
-import { sections, age, EMAIL, MAX_DEPTH } from "../data/cv";
+import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
 import portrait from "../assets/james.jpg";
@@ -59,17 +59,10 @@ const DepthMeter = () => {
   const fillRef = useRef(null);
   useEffect(() => {
     let raf;
-    const zoneFor = (d) => {
-      if (d < 2) return "the surface";
-      if (d < 63) return "sunlight zone";
-      if (d < 138) return "twilight zone";
-      if (d < 195) return "midnight zone";
-      return "the seabed";
-    };
     const tick = () => {
-      const depth = Math.round(scroll.progress * MAX_DEPTH);
-      if (valueRef.current) valueRef.current.textContent = `-${depth} m`;
-      if (zoneRef.current) zoneRef.current.textContent = zoneFor(depth);
+      const depth = Math.round(depthAtProgress(scroll.progress));
+      if (valueRef.current) valueRef.current.textContent = `-${depth.toLocaleString("en-GB")} m`;
+      if (zoneRef.current) zoneRef.current.textContent = zoneAtDepth(depth);
       if (fillRef.current) fillRef.current.style.height = `${scroll.progress * 100}%`;
       raf = requestAnimationFrame(tick);
     };
@@ -177,6 +170,27 @@ const SectionPanel = ({ section }) => {
             ))}
           </ul>
         )}
+        {section.education && (
+          <div className="panel__edu">
+            {section.education.map((item) => (
+              <div className="panel__edu-item" key={item.title}>
+                <div className="panel__edu-head">
+                  <h3>{item.title}</h3>
+                  <span>{item.period}</span>
+                </div>
+                <p>{item.detail}</p>
+                <div className="panel__edu-stats">
+                  {item.stats.map((stat) => (
+                    <div className="panel__edu-stat" key={stat.label}>
+                      <strong>{stat.value}</strong>
+                      <span>{stat.label}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {section.skills && (
           <div className="panel__skills">
             {section.skills.map((group) => (
@@ -220,7 +234,7 @@ const SectionPanel = ({ section }) => {
             {section.link.label} →
           </a>
         )}
-        <span className="panel__depth">{`-${section.depth} m · ${section.zone}`}</span>
+        <span className="panel__depth">{`-${section.depth.toLocaleString("en-GB")} m · ${section.zone}`}</span>
       </article>
     </section>
   );
@@ -232,11 +246,12 @@ const SeabedFooter = () => {
   return (
     <section className="dive-section seabed" id="seabed">
       <div className="panel seabed__panel" ref={ref}>
-        <p className="panel__kicker">-200 m · the seabed</p>
+        <p className="panel__kicker">-10,935 m · Challenger Deep</p>
         <h2 className="panel__title">You've hit the bottom</h2>
         <p className="panel__body">
-          Thanks for diving all the way down. If anything up there caught your eye — an
-          opportunity, a conservation project, or just to say hi — I'd love to hear from you.
+          This is Challenger Deep — the deepest point in any ocean — and you dived the whole
+          way. If anything up there caught your eye — an opportunity, a conservation project,
+          or just to say hi — I'd love to hear from you.
         </p>
         <div className="hero__buttons">
           <button className="btn btn--solid" onClick={contact}>
@@ -249,9 +264,7 @@ const SeabedFooter = () => {
         <p className="seabed__egg">
           Wait — is that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
-        <p className="seabed__credits">
-          Built from scratch with React and three.js · © {new Date().getFullYear()} James Hirst
-        </p>
+        <p className="seabed__credits">© {new Date().getFullYear()} James Hirst</p>
       </div>
     </section>
   );
@@ -274,12 +287,21 @@ const DivePage = () => {
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
+    // Recentre when the cursor leaves so the submersible stops turning.
+    const onPointerReset = () => {
+      pointer.x = 0;
+      pointer.y = 0;
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("pointermove", onPointer, { passive: true });
+    document.documentElement.addEventListener("pointerleave", onPointerReset);
+    window.addEventListener("blur", onPointerReset);
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
+      document.documentElement.removeEventListener("pointerleave", onPointerReset);
+      window.removeEventListener("blur", onPointerReset);
     };
   }, []);
 

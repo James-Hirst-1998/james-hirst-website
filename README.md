@@ -1,10 +1,11 @@
 # James Hirst — personal website
 
 An interactive CV you scroll through like a dive: the page descends from the sunlit
-surface to the seabed at -200m, with each depth revealing a chapter (Mozaic Earth,
-Microsoft, Cambridge research, the Shark Trust, education, skills). The ocean is a
-real-time 3D scene — procedural fish schools, a cruising shark, jellyfish, god rays
-and a kelp-covered seabed — rendered with three.js behind glass content panels.
+surface to Challenger Deep at -10,935m, with each depth revealing a chapter (Mozaic
+Earth, Microsoft, Cambridge research, the Shark Trust, education, skills). The ocean
+is a real-time 3D scene — procedural fish schools, a cruising shark, jellyfish, a
+distant whale, an anglerfish in the abyss and a kelp-covered seabed — rendered with
+three.js behind glass content panels, with submersible-style mouse look-around.
 
 ## Stack
 
