@@ -14,7 +14,8 @@ export const MarineSnow = () => {
     for (let i = 0; i < SNOW_COUNT; i++) {
       positions[i * 3] = THREE.MathUtils.randFloatSpread(80);
       positions[i * 3 + 1] = THREE.MathUtils.randFloat(-118, 12);
-      positions[i * 3 + 2] = THREE.MathUtils.randFloat(-28, 7);
+      // Straddles the camera (z=10) so snow surrounds you when looking around.
+      positions[i * 3 + 2] = THREE.MathUtils.randFloat(-28, 44);
       speeds[i] = THREE.MathUtils.randFloat(0.15, 0.55);
     }
     return { positions, speeds };
@@ -60,7 +61,7 @@ export const Bubbles = () => {
       const cx = columns[i % columns.length];
       const x = cx + THREE.MathUtils.randFloatSpread(2.5);
       const y = THREE.MathUtils.randFloat(-118, 10);
-      const z = THREE.MathUtils.randFloat(-18, 4);
+      const z = THREE.MathUtils.randFloat(-18, 36);
       positions[i * 3] = x;
       positions[i * 3 + 1] = y;
       positions[i * 3 + 2] = z;

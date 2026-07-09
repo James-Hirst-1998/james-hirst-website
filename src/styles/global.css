@@ -426,11 +426,21 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 2px;
+  font-family: inherit;
   font-size: 13px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: rgba(240, 252, 255, 0.85);
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  cursor: pointer;
   animation: bob 2.4s ease-in-out infinite;
+  transition: color 0.2s ease;
+}
+
+.hero__cue:hover {
+  color: #ffffff;
 }
 
 .hero__cue-arrow {

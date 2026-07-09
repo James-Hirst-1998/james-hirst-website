@@ -201,6 +201,9 @@ export const JellyfishBloom = () => (
     <Jellyfish position={[9, -68, -7]} phase={4.2} tint="#e8a2d5" />
     <Jellyfish position={[14, -76, -12]} phase={1.3} tint="#b3a2e8" />
     <Jellyfish position={[2, -80, -16]} phase={3.3} tint="#c9a2e8" />
+    {/* a few drift behind the camera for the look-around */}
+    <Jellyfish position={[-8, -70, 24]} phase={5.1} tint="#a2b8e8" />
+    <Jellyfish position={[10, -78, 28]} phase={2.7} tint="#e8a2d5" />
   </group>
 );
 
@@ -264,6 +267,188 @@ export const Anglerfish = ({ center = [0, -86, -8], radius = 6, speed = 0.16 }) 
           </mesh>
         </group>
       </group>
+    </group>
+  );
+};
+
+// A sea turtle cruising the sunlit shallows. Its orbit straddles the camera,
+// so it drifts past whichever way you happen to be looking.
+export const Turtle = ({ center = [0, -10, 4], radius = 13, speed = 0.09 }) => {
+  const group = useRef();
+  const flippers = useRef();
+  const target = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const a = t * speed;
+    const x = center[0] + Math.cos(a) * radius;
+    const z = center[2] + Math.sin(a) * radius * 0.8;
+    const y = center[1] + Math.sin(t * 0.5) * 0.9;
+    group.current.position.set(x, y, z);
+    const ahead = a + 0.1;
+    target.set(
+      center[0] + Math.cos(ahead) * radius,
+      y + Math.sin(t * 0.5 + 0.25) * 0.9,
+      center[2] + Math.sin(ahead) * radius * 0.8
+    );
+    group.current.lookAt(target);
+    if (flippers.current) flippers.current.rotation.z = Math.sin(t * 1.6) * 0.35;
+  });
+
+  return (
+    <group ref={group} scale={1.15}>
+      {/* shell */}
+      <mesh scale={[0.72, 0.4, 0.95]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#4f7a58" flatShading roughness={0.8} />
+      </mesh>
+      <mesh position={[0, -0.18, 0]} scale={[0.66, 0.22, 0.88]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#c9c08a" flatShading roughness={0.85} />
+      </mesh>
+      {/* head */}
+      <mesh position={[0, -0.02, 0.98]} scale={[0.2, 0.18, 0.3]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#7ba374" flatShading roughness={0.8} />
+      </mesh>
+      {/* front flippers flap together; rear ones trail */}
+      <group ref={flippers}>
+        <mesh position={[0.78, -0.08, 0.42]} rotation-z={-0.5} rotation-y={0.5} scale={[0.55, 0.08, 0.24]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          <meshStandardMaterial color="#7ba374" flatShading roughness={0.8} />
+        </mesh>
+        <mesh position={[-0.78, -0.08, 0.42]} rotation-z={0.5} rotation-y={-0.5} scale={[0.55, 0.08, 0.24]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          <meshStandardMaterial color="#7ba374" flatShading roughness={0.8} />
+        </mesh>
+      </group>
+      <mesh position={[0.42, -0.08, -0.75]} rotation-y={-0.6} scale={[0.34, 0.07, 0.18]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#7ba374" flatShading roughness={0.8} />
+      </mesh>
+      <mesh position={[-0.42, -0.08, -0.75]} rotation-y={0.6} scale={[0.34, 0.07, 0.18]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#7ba374" flatShading roughness={0.8} />
+      </mesh>
+    </group>
+  );
+};
+
+// A manta ray sweeping wide, slow circles around the twilight zone,
+// wings beating gently. Orbit surrounds the camera like the turtle's.
+export const MantaRay = ({ center = [0, -57, 5], radius = 15, speed = 0.11 }) => {
+  const group = useRef();
+  const wingL = useRef();
+  const wingR = useRef();
+  const target = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    const a = t * speed;
+    const x = center[0] + Math.cos(a) * radius;
+    const z = center[2] + Math.sin(a) * radius * 0.85;
+    const y = center[1] + Math.sin(t * 0.35) * 1.6;
+    group.current.position.set(x, y, z);
+    const ahead = a + 0.09;
+    target.set(
+      center[0] + Math.cos(ahead) * radius,
+      y + Math.sin(t * 0.35 + 0.2) * 1.6,
+      center[2] + Math.sin(ahead) * radius * 0.85
+    );
+    group.current.lookAt(target);
+    const flap = Math.sin(t * 1.3);
+    if (wingL.current) wingL.current.rotation.z = flap * 0.45;
+    if (wingR.current) wingR.current.rotation.z = -flap * 0.45;
+  });
+
+  return (
+    <group ref={group} scale={1.5}>
+      {/* body */}
+      <mesh scale={[0.42, 0.16, 0.9]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#33505e" flatShading roughness={0.7} />
+      </mesh>
+      <mesh position={[0, -0.06, 0.2]} scale={[0.36, 0.1, 0.7]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#9fb6bd" flatShading roughness={0.75} />
+      </mesh>
+      {/* wings hinge at the body */}
+      <group ref={wingL}>
+        <mesh position={[0.85, 0, -0.05]} rotation-y={-0.25} scale={[0.85, 0.05, 0.55]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          <meshStandardMaterial color="#33505e" flatShading roughness={0.7} />
+        </mesh>
+      </group>
+      <group ref={wingR}>
+        <mesh position={[-0.85, 0, -0.05]} rotation-y={0.25} scale={[0.85, 0.05, 0.55]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          <meshStandardMaterial color="#33505e" flatShading roughness={0.7} />
+        </mesh>
+      </group>
+      {/* tail */}
+      <mesh position={[0, 0, -1.25]} rotation-x={Math.PI / 2}>
+        <cylinderGeometry args={[0.015, 0.05, 0.9, 4]} />
+        <meshStandardMaterial color="#33505e" roughness={0.8} />
+      </mesh>
+    </group>
+  );
+};
+
+// An octopus perched on the seabed, tentacles swaying in the current.
+export const Octopus = ({ position = [7, 0, 15] }) => {
+  const body = useRef();
+  const tentacles = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, i) => ({
+        angle: (i / 8) * Math.PI * 2,
+        phase: i * 0.9,
+        ref: React.createRef(),
+      })),
+    []
+  );
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (body.current) {
+      const breathe = 1 + Math.sin(t * 1.1) * 0.05;
+      body.current.scale.set(0.55 * breathe, 0.62 * breathe, 0.55 * breathe);
+    }
+    tentacles.forEach((tc) => {
+      if (tc.ref.current) {
+        tc.ref.current.rotation.x = 0.85 + Math.sin(t * 0.8 + tc.phase) * 0.14;
+      }
+    });
+  });
+
+  return (
+    <group position={position}>
+      <mesh ref={body} position={[0, 0.55, 0]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#8a4250" emissive="#2b0f16" emissiveIntensity={0.4} flatShading roughness={0.7} />
+      </mesh>
+      {/* eyes catch the headlamp */}
+      <mesh position={[0.2, 0.72, 0.48]} scale={0.08}>
+        <sphereGeometry args={[1, 6, 5]} />
+        <meshStandardMaterial color="#f2e9c9" emissive="#f2e9c9" emissiveIntensity={0.5} />
+      </mesh>
+      <mesh position={[-0.2, 0.72, 0.48]} scale={0.08}>
+        <sphereGeometry args={[1, 6, 5]} />
+        <meshStandardMaterial color="#f2e9c9" emissive="#f2e9c9" emissiveIntensity={0.5} />
+      </mesh>
+      {tentacles.map((tc, i) => (
+        <group
+          key={i}
+          position={[Math.cos(tc.angle) * 0.34, 0.28, Math.sin(tc.angle) * 0.34]}
+          rotation-y={-tc.angle}
+        >
+          <group ref={tc.ref} rotation-x={0.85}>
+            <mesh position={[0, -0.5, 0]}>
+              <cylinderGeometry args={[0.035, 0.09, 1.1, 5]} />
+              <meshStandardMaterial color="#7a3944" flatShading roughness={0.75} />
+            </mesh>
+          </group>
+        </group>
+      ))}
     </group>
   );
 };

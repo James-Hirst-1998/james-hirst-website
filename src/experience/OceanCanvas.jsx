@@ -1,11 +1,20 @@
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { scroll, pointer, depthToWorldY } from "./scrollState";
+import { scroll, pointer, deviceLook, depthToWorldY } from "./scrollState";
 import { depthColor } from "./palette";
 import { WaterSurface, GodRays } from "./Surface";
 import { MarineSnow, Bubbles } from "./Ambience";
-import { FishSchool, Shark, JellyfishBloom, Anglerfish, Whale } from "./Creatures";
+import {
+  FishSchool,
+  Shark,
+  JellyfishBloom,
+  Anglerfish,
+  Whale,
+  Turtle,
+  MantaRay,
+  Octopus,
+} from "./Creatures";
 import { Seabed } from "./Seabed";
 
 // Drives the camera down the water column with scroll. Look-around works
@@ -26,15 +35,22 @@ const CameraRig = () => {
     camera.position.y += (goalY - camera.position.y) * ease;
     camera.position.x += (0 - camera.position.x) * ease * 0.6;
 
-    const overshoot = Math.abs(pointer.x) - YAW_DEADZONE;
-    const drive =
-      overshoot > 0
-        ? Math.sign(pointer.x) * (overshoot / (1 - YAW_DEADZONE)) ** 2
-        : 0;
-    r.yawVel += (drive * YAW_MAX_RATE - r.yawVel) * ease;
-    r.yaw -= r.yawVel * delta;
-    r.pitch += (pointer.y * -0.3 - r.pitch) * ease * 0.7;
-    camera.rotation.set(r.pitch, r.yaw, r.yawVel * 0.16, "YXZ");
+    if (deviceLook.active) {
+      // Phone: the gyroscope gives absolute yaw/pitch targets — ease onto them.
+      r.yaw += (deviceLook.yaw - r.yaw) * ease;
+      r.pitch += (deviceLook.pitch - r.pitch) * ease;
+      camera.rotation.set(r.pitch, r.yaw, 0, "YXZ");
+    } else {
+      const overshoot = Math.abs(pointer.x) - YAW_DEADZONE;
+      const drive =
+        overshoot > 0
+          ? Math.sign(pointer.x) * (overshoot / (1 - YAW_DEADZONE)) ** 2
+          : 0;
+      r.yawVel += (drive * YAW_MAX_RATE - r.yawVel) * ease;
+      r.yaw -= r.yawVel * delta;
+      r.pitch += (pointer.y * -0.3 - r.pitch) * ease * 0.7;
+      camera.rotation.set(r.pitch, r.yaw, r.yawVel * 0.16, "YXZ");
+    }
   });
   return null;
 };
@@ -86,12 +102,17 @@ const Scene = () => (
     <MarineSnow />
     <Bubbles />
     <FishSchool center={[-4, -13, -10]} count={46} radius={9} speed={0.32} color="#c7d9e4" />
+    <Turtle center={[0, -10, 4]} radius={13} speed={0.09} />
     <FishSchool center={[8, -26, -8]} count={28} radius={6} speed={0.45} color="#e8b46a" scale={0.7} direction={-1} />
+    <FishSchool center={[-2, -22, 26]} count={24} radius={6} speed={0.36} color="#b9d3a8" scale={0.8} />
     <FishSchool center={[-6, -38, -12]} count={36} radius={8} speed={0.28} color="#7fa8d9" scale={0.9} />
+    <FishSchool center={[7, -42, 24]} count={18} radius={5} speed={0.4} color="#d9c17f" scale={0.7} direction={-1} />
     <Shark center={[0, -50, -10]} radius={15} speed={0.13} />
+    <MantaRay center={[0, -57, 5]} radius={15} speed={0.11} />
     <Whale />
     <JellyfishBloom />
     <FishSchool center={[6, -75, -9]} count={22} radius={5.5} speed={0.3} color="#6f8898" scale={0.75} />
+    <FishSchool center={[-4, -80, 25]} count={14} radius={4.5} speed={0.26} color="#5f7484" scale={0.6} direction={-1} />
     <Anglerfish center={[-4, -86, -8]} radius={6.5} speed={0.16} />
     <Seabed />
   </>

@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { scroll, pointer } from "../experience/scrollState";
+import { scroll, pointer, deviceLook } from "../experience/scrollState";
 import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
@@ -138,10 +138,13 @@ const Hero = () => {
           </button>
         </div>
       </div>
-      <div className="hero__cue">
+      <button
+        className="hero__cue"
+        onClick={() => document.getElementById("mozaic")?.scrollIntoView({ behavior: "smooth" })}
+      >
         <span>Dive in</span>
         <span className="hero__cue-arrow">⌄</span>
-      </div>
+      </button>
     </section>
   );
 };
@@ -304,6 +307,59 @@ const DivePage = () => {
       window.removeEventListener("blur", onPointerReset);
     };
   }, []);
+
+  // Phone look-around: point the phone and the view follows, while normal
+  // touch scrolling still drives the descent.
+  useEffect(() => {
+    if (!show3D || !window.matchMedia("(pointer: coarse)").matches) return undefined;
+
+    let lastAlpha = null;
+    let baseBeta = null;
+    const onOrientation = (e) => {
+      if (e.alpha == null || e.beta == null) return;
+      if (lastAlpha === null) {
+        lastAlpha = e.alpha;
+        baseBeta = e.beta;
+        deviceLook.active = true;
+      }
+      // Unwrap alpha so turning right around keeps rotating instead of snapping.
+      let step = e.alpha - lastAlpha;
+      if (step > 180) step -= 360;
+      if (step < -180) step += 360;
+      lastAlpha = e.alpha;
+      deviceLook.yaw += (step * Math.PI) / 180;
+      const pitch = ((e.beta - baseBeta) * Math.PI) / 180;
+      deviceLook.pitch = Math.min(Math.max(pitch, -0.7), 0.7);
+    };
+
+    const listen = () => window.addEventListener("deviceorientation", onOrientation);
+    let cleanupGesture = () => {};
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      // iOS: sensor access needs a permission prompt from a user gesture,
+      // so ask on the first tap.
+      const request = () => {
+        DeviceOrientationEvent.requestPermission()
+          .then((state) => {
+            if (state === "granted") listen();
+          })
+          .catch(() => {});
+        window.removeEventListener("touchend", request);
+      };
+      window.addEventListener("touchend", request);
+      cleanupGesture = () => window.removeEventListener("touchend", request);
+    } else {
+      listen();
+    }
+
+    return () => {
+      cleanupGesture();
+      window.removeEventListener("deviceorientation", onOrientation);
+      deviceLook.active = false;
+    };
+  }, [show3D]);
 
   const contentSections = sections.filter((s) => s.title);
 

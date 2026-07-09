@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { Octopus } from "./Creatures";
 
 const FLOOR_Y = -107;
 
@@ -101,6 +102,9 @@ export const Seabed = () => {
       <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
       <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
       <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
+      {/* behind the camera — reward for a look back at the bottom */}
+      <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
+      <Octopus position={[7, FLOOR_Y - 1.1, 15]} />
       <Fishbowl />
     </group>
   );
