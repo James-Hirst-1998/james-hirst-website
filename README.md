@@ -1,23 +1,38 @@
-# Getting Started with Create React App
+# James Hirst — personal website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+An interactive CV you scroll through like a dive: the page descends from the sunlit
+surface to the seabed at -200m, with each depth revealing a chapter (Mozaic Earth,
+Microsoft, Cambridge research, the Shark Trust, education, skills). The ocean is a
+real-time 3D scene — procedural fish schools, a cruising shark, jellyfish, god rays
+and a kelp-covered seabed — rendered with three.js behind glass content panels.
+
+## Stack
+
+- [Vite](https://vitejs.dev/) + React 18
+- [three.js](https://threejs.org/) via [@react-three/fiber](https://docs.pmnd.rs/react-three-fiber)
+- All 3D is procedural (no modelled assets); the scene is driven by scroll progress
+
+## Develop
+
+```bash
+npm install
+npm run dev      # dev server on http://localhost:3000
+npm run build    # production build to dist/
+npm run preview  # serve the production build locally
+```
+
+## Structure
+
+- `src/data/cv.js` — all CV content lives here; edit this to update the site
+- `src/experience/` — the 3D ocean (camera rig, creatures, seabed, ambience)
+- `src/pages/Dive.jsx` — page layout, glass panels, depth meter, section nav
+- `src/pages/BowlOfFish.jsx` — the Bowl of Fish game (find it on the seabed)
+
+Users with `prefers-reduced-motion` or no WebGL get a static gradient fallback;
+all content stays fully readable without the 3D scene.
 
 ## Deployment
 
-This project is hosted via [Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/overview).
-
-Deployment is triggered automatically whenever changes are merged into the `main` branch.
-
-Azure picks up the latest commit, builds the project, and serves the updated version at the configured site URL. No manual steps are required to deploy.
-
-## `npm start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-## Icon Animations
-
-This project uses [Lordicon](https://lordicon.com/) for animated icons. Browse their library to add more icons or change existing ones.
+Hosted on [Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/overview).
+Merging to `main` triggers the workflow in `.github/workflows/`, which builds the
+site and serves `dist/`. No manual steps required.

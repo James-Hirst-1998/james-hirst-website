@@ -1,0 +1,310 @@
+import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import { Link } from "react-router-dom";
+import { scroll, pointer } from "../experience/scrollState";
+import { sections, age, EMAIL, MAX_DEPTH } from "../data/cv";
+
+const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
+import portrait from "../assets/james.jpg";
+
+const supportsWebGL = () => {
+  try {
+    const canvas = document.createElement("canvas");
+    return !!(canvas.getContext("webgl2") || canvas.getContext("webgl"));
+  } catch {
+    return false;
+  }
+};
+
+// Adds .is-visible when the element scrolls into view (drives CSS reveals).
+const useReveal = () => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add("is-visible");
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+  return ref;
+};
+
+const useContactButton = () => {
+  const [copied, setCopied] = useState(false);
+  const contact = () => {
+    window.location.href = `mailto:${EMAIL}?subject=Website Contact`;
+    setTimeout(() => {
+      navigator.clipboard
+        ?.writeText(EMAIL)
+        .then(() => {
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        })
+        .catch(() => {});
+    }, 100);
+  };
+  return [copied, contact];
+};
+
+const DepthMeter = () => {
+  const valueRef = useRef(null);
+  const zoneRef = useRef(null);
+  const fillRef = useRef(null);
+  useEffect(() => {
+    let raf;
+    const zoneFor = (d) => {
+      if (d < 2) return "the surface";
+      if (d < 63) return "sunlight zone";
+      if (d < 138) return "twilight zone";
+      if (d < 195) return "midnight zone";
+      return "the seabed";
+    };
+    const tick = () => {
+      const depth = Math.round(scroll.progress * MAX_DEPTH);
+      if (valueRef.current) valueRef.current.textContent = `-${depth} m`;
+      if (zoneRef.current) zoneRef.current.textContent = zoneFor(depth);
+      if (fillRef.current) fillRef.current.style.height = `${scroll.progress * 100}%`;
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  return (
+    <div className="depth-meter" aria-hidden="true">
+      <span className="depth-meter__value" ref={valueRef}>
+        -0 m
+      </span>
+      <div className="depth-meter__track">
+        <div className="depth-meter__fill" ref={fillRef} />
+      </div>
+      <span className="depth-meter__zone" ref={zoneRef}>
+        the surface
+      </span>
+    </div>
+  );
+};
+
+const NavDots = () => {
+  const [active, setActive] = useState("surface");
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActive(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" }
+    );
+    sections.forEach((s) => {
+      const el = document.getElementById(s.id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <nav className="nav-dots" aria-label="Sections">
+      {sections.map((s) => (
+        <button
+          key={s.id}
+          className={`nav-dots__dot ${active === s.id ? "is-active" : ""}`}
+          aria-label={s.nav}
+          onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" })}
+        >
+          <span className="nav-dots__label">{s.nav}</span>
+        </button>
+      ))}
+    </nav>
+  );
+};
+
+const Hero = () => {
+  const [copied, contact] = useContactButton();
+  return (
+    <section className="dive-section hero" id="surface">
+      <div className="hero__inner">
+        <img className="hero__portrait" src={portrait} alt="James Hirst" />
+        <p className="hero__hi">Hi, I'm</p>
+        <h1 className="hero__name">James Hirst</h1>
+        <p className="hero__tagline">
+          A {age()}-year-old software engineer at Mozaic Earth, with a Masters in Mathematics from
+          Cambridge and a soft spot for everything that lives underwater.
+        </p>
+        <div className="hero__buttons">
+          <a className="btn btn--solid" href="/CV.pdf" target="_blank" rel="noreferrer">
+            View my CV
+          </a>
+          <button className="btn" onClick={contact}>
+            {copied ? "Email copied!" : "Contact me"}
+          </button>
+        </div>
+      </div>
+      <div className="hero__cue">
+        <span>Dive in</span>
+        <span className="hero__cue-arrow">⌄</span>
+      </div>
+    </section>
+  );
+};
+
+const SectionPanel = ({ section }) => {
+  const ref = useReveal();
+  return (
+    <section className="dive-section" id={section.id}>
+      <article className="panel" ref={ref}>
+        <header className="panel__header">
+          <div>
+            <p className="panel__kicker">{section.kicker}</p>
+            <h2 className="panel__title">{section.title}</h2>
+          </div>
+          {section.logo && <img className="panel__logo" src={section.logo} alt="" />}
+        </header>
+        {section.body?.map((text, i) => (
+          <p className="panel__body" key={i}>
+            {text}
+          </p>
+        ))}
+        {section.bullets && (
+          <ul className="panel__bullets">
+            {section.bullets.map((b, i) => (
+              <li key={i}>{b}</li>
+            ))}
+          </ul>
+        )}
+        {section.skills && (
+          <div className="panel__skills">
+            {section.skills.map((group) => (
+              <div className="panel__skill-group" key={group.group}>
+                <h3>{group.group}</h3>
+                <ul>
+                  {group.items.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+        {section.cards && (
+          <div className="panel__cards">
+            {section.cards.map((card) => (
+              <div className="panel__card" key={card.title}>
+                <h3>{card.title}</h3>
+                <p>{card.text}</p>
+                {card.href && (
+                  <a href={card.href} target="_blank" rel="noreferrer">
+                    {card.linkLabel} →
+                  </a>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+        {section.highlight && (
+          <div className="panel__highlight">
+            <h3>{section.highlight.title}</h3>
+            <p>{section.highlight.text}</p>
+            <a href={section.highlight.href} target="_blank" rel="noreferrer">
+              Read the paper →
+            </a>
+          </div>
+        )}
+        {section.link && (
+          <a className="panel__link" href={section.link.href} target="_blank" rel="noreferrer">
+            {section.link.label} →
+          </a>
+        )}
+        <span className="panel__depth">{`-${section.depth} m · ${section.zone}`}</span>
+      </article>
+    </section>
+  );
+};
+
+const SeabedFooter = () => {
+  const [copied, contact] = useContactButton();
+  const ref = useReveal();
+  return (
+    <section className="dive-section seabed" id="seabed">
+      <div className="panel seabed__panel" ref={ref}>
+        <p className="panel__kicker">-200 m · the seabed</p>
+        <h2 className="panel__title">You've hit the bottom</h2>
+        <p className="panel__body">
+          Thanks for diving all the way down. If anything up there caught your eye — an
+          opportunity, a conservation project, or just to say hi — I'd love to hear from you.
+        </p>
+        <div className="hero__buttons">
+          <button className="btn btn--solid" onClick={contact}>
+            {copied ? "Email copied!" : "Get in touch"}
+          </button>
+          <a className="btn" href="/CV.pdf" target="_blank" rel="noreferrer">
+            Download CV
+          </a>
+        </div>
+        <p className="seabed__egg">
+          Wait — is that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
+        </p>
+        <p className="seabed__credits">
+          Built from scratch with React and three.js · © {new Date().getFullYear()} James Hirst
+        </p>
+      </div>
+    </section>
+  );
+};
+
+const DivePage = () => {
+  const show3D = useMemo(
+    () =>
+      supportsWebGL() &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    []
+  );
+
+  useEffect(() => {
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      scroll.progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+    };
+    const onPointer = (e) => {
+      pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+      pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("pointermove", onPointer, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("pointermove", onPointer);
+    };
+  }, []);
+
+  const contentSections = sections.filter((s) => s.title);
+
+  return (
+    <div className="dive-page">
+      {show3D ? (
+        <Suspense fallback={<div className="ocean-fallback" aria-hidden="true" />}>
+          <OceanCanvas />
+        </Suspense>
+      ) : (
+        <div className="ocean-fallback" aria-hidden="true" />
+      )}
+      <DepthMeter />
+      <NavDots />
+      <main>
+        <Hero />
+        {contentSections.map((s) => (
+          <SectionPanel key={s.id} section={s} />
+        ))}
+        <SeabedFooter />
+      </main>
+    </div>
+  );
+};
+
+export default DivePage;
