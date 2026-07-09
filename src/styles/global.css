@@ -448,6 +448,44 @@ a {
   line-height: 0.6;
 }
 
+.look-hint {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  z-index: 6;
+  padding: 9px 18px;
+  font-size: 12px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(240, 252, 255, 0.92);
+  background: rgba(8, 30, 44, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  white-space: nowrap;
+  animation: lookHintIn 0.5s ease both, lookHintOut 0.6s ease 5.2s forwards;
+}
+
+@keyframes lookHintIn {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+}
+
+@keyframes lookHintOut {
+  to {
+    opacity: 0;
+  }
+}
+
 @keyframes bob {
   0%,
   100% {
