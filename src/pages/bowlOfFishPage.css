@@ -1,35 +1,483 @@
-/* BowlOfFishPage.css */
+/* Bowl of Fish — styled to match the dive's glass-panel aesthetic. */
 
-.bof-page-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.bof-page {
   min-height: 100vh;
   position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 120% 60% at 50% -10%, rgba(99, 191, 228, 0.22), transparent 60%),
+    linear-gradient(#0b3a5c 0%, #082c50 34%, #041a30 68%, #020f1e 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.bof-page-container .home-button {
+.bof-header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  padding: 22px 26px;
   position: relative;
-  top: 10px;
-  padding: 0.8rem 1.5rem;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  color: #e6e6e6;
-  cursor: pointer;
-  font-size: 1.1em;
-  transition: all 0.3s ease;
-  text-decoration: none;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  margin-bottom: 20px;
+  z-index: 2;
 }
 
-.bof-page-container .home-button:hover {
-  background: rgba(74, 158, 255, 0.2);
+.bof-home {
+  font-size: 13.5px;
+  padding: 10px 20px;
+}
+
+.bof-main {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2vh 20px 8vh;
+  position: relative;
+  z-index: 2;
+}
+
+/* ---------- Rising bubbles backdrop ---------- */
+
+.bof-bubbles {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.bof-bubbles span {
+  position: absolute;
+  bottom: -30px;
+  border-radius: 50%;
+  border: 1px solid rgba(150, 220, 255, 0.35);
+  background: radial-gradient(circle at 32% 30%, rgba(220, 245, 255, 0.35), rgba(150, 220, 255, 0.05));
+  animation: bof-rise linear infinite;
+}
+
+@keyframes bof-rise {
+  0% {
+    transform: translateY(0) translateX(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-110vh) translateX(24px);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bof-bubbles {
+    display: none;
+  }
+}
+
+/* ---------- Glass panel ---------- */
+
+.bof-panel {
+  width: min(440px, 100%);
+  background: rgba(4, 22, 42, 0.58);
+  border: 1px solid rgba(150, 220, 255, 0.16);
+  border-radius: 22px;
+  padding: 32px 34px 34px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 24px 60px rgba(0, 8, 20, 0.35);
+  color: #c8dfec;
+  font-size: 14.5px;
+  line-height: 1.65;
+}
+
+.bof-panel--wide {
+  width: min(680px, 100%);
+}
+
+.bof-panel--center {
+  text-align: center;
+}
+
+.bof-panel h2 {
+  font-size: 26px;
+  color: #eaf6fb;
+  line-height: 1.15;
+}
+
+.bof-panel h3 {
+  font-size: 17px;
+  color: #aeeaff;
+  margin: 18px 0 8px;
+}
+
+.bof-panel p {
+  margin-bottom: 12px;
+}
+
+.bof-panel__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.bof-kicker {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #7fe3ff;
+  margin-bottom: 6px;
+}
+
+.bof-rules-list {
+  margin: 0 0 12px 22px;
+}
+
+.bof-rules-list li {
+  padding: 3px 0;
+}
+
+.bof-rules-list b,
+.bof-panel b {
+  color: #eaf6fb;
+}
+
+/* ---------- Buttons ---------- */
+
+.bof-btn {
+  font-family: "Sora", sans-serif;
+  font-size: 14.5px;
+  font-weight: 600;
+  padding: 12px 22px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+.bof-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.18);
   transform: translateY(-2px);
 }
 
-.bof-page-container .home-button:active {
-  transform: translateY(1px);
+.bof-btn:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.bof-btn--solid {
+  background: rgba(255, 255, 255, 0.92);
+  color: #0a3355;
+  border-color: transparent;
+}
+
+.bof-btn--solid:hover:not(:disabled) {
+  background: #ffffff;
+}
+
+.bof-btn--full {
+  width: 100%;
+  margin-top: 16px;
+}
+
+.bof-btn--correct {
+  background: rgba(74, 222, 160, 0.16);
+  border-color: rgba(74, 222, 160, 0.65);
+  color: #8ef0c0;
+}
+
+.bof-btn--correct:hover:not(:disabled) {
+  background: rgba(74, 222, 160, 0.3);
+}
+
+.bof-btn--skip {
+  background: rgba(255, 196, 107, 0.14);
+  border-color: rgba(255, 196, 107, 0.6);
+  color: #ffd9a8;
+}
+
+.bof-btn--skip:hover:not(:disabled) {
+  background: rgba(255, 196, 107, 0.28);
+}
+
+.bof-close {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(150, 220, 255, 0.3);
+  background: rgba(127, 227, 255, 0.08);
+  color: #aeeaff;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.bof-close:hover {
+  background: rgba(127, 227, 255, 0.2);
+}
+
+.bof-quit {
+  border: none;
+  background: none;
+  color: rgba(210, 240, 255, 0.6);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 6px 0;
+}
+
+.bof-quit:hover {
+  color: #ffb3ab;
+}
+
+/* ---------- Setup form ---------- */
+
+.bof-field {
+  margin-bottom: 16px;
+}
+
+.bof-field label {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(210, 240, 255, 0.7);
+  margin-bottom: 7px;
+}
+
+.bof-field__count {
+  color: #7fe3ff;
+  letter-spacing: 0.05em;
+}
+
+.bof-input {
+  width: 100%;
+  font-family: "Inter", sans-serif;
+  font-size: 15px;
+  color: #eaf6fb;
+  background: rgba(4, 22, 42, 0.5);
+  border: 1px solid rgba(150, 220, 255, 0.2);
+  border-radius: 12px;
+  padding: 11px 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.bof-input::placeholder {
+  color: rgba(200, 223, 236, 0.4);
+}
+
+.bof-input:focus {
+  border-color: rgba(127, 227, 255, 0.6);
+}
+
+.bof-toggle-row {
+  display: flex;
+  gap: 8px;
+}
+
+.bof-toggle {
+  flex: 1;
+  font-family: "Sora", sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 9px 0;
+  border-radius: 10px;
+  border: 1px solid rgba(150, 220, 255, 0.2);
+  background: rgba(4, 22, 42, 0.4);
+  color: rgba(210, 240, 255, 0.7);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bof-toggle:hover {
+  border-color: rgba(127, 227, 255, 0.5);
+}
+
+.bof-toggle.is-active {
+  background: rgba(127, 227, 255, 0.16);
+  border-color: #7fe3ff;
+  color: #eaf6fb;
+}
+
+.bof-word-row {
+  display: flex;
+  gap: 8px;
+}
+
+.bof-word-row .bof-btn {
+  flex-shrink: 0;
+  padding: 10px 20px;
+}
+
+.bof-hint {
+  font-size: 12.5px;
+  color: #ffd9a8;
+  margin-top: 8px;
+}
+
+.bof-hint--muted {
+  color: rgba(200, 223, 236, 0.55);
+}
+
+/* ---------- In-game ---------- */
+
+.bof-scoreboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.bof-team {
+  border: 1px solid rgba(150, 220, 255, 0.14);
+  background: rgba(4, 22, 42, 0.4);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.bof-team.is-up {
+  border-color: rgba(127, 227, 255, 0.55);
+  background: rgba(127, 227, 255, 0.1);
+}
+
+.bof-team__name {
+  font-size: 12.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(210, 240, 255, 0.7);
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.bof-team__score {
+  font-family: "Sora", sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  color: #eaf6fb;
+  font-variant-numeric: tabular-nums;
+}
+
+.bof-turn {
+  text-align: center;
+  font-size: 13.5px;
+  margin: 12px 0 4px;
+  color: rgba(210, 240, 255, 0.75);
+}
+
+/* ---------- Timer ---------- */
+
+.bof-timer {
+  text-align: center;
+  padding: 10px 0 4px;
+}
+
+.bof-timer__value {
+  font-family: "Sora", sans-serif;
+  font-size: 56px;
+  font-weight: 700;
+  color: #eaf6fb;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  transition: color 0.3s ease;
+}
+
+.bof-timer__unit {
+  font-family: "Sora", sans-serif;
+  font-size: 20px;
+  color: rgba(210, 240, 255, 0.6);
+  margin-left: 3px;
+}
+
+.bof-timer.is-urgent .bof-timer__value {
+  color: #ffb3ab;
+}
+
+.bof-timer__track {
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(150, 220, 255, 0.14);
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.bof-timer__fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #2a7fa8, #7fe3ff);
+  transition: width 0.95s linear;
+}
+
+.bof-timer.is-urgent .bof-timer__fill {
+  background: linear-gradient(90deg, #a8452a, #ffb3ab);
+}
+
+/* ---------- Word card ---------- */
+
+.bof-word {
+  margin-top: 12px;
+  border: 1px solid rgba(127, 227, 255, 0.22);
+  background: rgba(127, 227, 255, 0.07);
+  border-radius: 16px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.bof-word__label {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(210, 240, 255, 0.6);
+}
+
+.bof-word__value {
+  font-family: "Sora", sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #eaf6fb;
+  word-break: break-word;
+}
+
+.bof-word__left {
+  font-size: 12.5px;
+  color: rgba(200, 223, 236, 0.6);
+}
+
+.bof-action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+/* ---------- Complete ---------- */
+
+.bof-winner {
+  font-size: 17px;
+  margin: 14px 0 6px;
+}
+
+@media (max-width: 480px) {
+  .bof-panel {
+    padding: 26px 22px 28px;
+  }
 }
