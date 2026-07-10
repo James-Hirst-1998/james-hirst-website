@@ -3013,51 +3013,57 @@ export const BaskingSharkModel = () => {
         <sphereGeometry args={[1, 10, 8]} />
         <meshStandardMaterial color="#b0aa9c" flatShading roughness={0.7} />
       </mesh>
-      {/* head like a normal shark's, with the gape cut into it: cheeks give
-          the head its mass, the conical snout carries the body line out over
-          the mouth, and the mouth itself is a jaw-rim hoop sunk into the
-          head's front with a dark void behind it — the jaw dropped mid-gulp */}
-      <mesh position={[0, 0, 1.15]} scale={[0.42, 0.42, 0.7]}>
+      {/* the head mid-gulp is two bulbs: the rounded snout above, the dropped
+          lower jaw below, the dark gape stretched between them, and a strut
+          either side where the jaw hinges join at the mouth corners */}
+      <mesh position={[0, 0.16, 1.45]} scale={[0.34, 0.26, 0.62]}>
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
       </mesh>
-      {/* conical snout overhanging the gape */}
-      <mesh position={[0, 0.18, 1.7]} scale={[0.24, 0.2, 0.55]}>
+      <mesh position={[0, -0.38, 1.35]} scale={[0.28, 0.16, 0.5]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
       </mesh>
-      {/* the stretched jaw hoop, drooping below the head line */}
-      <mesh position={[0, -0.1, 1.6]} scale={[1.05, 1.1, 1]}>
-        <torusGeometry args={[0.28, 0.05, 8, 18]} />
-        {bodyMat}
-      </mesh>
-      {/* dark cavern filling the hoop */}
-      <mesh position={[0, -0.1, 1.42]} scale={[0.29, 0.29, 0.2]}>
+      {/* the gape itself, proud of the tapering body at the front */}
+      <mesh position={[0, -0.11, 1.42]} scale={[0.3, 0.24, 0.38]}>
         <sphereGeometry args={[1, 10, 8]} />
         <meshStandardMaterial color="#12100d" roughness={0.9} />
       </mesh>
-      {/* small eyes above the mouth corners, beside the snout base */}
-      <mesh position={[0.24, 0.12, 1.72]} scale={0.04}>
+      {/* mouth-corner struts bridging snout and jaw */}
+      <mesh position={[0.27, -0.12, 1.12]} scale={[0.07, 0.24, 0.2]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {bodyMat}
+      </mesh>
+      <mesh position={[-0.27, -0.12, 1.12]} scale={[0.07, 0.24, 0.2]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {bodyMat}
+      </mesh>
+      {/* small eyes on the snout, above the mouth corners */}
+      <mesh position={[0.28, 0.16, 1.78]} scale={0.04}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
-      <mesh position={[-0.24, 0.12, 1.72]} scale={0.04}>
+      <mesh position={[-0.28, 0.16, 1.78]} scale={0.04}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
-      {/* five huge gill slits nearly encircling the head */}
-      {[0, 1, 2, 3, 4].map((i) => (
-        <group key={i} position={[0, -0.02, 1.05 - i * 0.16]}>
-          <mesh position={[0.44, 0, 0]} rotation-z={0.1} scale={[0.025, 0.42, 0.06]}>
-            <sphereGeometry args={[1, 6, 5]} />
+      {/* five gill collars wrapping the body just behind the head, sized to
+          the body's cross-section so they hug the skin — on a basking shark
+          they nearly meet under the throat */}
+      {[0.45, 0.6, 0.75, 0.9, 1.05].map((z) => {
+        const f = Math.sqrt(1 - (z / 1.8) ** 2);
+        return (
+          <mesh
+            key={z}
+            position={[0, 0, z]}
+            rotation-z={-Math.PI / 2 - Math.PI * 0.55}
+            scale={[0.52 * f + 0.01, 0.55 * f + 0.01, 1]}
+          >
+            <torusGeometry args={[1, 0.04, 6, 24, Math.PI * 1.1]} />
             <meshStandardMaterial color="#332d26" roughness={0.85} />
           </mesh>
-          <mesh position={[-0.44, 0, 0]} rotation-z={-0.1} scale={[0.025, 0.42, 0.06]}>
-            <sphereGeometry args={[1, 6, 5]} />
-            <meshStandardMaterial color="#332d26" roughness={0.85} />
-          </mesh>
-        </group>
-      ))}
+        );
+      })}
       {/* tall triangular dorsal */}
       <mesh position={[0, 0.68, -0.2]} rotation-x={-0.35} geometry={finGeometry} scale={1.2}>
         {bodyMat}
