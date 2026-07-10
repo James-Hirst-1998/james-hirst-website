@@ -36,6 +36,7 @@ import {
   BaskingSharkModel,
   CrabModel,
 } from "../experience/Creatures";
+import { track } from "../analytics";
 import "../styles/creatures.css";
 
 // Each entry pairs a model with the camera distance that frames it and a
@@ -598,6 +599,21 @@ const CreatureStage = ({ creature }) => {
   const last = useRef({ x: 0, y: 0 });
   const stageRef = useRef(null);
   const [hint, setHint] = useState(true);
+  // Kept fresh each render so the native (mount-bound) touch handlers below
+  // report the creature currently on the turntable, not the first one.
+  const creatureIdRef = useRef(creature.id);
+  creatureIdRef.current = creature.id;
+  const interacted = useRef(false);
+
+  // First time the user grabs the model — tells us whether people realise it
+  // spins. Fires once for the whole session.
+  const markInteracted = () => {
+    setHint(false);
+    if (!interacted.current) {
+      interacted.current = true;
+      track("creature_interacted", { id: creatureIdRef.current });
+    }
+  };
 
   // Reset the turntable each time a new creature is chosen.
   useEffect(() => {
@@ -615,7 +631,7 @@ const CreatureStage = ({ creature }) => {
     const onStart = (e) => {
       rot.current.dragging = true;
       last.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      setHint(false);
+      markInteracted();
     };
     const onMove = (e) => {
       if (!rot.current.dragging) return;
@@ -648,7 +664,7 @@ const CreatureStage = ({ creature }) => {
     if (e.pointerType === "touch") return;
     rot.current.dragging = true;
     last.current = { x: e.clientX, y: e.clientY };
-    setHint(false);
+    markInteracted();
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e) => {
@@ -714,12 +730,23 @@ const CreaturesPage = () => {
     [activeId]
   );
 
+  // Which creatures people actually open (includes the first one shown / any
+  // deep-linked via /creatures#<id>).
+  useEffect(() => {
+    track("creature_viewed", {
+      id: creature.id,
+      name: creature.name,
+      category: creature.category || "creature",
+    });
+  }, [creature.id]);
+
   const list = filter === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
 
   // Switching filter keeps the current pick if it belongs to the new list,
   // otherwise jumps to the first creature of that list.
   const chooseFilter = (next) => {
     if (next === filter) return;
+    track("creature_filter_changed", { filter: next });
     setFilter(next);
     const nextList = next === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
     if (!nextList.some((c) => c.id === activeId)) setActiveId(nextList[0].id);

@@ -9,6 +9,7 @@ import React, {
 import { Link } from "react-router-dom";
 import { scroll, pointer, look } from "../experience/scrollState";
 import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
+import { track } from "../analytics";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
 import portrait from "../assets/james_headshot.png";
@@ -46,6 +47,7 @@ const useReveal = () => {
 const useContactButton = () => {
   const [copied, setCopied] = useState(false);
   const contact = () => {
+    track("contact_clicked");
     window.location.href = `mailto:${EMAIL}?subject=Website Contact`;
     setTimeout(() => {
       navigator.clipboard
@@ -175,6 +177,7 @@ const Hero = () => {
             href="/CV.pdf"
             target="_blank"
             rel="noreferrer"
+            onClick={() => track("cv_opened", { location: "hero" })}
           >
             View my CV
           </a>
@@ -326,7 +329,13 @@ const SeabedFooter = () => {
           <button className="btn btn--solid" onClick={contact}>
             {copied ? "Email copied!" : "Get in touch"}
           </button>
-          <a className="btn" href="/CV.pdf" target="_blank" rel="noreferrer">
+          <a
+            className="btn"
+            href="/CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+            onClick={() => track("cv_opened", { location: "seabed" })}
+          >
             Download CV
           </a>
         </div>
@@ -404,6 +413,7 @@ const DivePage = () => {
         // Hand the camera to the gyro only once the sensor actually reports,
         // so denied permission / no sensor keeps the desktop pointer path.
         look.active = true;
+        track("gyro_look_activated");
       }
       // Unwrap alpha so turning right around keeps rotating instead of snapping.
       let step = e.alpha - lastAlpha;
@@ -445,6 +455,34 @@ const DivePage = () => {
       look.active = false;
     };
   }, [show3D]);
+
+  // How far people actually dive: fire once as each quartile is crossed, and
+  // once on reaching the seabed. Polled off rAF like the depth meter.
+  useEffect(() => {
+    const milestones = [25, 50, 75];
+    const fired = new Set();
+    let reachedSeabed = false;
+    let raf;
+    const tick = () => {
+      const pct = scroll.progress * 100;
+      for (const m of milestones) {
+        if (pct >= m && !fired.has(m)) {
+          fired.add(m);
+          track("dive_depth_reached", {
+            percent: m,
+            depth: Math.round(depthAtProgress(scroll.progress)),
+          });
+        }
+      }
+      if (scroll.progress >= 0.995 && !reachedSeabed) {
+        reachedSeabed = true;
+        track("dive_reached_seabed");
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
 
   const contentSections = sections.filter((s) => s.title);
 
