@@ -43,12 +43,13 @@ const CameraRig = () => {
     camera.position.x += (0 - camera.position.x) * ease * 0.6;
 
     if (look.active) {
-      // Phone: swipes and/or the gyroscope set yaw/pitch targets — ease onto
-      // them, banking slightly into the turn for a touch of submersible feel.
+      // Phone: swipes and/or the gyroscope already move yaw/pitch smoothly, so
+      // follow them directly — easing on top only makes the view trail the
+      // finger. A clamped bank still gives a touch of submersible feel.
       const prevYaw = r.yaw;
-      r.yaw += (look.yaw - r.yaw) * ease;
-      r.pitch += (look.pitch - r.pitch) * ease;
-      const bank = (r.yaw - prevYaw) * 2.2;
+      r.yaw = look.yaw;
+      r.pitch = look.pitch;
+      const bank = THREE.MathUtils.clamp((r.yaw - prevYaw) * 1.6, -0.3, 0.3);
       camera.rotation.set(r.pitch, r.yaw, bank, "YXZ");
     } else {
       const overshoot = Math.abs(pointer.x) - YAW_DEADZONE;
