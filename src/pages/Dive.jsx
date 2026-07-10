@@ -1,10 +1,17 @@
-import React, { Suspense, lazy, useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  Suspense,
+  lazy,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Link } from "react-router-dom";
 import { scroll, pointer, look } from "../experience/scrollState";
 import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
-import portrait from "../assets/james.jpg";
+import portrait from "../assets/james_headshot.png";
 
 const supportsWebGL = () => {
   try {
@@ -28,7 +35,7 @@ const useReveal = () => {
           observer.disconnect();
         }
       },
-      { threshold: 0.25 }
+      { threshold: 0.25 },
     );
     observer.observe(el);
     return () => observer.disconnect();
@@ -61,9 +68,11 @@ const DepthMeter = () => {
     let raf;
     const tick = () => {
       const depth = Math.round(depthAtProgress(scroll.progress));
-      if (valueRef.current) valueRef.current.textContent = `-${depth.toLocaleString("en-GB")} m`;
+      if (valueRef.current)
+        valueRef.current.textContent = `-${depth.toLocaleString("en-GB")} m`;
       if (zoneRef.current) zoneRef.current.textContent = zoneAtDepth(depth);
-      if (fillRef.current) fillRef.current.style.height = `${scroll.progress * 100}%`;
+      if (fillRef.current)
+        fillRef.current.style.height = `${scroll.progress * 100}%`;
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -93,7 +102,7 @@ const NavDots = () => {
           if (entry.isIntersecting) setActive(entry.target.id);
         });
       },
-      { rootMargin: "-45% 0px -45% 0px" }
+      { rootMargin: "-45% 0px -45% 0px" },
     );
     sections.forEach((s) => {
       const el = document.getElementById(s.id);
@@ -108,7 +117,11 @@ const NavDots = () => {
           key={s.id}
           className={`nav-dots__dot ${active === s.id ? "is-active" : ""}`}
           aria-label={s.nav}
-          onClick={() => document.getElementById(s.id)?.scrollIntoView({ behavior: "smooth" })}
+          onClick={() =>
+            document
+              .getElementById(s.id)
+              ?.scrollIntoView({ behavior: "smooth" })
+          }
         >
           <span className="nav-dots__label">{s.nav}</span>
         </button>
@@ -121,7 +134,9 @@ const NavDots = () => {
 // after a few seconds, or the moment the first touch lands.
 const LookHint = () => {
   const [show, setShow] = useState(
-    () => typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia("(pointer: coarse)").matches,
   );
   useEffect(() => {
     if (!show) return undefined;
@@ -150,11 +165,17 @@ const Hero = () => {
         <p className="hero__hi">Hi, I'm</p>
         <h1 className="hero__name">James Hirst</h1>
         <p className="hero__tagline">
-          A {age()}-year-old software engineer at Mozaic Earth, with a Masters in Mathematics from
-          Cambridge and a soft spot for everything that lives underwater.
+          A {age()}-year-old software engineer at Mozaic Earth, with a Masters
+          in Mathematics from Cambridge and a soft spot for everything that
+          lives underwater.
         </p>
         <div className="hero__buttons">
-          <a className="btn btn--solid" href="/CV.pdf" target="_blank" rel="noreferrer">
+          <a
+            className="btn btn--solid"
+            href="/CV.pdf"
+            target="_blank"
+            rel="noreferrer"
+          >
             View my CV
           </a>
           <button className="btn" onClick={contact}>
@@ -164,7 +185,11 @@ const Hero = () => {
       </div>
       <button
         className="hero__cue"
-        onClick={() => document.getElementById("mozaic")?.scrollIntoView({ behavior: "smooth" })}
+        onClick={() =>
+          document
+            .getElementById("mozaic")
+            ?.scrollIntoView({ behavior: "smooth" })
+        }
       >
         <span>Dive in</span>
         <span className="hero__cue-arrow">⌄</span>
@@ -183,7 +208,9 @@ const SectionPanel = ({ section }) => {
             <p className="panel__kicker">{section.kicker}</p>
             <h2 className="panel__title">{section.title}</h2>
           </div>
-          {section.logo && <img className="panel__logo" src={section.logo} alt="" />}
+          {section.logo && (
+            <img className="panel__logo" src={section.logo} alt="" />
+          )}
         </header>
         {section.body?.map((text, i) => (
           <p className="panel__body" key={i}>
@@ -257,7 +284,12 @@ const SectionPanel = ({ section }) => {
           </div>
         )}
         {section.link && (
-          <a className="panel__link" href={section.link.href} target="_blank" rel="noreferrer">
+          <a
+            className="panel__link"
+            href={section.link.href}
+            target="_blank"
+            rel="noreferrer"
+          >
             {section.link.label} →
           </a>
         )}
@@ -276,9 +308,10 @@ const SeabedFooter = () => {
         <p className="panel__kicker">-10,935 m · Challenger Deep</p>
         <h2 className="panel__title">You've hit the bottom</h2>
         <p className="panel__body">
-          This is Challenger Deep — the deepest point in any ocean — and you dived the whole
-          way. If anything up there caught your eye — an opportunity, a conservation project,
-          or just to say hi — I'd love to hear from you.
+          This is Challenger Deep — the deepest point in any ocean — and you
+          dived the whole way. If anything up there caught your eye — an
+          opportunity, a conservation project, or just to say hi — I'd love to
+          hear from you.
         </p>
         <div className="hero__buttons">
           <button className="btn btn--solid" onClick={contact}>
@@ -290,10 +323,12 @@ const SeabedFooter = () => {
         </div>
         <p className="seabed__egg">
           See anything you liked on the way down? Meet the{" "}
-          <Link to="/creatures">sea creatures</Link> up close — and wait, is that a{" "}
-          <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
+          <Link to="/creatures">sea creatures</Link> up close — and wait, is
+          that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
-        <p className="seabed__credits">© {new Date().getFullYear()} James Hirst</p>
+        <p className="seabed__credits">
+          © {new Date().getFullYear()} James Hirst
+        </p>
       </div>
     </section>
   );
@@ -304,13 +339,14 @@ const DivePage = () => {
     () =>
       supportsWebGL() &&
       !window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    []
+    [],
   );
 
   useEffect(() => {
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
-      scroll.progress = max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
+      scroll.progress =
+        max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
     };
     const onPointer = (e) => {
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -329,7 +365,10 @@ const DivePage = () => {
     return () => {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("pointermove", onPointer);
-      document.documentElement.removeEventListener("pointerleave", onPointerReset);
+      document.documentElement.removeEventListener(
+        "pointerleave",
+        onPointerReset,
+      );
       window.removeEventListener("blur", onPointerReset);
     };
   }, []);
@@ -338,7 +377,8 @@ const DivePage = () => {
   // to look: swipe sideways to turn (vertical touches still scroll/dive), and
   // — where the sensor allows — tilt or pan the phone via the gyroscope.
   useEffect(() => {
-    if (!show3D || !window.matchMedia("(pointer: coarse)").matches) return undefined;
+    if (!show3D || !window.matchMedia("(pointer: coarse)").matches)
+      return undefined;
     const clamp = (v) => Math.min(Math.max(v, -0.75), 0.75);
     // Enable the look camera up front so swipes work even if the gyroscope
     // never reports (permission denied, no sensor, insecure origin).
@@ -361,7 +401,8 @@ const DivePage = () => {
       lastX = x;
       lastY = y;
       look.yaw += dx * 0.005;
-      if (Math.abs(dx) > Math.abs(dy)) look.pitch = clamp(look.pitch + dy * 0.003);
+      if (Math.abs(dx) > Math.abs(dy))
+        look.pitch = clamp(look.pitch + dy * 0.003);
     };
     const onTouchEnd = () => {
       lastX = null;
@@ -390,7 +431,8 @@ const DivePage = () => {
       look.pitch = clamp(((e.beta - baseBeta) * Math.PI) / 180);
     };
 
-    const listen = () => window.addEventListener("deviceorientation", onOrientation);
+    const listen = () =>
+      window.addEventListener("deviceorientation", onOrientation);
     let cleanupGesture = () => {};
     if (
       typeof DeviceOrientationEvent !== "undefined" &&
@@ -427,7 +469,9 @@ const DivePage = () => {
   return (
     <div className="dive-page">
       {show3D ? (
-        <Suspense fallback={<div className="ocean-fallback" aria-hidden="true" />}>
+        <Suspense
+          fallback={<div className="ocean-fallback" aria-hidden="true" />}
+        >
           <OceanCanvas />
         </Suspense>
       ) : (
