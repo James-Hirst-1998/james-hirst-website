@@ -445,33 +445,74 @@ const DivePage = () => {
   useEffect(() => {
     if (!show3D || !window.matchMedia("(pointer: coarse)").matches)
       return undefined;
-    const clamp = (v) => Math.min(Math.max(v, -0.75), 0.75);
+    const clamp = (v, lim) => Math.min(Math.max(v, -lim), lim);
+    const RAD = Math.PI / 180;
+
+    // Where the back of the phone points, from the full device rotation
+    // R = Rz(alpha)·Rx(beta)·Ry(gamma) applied to (0, 0, -1). Yaw/pitch are
+    // read off this vector rather than raw alpha/beta: held upright in
+    // portrait — exactly how people browse — the device sits at the Euler
+    // gimbal lock, where alpha and gamma trade sudden 180° flips (raw-alpha
+    // deltas read as violent yaw spikes, and tilting up past vertical fought
+    // back). The forward vector stays continuous through all of it, and it's
+    // screen-orientation-proof for free.
+    const forward = (alpha, beta, gamma) => {
+      const ca = Math.cos(alpha);
+      const sa = Math.sin(alpha);
+      const cb = Math.cos(beta);
+      const sb = Math.sin(beta);
+      const cg = Math.cos(gamma);
+      const sg = Math.sin(gamma);
+      return {
+        x: -ca * sg - sa * sb * cg,
+        y: -sa * sg + ca * sb * cg,
+        z: -cb * cg,
+      };
+    };
 
     // Both axes are incremental (deltas since the last reading), relative to
     // wherever the phone was pointing on the first report — so the dive
     // always starts facing forward, not at some compass heading.
-    let lastAlpha = null;
-    let lastBeta = null;
+    let last = null;
     const onOrientation = (e) => {
-      if (e.alpha == null || e.beta == null) return;
-      if (lastAlpha === null) {
-        lastAlpha = e.alpha;
-        lastBeta = e.beta;
+      if (e.alpha == null || e.beta == null || e.gamma == null) return;
+      const f = forward(e.alpha * RAD, e.beta * RAD, e.gamma * RAD);
+      const pitch = Math.asin(clamp(f.z, 1));
+      // Yaw is undefined with the phone pointed straight at sky or floor —
+      // hold the previous heading through that cone.
+      const yaw =
+        Math.hypot(f.x, f.y) > 0.05
+          ? Math.atan2(-f.x, f.y)
+          : (last?.yaw ?? 0);
+      const now = performance.now();
+
+      if (last === null) {
+        last = { yaw, pitch, at: now };
         // Hand the camera to the gyro only once the sensor actually reports,
         // so denied permission / no sensor keeps the desktop pointer path.
         look.active = true;
         setGyroState("active");
         track("gyro_look_activated");
+        return;
       }
-      // Unwrap alpha so turning right around keeps rotating instead of snapping.
-      let step = e.alpha - lastAlpha;
-      if (step > 180) step -= 360;
-      if (step < -180) step += 360;
-      const pitchStep = e.beta - lastBeta;
-      lastAlpha = e.alpha;
-      lastBeta = e.beta;
-      look.yaw += (step * Math.PI) / 180;
-      look.pitch = clamp(look.pitch + (pitchStep * Math.PI) / 180);
+      if (now - last.at > 200) {
+        // iOS parks sensor events for the length of a scroll. Applying the
+        // rotation accumulated across that gap snapped the view the moment a
+        // free scroll ended — re-baseline instead, so the view stays put and
+        // tracking resumes from wherever the phone is pointing now.
+        last = { yaw, pitch, at: now };
+        return;
+      }
+      // Unwrap yaw so turning right around keeps rotating instead of snapping.
+      let dYaw = yaw - last.yaw;
+      if (dYaw > Math.PI) dYaw -= 2 * Math.PI;
+      if (dYaw < -Math.PI) dYaw += 2 * Math.PI;
+      const dPitch = pitch - last.pitch;
+      last = { yaw, pitch, at: now };
+      // Per-event cap: one 60 Hz step can't legitimately be ~20°+; anything
+      // bigger is sensor junk that would kick the camera.
+      look.yaw += clamp(dYaw, 0.35);
+      look.pitch = clamp(look.pitch + clamp(dPitch, 0.35), 0.75);
     };
 
     const listen = () =>
