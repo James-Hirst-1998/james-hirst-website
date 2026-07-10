@@ -27,6 +27,8 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 
 ## Web + mobile gotchas
 - `touch-action: none` is required on any element a touch-drag starts on (including the R3F `<canvas>`, not just its wrapper) or the browser eats the gesture as a scroll on mobile.
-- Prefer pointer events over mouse-only events so one handler covers desktop and mobile.
+- Don't trust pointer events for touch drags — real devices cancel the stream mid-drag; use native touch listeners (`addEventListener`, `{ passive: false }` + `preventDefault`) and skip `pointerType === "touch"` in the pointer handlers.
+- React's synthetic `onTouchMove` is registered passive — `preventDefault` inside it does nothing; native listeners only.
+- Gyroscope input must be applied as per-event deltas, never absolute values, or it stomps whatever a swipe set and the view rubber-bands; pause gyro while a finger is down.
 - Touch/gyro already move smoothly — apply their values to the camera directly; extra `useFrame` easing on top just adds visible lag.
-- Mobile touch listeners on the dive are `{ passive: true }` so vertical swipes still scroll/dive the page.
+- Mobile touch listeners on the dive are `{ passive: true }` so vertical swipes still scroll/dive the page (the creature stage is the exception — it never scrolls).

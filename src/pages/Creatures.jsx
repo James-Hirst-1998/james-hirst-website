@@ -524,10 +524,13 @@ const Turntable = ({ Model, offset, rot }) => {
   );
 };
 
+const clampPitch = (v) => Math.min(Math.max(v, -0.9), 0.9);
+
 const CreatureStage = ({ creature }) => {
   // Shared, ref-based rotation so pointer handlers never trigger re-renders.
   const rot = useRef({ yaw: 0.6, pitch: 0, dragging: false });
   const last = useRef({ x: 0, y: 0 });
+  const stageRef = useRef(null);
   const [hint, setHint] = useState(true);
 
   // Reset the turntable each time a new creature is chosen.
@@ -536,28 +539,68 @@ const CreatureStage = ({ creature }) => {
     rot.current.pitch = 0;
   }, [creature.id]);
 
-  const clampPitch = (v) => Math.min(Math.max(v, -0.9), 0.9);
+  // Mobile drag comes from native touch events, not the pointer handlers:
+  // React registers touch listeners as passive, and on real devices the
+  // pointer stream can be cancelled mid-drag despite touch-action, so we
+  // listen with { passive: false } and preventDefault while dragging.
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return undefined;
+    const onStart = (e) => {
+      rot.current.dragging = true;
+      last.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      setHint(false);
+    };
+    const onMove = (e) => {
+      if (!rot.current.dragging) return;
+      e.preventDefault(); // the stage rotates; it never scrolls the page
+      const t = e.touches[0];
+      const dx = t.clientX - last.current.x;
+      const dy = t.clientY - last.current.y;
+      last.current = { x: t.clientX, y: t.clientY };
+      rot.current.yaw += dx * 0.01;
+      rot.current.pitch = clampPitch(rot.current.pitch + dy * 0.01);
+    };
+    const onEnd = () => {
+      rot.current.dragging = false;
+    };
+    el.addEventListener("touchstart", onStart, { passive: true });
+    el.addEventListener("touchmove", onMove, { passive: false });
+    el.addEventListener("touchend", onEnd, { passive: true });
+    el.addEventListener("touchcancel", onEnd, { passive: true });
+    return () => {
+      el.removeEventListener("touchstart", onStart);
+      el.removeEventListener("touchmove", onMove);
+      el.removeEventListener("touchend", onEnd);
+      el.removeEventListener("touchcancel", onEnd);
+    };
+  }, []);
 
+  // Desktop drag. Touch pointers are skipped — the native handlers above own
+  // them, and handling both would double every movement.
   const onPointerDown = (e) => {
+    if (e.pointerType === "touch") return;
     rot.current.dragging = true;
     last.current = { x: e.clientX, y: e.clientY };
     setHint(false);
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e) => {
-    if (!rot.current.dragging) return;
+    if (e.pointerType === "touch" || !rot.current.dragging) return;
     const dx = e.clientX - last.current.x;
     const dy = e.clientY - last.current.y;
     last.current = { x: e.clientX, y: e.clientY };
     rot.current.yaw += dx * 0.01;
     rot.current.pitch = clampPitch(rot.current.pitch + dy * 0.01);
   };
-  const onPointerUp = () => {
+  const onPointerUp = (e) => {
+    if (e.pointerType === "touch") return;
     rot.current.dragging = false;
   };
 
   return (
     <div
+      ref={stageRef}
       className={`cv-stage cv-zone-${creature.id}`}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
