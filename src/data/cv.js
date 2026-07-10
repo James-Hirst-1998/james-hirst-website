@@ -93,6 +93,10 @@ export const sections = [
       href: "https://www.sharktrust.org/greateggcasehunt",
       label: "The Great Eggcase Hunt",
     },
+    internalLink: {
+      to: "/creatures#shark",
+      label: "Meet the sharks — a few of my favourites",
+    },
     body: [
       "As a passionate conservationist I volunteer my technical skills for environmental protection. I'm building convolutional neural networks that automate shark and ray species classification from eggcase photos, contributing to the Shark Trust's Great Eggcase Hunt.",
       "I train the models and handle data collection and cleaning. The goal is to integrate classification directly into the app — letting the project expand globally while keeping the Trust's workload manageable.",

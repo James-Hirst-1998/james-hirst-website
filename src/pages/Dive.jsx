@@ -283,15 +283,24 @@ const SectionPanel = ({ section }) => {
             </a>
           </div>
         )}
-        {section.link && (
-          <a
-            className="panel__link"
-            href={section.link.href}
-            target="_blank"
-            rel="noreferrer"
-          >
-            {section.link.label} →
-          </a>
+        {(section.link || section.internalLink) && (
+          <div className="panel__links">
+            {section.link && (
+              <a
+                className="panel__link"
+                href={section.link.href}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {section.link.label} →
+              </a>
+            )}
+            {section.internalLink && (
+              <Link className="panel__link" to={section.internalLink.to}>
+                {section.internalLink.label} →
+              </Link>
+            )}
+          </div>
         )}
         <span className="panel__depth">{`-${section.depth.toLocaleString("en-GB")} m · ${section.zone}`}</span>
       </article>
