@@ -73,6 +73,9 @@ const CameraRig = () => {
 // Background colour, fog and light all deepen as you descend.
 const Environment = () => {
   const { scene } = useThree();
+  // Dev-only scene handle for poking at culling/lights from the console,
+  // same spirit as window.__dive in scrollState.js.
+  if (import.meta.env.DEV && typeof window !== "undefined") window.__scene = scene;
   const sun = useRef();
   const ambient = useRef();
   const glow = useRef();

@@ -122,7 +122,6 @@ const Fishbowl = () => {
   });
   return (
     <group position={[4.5, FLOOR_Y + 0.85, -2]}>
-      <pointLight color="#ffb45e" intensity={6} distance={7} />
       <mesh>
         <sphereGeometry args={[0.85, 16, 12]} />
         <meshStandardMaterial color="#bfe8f0" transparent opacity={0.18} roughness={0.1} />
@@ -176,34 +175,41 @@ export const Seabed = () => {
   }, []);
 
   return (
-    <group ref={root}>
-      <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
-        <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
-      </mesh>
-      {kelp.map((k, i) => (
-        <Kelp key={i} {...k} />
-      ))}
-      <Rock position={[-8, FLOOR_Y + 0.4, -6]} scale={[1.8, 1.1, 1.4]} tone="#4a5a63" />
-      <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
-      <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
-      <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
-      {/* behind the camera — reward for a look back at the bottom */}
-      <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
-      {/* Out ahead on the open floor, not tucked directly underfoot where the
-          camera can't tilt down to it. A soft fill lifts it from the gloom. */}
+    <>
+      {/* Both seabed lights live outside the culled group: removing a light
+          from the scene changes the light count and three.js recompiles
+          every shader program — a visible freeze. They stay on always. */}
       <pointLight position={[-5, FLOOR_Y + 2, -16]} color="#c98a94" intensity={6} distance={11} />
-      <Octopus position={[-5, FLOOR_Y - 0.1, -16]} />
-      <Fishbowl />
-      {/* a crab patrolling the sand near the fishbowl's glow */}
-      <ScuttlingCrab x={2.6} z={-3.5} range={1.4} speed={0.5} />
-      {/* starfish scattered where the two seabed lights reach */}
-      <Starfish position={[6.6, FLOOR_Y + floorHeight(6.6, -0.8) + 0.02, -0.8]} scale={0.9} spin={0.7} />
-      <Starfish position={[-3.6, FLOOR_Y + floorHeight(-3.6, -13) + 0.02, -13]} scale={1.15} color="#c96a8e" spin={2.1} />
-      <Starfish position={[0.6, FLOOR_Y + floorHeight(0.6, -6.5) + 0.02, -6.5]} scale={0.7} color="#d9a052" spin={4} />
-      {/* anemone gardens swaying by the octopus and the bowl */}
-      <Anemone position={[-7.2, FLOOR_Y + floorHeight(-7.2, -15), -15]} tint="#d98ca8" scale={1.1} phase={0.6} />
-      <Anemone position={[-6.2, FLOOR_Y + floorHeight(-6.2, -13.6), -13.6]} tint="#8cc7d9" scale={0.8} phase={2.4} />
-      <Anemone position={[5.9, FLOOR_Y + floorHeight(5.9, -4), -4]} tint="#a0d9a5" scale={0.9} phase={4.1} />
-    </group>
+      <pointLight position={[4.5, FLOOR_Y + 0.85, -2]} color="#ffb45e" intensity={6} distance={7} />
+      <group ref={root}>
+        <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
+          <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
+        </mesh>
+        {kelp.map((k, i) => (
+          <Kelp key={i} {...k} />
+        ))}
+        <Rock position={[-8, FLOOR_Y + 0.4, -6]} scale={[1.8, 1.1, 1.4]} tone="#4a5a63" />
+        <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
+        <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
+        <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
+        {/* behind the camera — reward for a look back at the bottom */}
+        <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
+        {/* Out ahead on the open floor, not tucked directly underfoot where the
+            camera can't tilt down to it. The soft fill above lifts it from the
+            gloom. */}
+        <Octopus position={[-5, FLOOR_Y - 0.1, -16]} />
+        <Fishbowl />
+        {/* a crab patrolling the sand near the fishbowl's glow */}
+        <ScuttlingCrab x={2.6} z={-3.5} range={1.4} speed={0.5} />
+        {/* starfish scattered where the two seabed lights reach */}
+        <Starfish position={[6.6, FLOOR_Y + floorHeight(6.6, -0.8) + 0.02, -0.8]} scale={0.9} spin={0.7} />
+        <Starfish position={[-3.6, FLOOR_Y + floorHeight(-3.6, -13) + 0.02, -13]} scale={1.15} color="#c96a8e" spin={2.1} />
+        <Starfish position={[0.6, FLOOR_Y + floorHeight(0.6, -6.5) + 0.02, -6.5]} scale={0.7} color="#d9a052" spin={4} />
+        {/* anemone gardens swaying by the octopus and the bowl */}
+        <Anemone position={[-7.2, FLOOR_Y + floorHeight(-7.2, -15), -15]} tint="#d98ca8" scale={1.1} phase={0.6} />
+        <Anemone position={[-6.2, FLOOR_Y + floorHeight(-6.2, -13.6), -13.6]} tint="#8cc7d9" scale={0.8} phase={2.4} />
+        <Anemone position={[5.9, FLOOR_Y + floorHeight(5.9, -4), -4]} tint="#a0d9a5" scale={0.9} phase={4.1} />
+      </group>
+    </>
   );
 };
