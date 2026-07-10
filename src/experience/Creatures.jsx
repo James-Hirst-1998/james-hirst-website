@@ -2867,9 +2867,43 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
         arcAmp: 3.1 + (i % 2) * 0.9,
         size: 0.9 + (i % 3) * 0.12,
         laneZ: (i - count / 2) * 1.3,
+        prevY: null,
       })),
     [count, radius]
   );
+
+  // A small pool of reusable splashes, fired whenever a dolphin dives back
+  // through the surface plane: an expanding foam ring and ripple, a spray
+  // plume, and a crown of droplets that leap up and fall away.
+  const SPLASH_DURATION = 1.15;
+  const splashes = useMemo(
+    () =>
+      Array.from({ length: 6 }, (_, i) => ({
+        group: React.createRef(),
+        ring: React.createRef(),
+        ripple: React.createRef(),
+        foam: React.createRef(),
+        plume: React.createRef(),
+        drops: Array.from({ length: 9 }, (_, j) => {
+          // Deterministic per-droplet jitter so the pool never re-randomises.
+          const rnd = (n) => {
+            const v = Math.sin((i * 9 + j) * 12.9898 + n * 78.233) * 43758.5453;
+            return v - Math.floor(v);
+          };
+          return {
+            ref: React.createRef(),
+            theta: (j / 9) * Math.PI * 2 + rnd(1) * 0.8,
+            out: 0.9 + rnd(2) * 1.1,
+            up: 2.4 + rnd(3) * 1.6,
+          };
+        }),
+        start: -1,
+        spray: true,
+        strength: 1,
+      })),
+    []
+  );
+  const nextSplash = useRef(0);
 
   const posOf = (d, a, out) => {
     out.set(
@@ -2888,9 +2922,73 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
       if (!d.ref.current) return;
       const a = t * speed + d.phase;
       posOf(d, a, here);
+      // Crossing the surface plane fires a splash there: the full show with
+      // spray on the way down, just a soft ripple on the way out.
+      if (d.prevY !== null) {
+        const dive = d.prevY >= center[1] && here.y < center[1];
+        const breach = d.prevY < center[1] && here.y >= center[1];
+        if (dive || breach) {
+          const s = splashes[nextSplash.current++ % splashes.length];
+          s.start = t;
+          s.spray = dive;
+          s.strength = dive ? 1 : 0.55;
+          if (s.group.current) {
+            s.group.current.position.set(here.x, center[1] + 0.03, here.z);
+            s.group.current.scale.setScalar(d.size * (dive ? 1 : 0.7));
+            s.group.current.visible = true;
+          }
+        }
+      }
+      d.prevY = here.y;
       d.ref.current.position.copy(here);
       posOf(d, a + 0.04, target);
       d.ref.current.lookAt(target);
+    });
+
+    splashes.forEach((s) => {
+      if (s.start < 0 || !s.group.current) return;
+      const k = (t - s.start) / SPLASH_DURATION;
+      if (k >= 1) {
+        s.group.current.visible = false;
+        s.start = -1;
+        return;
+      }
+      const ease = 1 - (1 - k) * (1 - k);
+      if (s.ring.current) {
+        s.ring.current.scale.setScalar(0.5 + 2.4 * ease);
+        s.ring.current.material.opacity = 0.7 * s.strength * (1 - k) * (1 - k);
+      }
+      // The second ripple chases the first after a beat.
+      const k2 = Math.max(0, Math.min(1, (k * SPLASH_DURATION - 0.15) / (SPLASH_DURATION - 0.15)));
+      if (s.ripple.current) {
+        const e2 = 1 - (1 - k2) * (1 - k2);
+        s.ripple.current.scale.setScalar(0.3 + 1.7 * e2);
+        s.ripple.current.material.opacity = k2 <= 0 ? 0 : 0.5 * s.strength * (1 - k2);
+      }
+      if (s.foam.current) {
+        s.foam.current.scale.setScalar(0.4 + 1.4 * ease);
+        s.foam.current.material.opacity = 0.3 * s.strength * (1 - k);
+      }
+      if (s.plume.current) {
+        const sp = Math.sin(Math.min(1, k * 2.1) * Math.PI);
+        s.plume.current.visible = s.spray;
+        s.plume.current.scale.set(0.5 + 0.3 * sp, 0.15 + 1.05 * sp, 0.5 + 0.3 * sp);
+        s.plume.current.position.y = 0.45 * (0.15 + 1.05 * sp);
+        s.plume.current.material.opacity = 0.75 * (1 - k);
+      }
+      const age = k * SPLASH_DURATION;
+      s.drops.forEach((dp) => {
+        if (!dp.ref.current) return;
+        const y = dp.up * age - 5.2 * age * age;
+        dp.ref.current.visible = s.spray && y > -0.15;
+        dp.ref.current.position.set(
+          Math.cos(dp.theta) * dp.out * (0.15 + age),
+          y,
+          Math.sin(dp.theta) * dp.out * (0.15 + age)
+        );
+        dp.ref.current.scale.setScalar(0.09 * (1 - 0.5 * k));
+        dp.ref.current.material.opacity = 0.9 * (1 - k);
+      });
     });
   });
 
@@ -2899,6 +2997,32 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
       {pod.map((d, i) => (
         <group key={i} ref={d.ref} scale={d.size}>
           <DolphinModel />
+        </group>
+      ))}
+      {splashes.map((s, i) => (
+        <group key={`splash-${i}`} ref={s.group} visible={false}>
+          <mesh ref={s.ring} rotation-x={-Math.PI / 2}>
+            <ringGeometry args={[0.72, 1, 20]} />
+            <meshBasicMaterial color="#dff3fb" transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} />
+          </mesh>
+          <mesh ref={s.ripple} rotation-x={-Math.PI / 2}>
+            <ringGeometry args={[0.55, 0.8, 16]} />
+            <meshBasicMaterial color="#bfe4f2" transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} />
+          </mesh>
+          <mesh ref={s.foam} rotation-x={-Math.PI / 2}>
+            <circleGeometry args={[0.7, 16]} />
+            <meshBasicMaterial color="#eaf7fc" transparent opacity={0} side={THREE.DoubleSide} depthWrite={false} />
+          </mesh>
+          <mesh ref={s.plume}>
+            <coneGeometry args={[0.3, 0.9, 7]} />
+            <meshBasicMaterial color="#eaf7fc" transparent opacity={0} depthWrite={false} />
+          </mesh>
+          {s.drops.map((dp, j) => (
+            <mesh key={j} ref={dp.ref}>
+              <sphereGeometry args={[1, 6, 5]} />
+              <meshBasicMaterial color="#eaf7fc" transparent opacity={0} depthWrite={false} />
+            </mesh>
+          ))}
         </group>
       ))}
     </group>
