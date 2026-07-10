@@ -113,8 +113,9 @@ export const SharkModel = () => {
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
       </mesh>
-      {/* tapered snout */}
-      <mesh position={[0, -0.02, 1.55]} scale={[0.3, 0.32, 0.55]}>
+      {/* tapered snout — tucked inside the body line so it runs straight out
+          to a point instead of bulging past the head */}
+      <mesh position={[0, -0.02, 1.45]} scale={[0.26, 0.28, 0.7]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
       </mesh>
@@ -3012,31 +3013,36 @@ export const BaskingSharkModel = () => {
         <sphereGeometry args={[1, 10, 8]} />
         <meshStandardMaterial color="#b0aa9c" flatShading roughness={0.7} />
       </mesh>
-      {/* conical snout above the gape */}
-      <mesh position={[0, 0.2, 1.6]} scale={[0.3, 0.24, 0.6]}>
-        <sphereGeometry args={[1, 12, 9]} />
+      {/* the whole head is the mouth: cheeks flare out to one open rim, with
+          a flat black disc recessed inside — a clean gaping scoop, no lumps.
+          (rotation-x swaps y/z, so the cheek cone's scale-z is world height) */}
+      <mesh position={[0, -0.02, 1.3]} rotation-x={Math.PI / 2} scale={[1, 1, 1.08]}>
+        <cylinderGeometry args={[0.38, 0.46, 0.8, 12]} />
         {bodyMat}
       </mesh>
-      {/* the gape: a ring of jaw rim held wide open, black void filling it */}
-      <mesh position={[0, -0.08, 1.55]} scale={[1.15, 1.05, 1]}>
-        <torusGeometry args={[0.3, 0.07, 8, 16]} />
+      <mesh position={[0, -0.02, 1.68]} scale={[1, 1.1, 1]}>
+        <torusGeometry args={[0.34, 0.055, 8, 18]} />
         {bodyMat}
       </mesh>
-      <mesh position={[0, -0.08, 1.4]} scale={[0.33, 0.3, 0.22]}>
-        <sphereGeometry args={[1, 10, 8]} />
+      <mesh position={[0, -0.02, 1.64]}>
+        <circleGeometry args={[0.36, 18]} />
         <meshStandardMaterial color="#12100d" roughness={0.9} />
       </mesh>
-      {/* slack lower jaw backing the bottom of the rim */}
-      <mesh position={[0, -0.4, 1.32]} scale={[0.32, 0.14, 0.5]}>
+      {/* the small pointed snout overhanging the gape */}
+      <mesh position={[0, 0.32, 1.6]} scale={[0.17, 0.13, 0.3]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
       </mesh>
-      {/* small eyes up by the snout, well clear of the mouth */}
-      <mesh position={[0.28, 0.26, 1.55]} scale={0.045}>
+      <mesh position={[0, 0.32, 1.95]} rotation-x={Math.PI / 2} scale={[1, 1, 0.8]}>
+        <coneGeometry args={[0.13, 0.45, 8]} />
+        {bodyMat}
+      </mesh>
+      {/* small eyes tucked either side of the snout base */}
+      <mesh position={[0.16, 0.28, 1.78]} scale={0.04}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
-      <mesh position={[-0.28, 0.26, 1.55]} scale={0.045}>
+      <mesh position={[-0.16, 0.28, 1.78]} scale={0.04}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
