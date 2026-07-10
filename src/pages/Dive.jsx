@@ -145,30 +145,47 @@ const NavDots = () => {
   );
 };
 
-// One-off nudge on phones that the view can be steered. Fades itself out
-// after a few seconds, or the moment the first touch lands.
-const LookHint = () => {
-  const [show, setShow] = useState(
-    () =>
-      typeof window !== "undefined" &&
-      window.matchMedia("(pointer: coarse)").matches,
-  );
+// One-off nudge on phones that the view can be steered, pinned to the top of
+// the screen so it stays clear of the hero buttons. On iOS ("ask") it's a real
+// button that opens the motion-permission dialog — Safari only accepts the
+// request from a tap; elsewhere ("hint") it's passive and fades on its own.
+const LookHint = ({ state, onEnable }) => {
+  const [expired, setExpired] = useState(false);
   useEffect(() => {
-    if (!show) return undefined;
-    const hide = () => setShow(false);
-    const timer = setTimeout(hide, 6000);
-    window.addEventListener("touchstart", hide, { once: true, passive: true });
+    if (state !== "hint" && state !== "ask") return undefined;
+    const timer = setTimeout(
+      () => setExpired(true),
+      state === "ask" ? 12000 : 6000,
+    );
+    let hide;
+    if (state === "hint") {
+      hide = () => setExpired(true);
+      window.addEventListener("touchstart", hide, {
+        once: true,
+        passive: true,
+      });
+    }
     return () => {
       clearTimeout(timer);
-      window.removeEventListener("touchstart", hide);
+      if (hide) window.removeEventListener("touchstart", hide);
     };
-  }, [show]);
-  if (!show) return null;
-  return (
-    <div className="look-hint" aria-hidden="true">
-      Move your phone around to look
-    </div>
-  );
+  }, [state]);
+  if (expired) return null;
+  if (state === "ask") {
+    return (
+      <button className="look-hint look-hint--tap" onClick={onEnable}>
+        Tap to look around with your phone
+      </button>
+    );
+  }
+  if (state === "hint") {
+    return (
+      <div className="look-hint" aria-hidden="true">
+        Move your phone around to look
+      </div>
+    );
+  }
+  return null;
 };
 
 const Hero = () => {
@@ -373,6 +390,18 @@ const DivePage = () => {
     [],
   );
 
+  // Drives the top-of-screen look hint: "ask" = iOS needs a tap to unlock the
+  // sensor, "hint" = sensor should just work, "active"/"denied"/"off" = hidden.
+  const [gyroState, setGyroState] = useState(() => {
+    if (typeof window === "undefined") return "off";
+    if (!window.matchMedia("(pointer: coarse)").matches) return "off";
+    return typeof DeviceOrientationEvent !== "undefined" &&
+      typeof DeviceOrientationEvent.requestPermission === "function"
+      ? "ask"
+      : "hint";
+  });
+  const requestGyro = useRef(() => {});
+
   useEffect(() => {
     const onScroll = () => {
       const max = document.documentElement.scrollHeight - window.innerHeight;
@@ -380,6 +409,11 @@ const DivePage = () => {
         max > 0 ? Math.min(Math.max(window.scrollY / max, 0), 1) : 0;
     };
     const onPointer = (e) => {
+      // iOS fires pointer events for touches too. Without this, a scroll
+      // swipe that ends near a screen edge parks pointer.x past the yaw
+      // deadzone and the desktop steering path spins the camera forever —
+      // touch steering is gyro-only.
+      if (e.pointerType === "touch") return;
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
       pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
     };
@@ -426,6 +460,7 @@ const DivePage = () => {
         // Hand the camera to the gyro only once the sensor actually reports,
         // so denied permission / no sensor keeps the desktop pointer path.
         look.active = true;
+        setGyroState("active");
         track("gyro_look_activated");
       }
       // Unwrap alpha so turning right around keeps rotating instead of snapping.
@@ -446,18 +481,55 @@ const DivePage = () => {
       typeof DeviceOrientationEvent !== "undefined" &&
       typeof DeviceOrientationEvent.requestPermission === "function"
     ) {
-      // iOS: sensor access needs a permission prompt from a user gesture,
-      // so ask on the first tap.
+      // iOS: the sensor sits behind a permission dialog that Safari will only
+      // open from a real tap — a scroll swipe's touchend rejects the request.
+      // Asking once on the first touchend and giving up left motion dead
+      // whenever the visit started with a swipe (i.e. almost always), so keep
+      // retrying on every genuine tap until the dialog actually answers.
+      let inFlight = false;
       const request = () => {
+        if (inFlight) return;
+        inFlight = true;
         DeviceOrientationEvent.requestPermission()
           .then((state) => {
-            if (state === "granted") listen();
+            cleanupGesture();
+            if (state === "granted") {
+              listen();
+              setGyroState("hint");
+            } else {
+              setGyroState("denied");
+              track("gyro_permission_denied");
+            }
           })
-          .catch(() => {});
-        window.removeEventListener("touchend", request);
+          .catch(() => {
+            // Not a tap Safari accepts — wait for the next one.
+            inFlight = false;
+          });
       };
-      window.addEventListener("touchend", request);
-      cleanupGesture = () => window.removeEventListener("touchend", request);
+      requestGyro.current = request;
+      // The hint button asks, but so does any real tap anywhere — while a
+      // swipe's touchend must not (it would fail the gesture test and pop
+      // the dialog mid-scroll).
+      let start = null;
+      const onTouchStart = (e) => {
+        start = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      };
+      const onTouchEnd = (e) => {
+        if (!start) return;
+        const t = e.changedTouches[0];
+        const moved = Math.hypot(t.clientX - start.x, t.clientY - start.y);
+        start = null;
+        // Taps on links/buttons carry their own intent (the hint button asks
+        // via its onClick) — don't stack the dialog on top of them.
+        if (moved < 12 && !e.target.closest?.("a, button")) request();
+      };
+      window.addEventListener("touchstart", onTouchStart, { passive: true });
+      window.addEventListener("touchend", onTouchEnd, { passive: true });
+      cleanupGesture = () => {
+        window.removeEventListener("touchstart", onTouchStart);
+        window.removeEventListener("touchend", onTouchEnd);
+        requestGyro.current = () => {};
+      };
     } else {
       listen();
     }
@@ -512,7 +584,9 @@ const DivePage = () => {
       )}
       <DepthMeter />
       <NavDots />
-      <LookHint />
+      {show3D && (
+        <LookHint state={gyroState} onEnable={() => requestGyro.current()} />
+      )}
       <main>
         <Hero />
         {contentSections.map((s) => (
