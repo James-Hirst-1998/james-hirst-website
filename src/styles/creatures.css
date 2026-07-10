@@ -67,8 +67,11 @@
   cursor: grabbing;
 }
 
+/* The touch lands on the canvas, not the stage div, and touch-action isn't
+   inherited — so the canvas needs it too or mobile drags get eaten as scrolls. */
 .cv-stage canvas {
   display: block;
+  touch-action: none;
 }
 
 .cv-hint {
