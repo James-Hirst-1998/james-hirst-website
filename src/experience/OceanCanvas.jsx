@@ -43,12 +43,14 @@ const CameraRig = () => {
     camera.position.x += (0 - camera.position.x) * ease * 0.6;
 
     if (look.active) {
-      // Phone: swipes and/or the gyroscope already move yaw/pitch smoothly, so
-      // follow them directly — easing on top only makes the view trail the
-      // finger. A clamped bank still gives a touch of submersible feel.
+      // Phone: the gyroscope steers. Raw sensor readings jitter, so ease onto
+      // the target with a very short (~70 ms) time constant — enough to soak
+      // up the shake, too quick to read as lag. (The old ~300 ms ease was the
+      // laggy-look bug; don't slow this back down.)
+      const smooth = 1 - Math.pow(0.000001, delta);
       const prevYaw = r.yaw;
-      r.yaw = look.yaw;
-      r.pitch = look.pitch;
+      r.yaw += (look.yaw - r.yaw) * smooth;
+      r.pitch += (look.pitch - r.pitch) * smooth;
       const bank = THREE.MathUtils.clamp((r.yaw - prevYaw) * 1.6, -0.3, 0.3);
       camera.rotation.set(r.pitch, r.yaw, bank, "YXZ");
     } else {

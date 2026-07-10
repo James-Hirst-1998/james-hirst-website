@@ -151,7 +151,7 @@ const LookHint = () => {
   if (!show) return null;
   return (
     <div className="look-hint" aria-hidden="true">
-      Swipe or tilt your phone to look around
+      Move your phone around to look
     </div>
   );
 };
@@ -331,7 +331,7 @@ const SeabedFooter = () => {
           </a>
         </div>
         <p className="seabed__egg">
-          See anything you liked on the way down? Meet the{" "}
+          See anything you liked on the way down? <br /> Meet the{" "}
           <Link to="/creatures">sea creatures</Link> up close — and wait, is
           that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
@@ -382,52 +382,18 @@ const DivePage = () => {
     };
   }, []);
 
-  // Phone look-around. Two inputs steer the same view so there's always a way
-  // to look: swipe sideways to turn (vertical touches still scroll/dive), and
-  // — where the sensor allows — tilt or pan the phone via the gyroscope.
+  // Phone look-around: gyroscope only — pan or tilt the phone to look.
+  // Swipes used to steer too, but they fought page scrolling (a vertical
+  // scroll leaked wobble into yaw), so touches are left entirely to the
+  // browser and the sensor owns the view.
   useEffect(() => {
     if (!show3D || !window.matchMedia("(pointer: coarse)").matches)
       return undefined;
     const clamp = (v) => Math.min(Math.max(v, -0.75), 0.75);
-    // Enable the look camera up front so swipes work even if the gyroscope
-    // never reports (permission denied, no sensor, insecure origin).
-    look.active = true;
 
-    // --- Swipe to look: horizontal drag turns the view; a clearly sideways
-    // drag also tilts it. Vertical drags fall through to the page scroll. ---
-    let lastX = null;
-    let lastY = null;
-    let touching = false; // the gyro yields while a finger is steering
-    const onTouchStart = (e) => {
-      touching = true;
-      lastX = e.touches[0].clientX;
-      lastY = e.touches[0].clientY;
-    };
-    const onTouchMove = (e) => {
-      if (lastX === null) return;
-      const x = e.touches[0].clientX;
-      const y = e.touches[0].clientY;
-      const dx = x - lastX;
-      const dy = y - lastY;
-      lastX = x;
-      lastY = y;
-      look.yaw += dx * 0.005;
-      if (Math.abs(dx) > Math.abs(dy))
-        look.pitch = clamp(look.pitch + dy * 0.003);
-    };
-    const onTouchEnd = (e) => {
-      touching = e.touches.length > 0;
-      lastX = null;
-      lastY = null;
-    };
-    window.addEventListener("touchstart", onTouchStart, { passive: true });
-    window.addEventListener("touchmove", onTouchMove, { passive: true });
-    window.addEventListener("touchend", onTouchEnd, { passive: true });
-
-    // --- Gyroscope: layered on top of swipes. Both axes are incremental
-    // (deltas since the last reading) so the sensor nudges the view rather
-    // than owning it — an absolute pitch would stomp whatever a swipe set,
-    // making the view rubber-band back after every drag. ---
+    // Both axes are incremental (deltas since the last reading), relative to
+    // wherever the phone was pointing on the first report — so the dive
+    // always starts facing forward, not at some compass heading.
     let lastAlpha = null;
     let lastBeta = null;
     const onOrientation = (e) => {
@@ -435,6 +401,9 @@ const DivePage = () => {
       if (lastAlpha === null) {
         lastAlpha = e.alpha;
         lastBeta = e.beta;
+        // Hand the camera to the gyro only once the sensor actually reports,
+        // so denied permission / no sensor keeps the desktop pointer path.
+        look.active = true;
       }
       // Unwrap alpha so turning right around keeps rotating instead of snapping.
       let step = e.alpha - lastAlpha;
@@ -443,9 +412,6 @@ const DivePage = () => {
       const pitchStep = e.beta - lastBeta;
       lastAlpha = e.alpha;
       lastBeta = e.beta;
-      // Keep the baselines fresh while a finger steers, but let the swipe win —
-      // gyro and touch fighting over the same target reads as lag.
-      if (touching) return;
       look.yaw += (step * Math.PI) / 180;
       look.pitch = clamp(look.pitch + (pitchStep * Math.PI) / 180);
     };
@@ -474,9 +440,6 @@ const DivePage = () => {
     }
 
     return () => {
-      window.removeEventListener("touchstart", onTouchStart);
-      window.removeEventListener("touchmove", onTouchMove);
-      window.removeEventListener("touchend", onTouchEnd);
       cleanupGesture();
       window.removeEventListener("deviceorientation", onOrientation);
       look.active = false;
