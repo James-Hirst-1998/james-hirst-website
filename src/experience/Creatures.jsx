@@ -1066,6 +1066,573 @@ export const DumboOctopusModel = () => {
 };
 
 // ===========================================================================
+// Shark collection — PLACEHOLDERS. Each is a standalone copy of the same
+// generic shark shape, differing only in colour, so every species can be
+// improved individually later without touching the others. They appear only
+// in the /creatures viewer (grouped under "Sharks"), never in the dive.
+// ===========================================================================
+
+// Tiger Shark · Galeocerdo cuvier — PLACEHOLDER
+export const TigerSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#5f6f52" emissive="#171d12" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#c4c9b8" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Whale Shark · Rhincodon typus — PLACEHOLDER
+export const WhaleSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#38566a" emissive="#14222c" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#9fb0ba" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Bull Shark · Carcharhinus leucas — PLACEHOLDER
+export const BullSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#8b8f88" emissive="#23251f" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#d0d2cb" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Blue Shark · Prionace glauca — PLACEHOLDER
+export const BlueSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#3a5a9c" emissive="#101c3a" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#b8c6e0" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Shortfin Mako · Isurus oxyrinchus — PLACEHOLDER
+export const MakoSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#2f6285" emissive="#0e2634" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#b6d2e0" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Thresher Shark · Alopias vulpinus — PLACEHOLDER
+export const ThresherSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#566b7a" emissive="#1a2831" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#c2ccce" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Oceanic Whitetip · Carcharhinus longimanus — PLACEHOLDER
+export const OceanicWhitetipModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#7d7860" emissive="#201d14" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#ceccbc" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Zebra Shark · Stegostoma tigrinum — PLACEHOLDER
+export const ZebraSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#b39a5c" emissive="#2a2312" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#e6dcc0" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Goblin Shark · Mitsukurina owstoni — PLACEHOLDER
+export const GoblinSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#c98a90" emissive="#351d20" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#ecd6d6" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Tasselled Wobbegong · Eucrossorhinus dasypogon — PLACEHOLDER
+export const WobbegongModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#7a6a48" emissive="#241d10" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#b8a878" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Frilled Shark · Chlamydoselachus anguineus — PLACEHOLDER
+export const FrilledSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#5b4a3a" emissive="#1c150e" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#a89478" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Greenland Shark · Somniosus microcephalus — PLACEHOLDER
+export const GreenlandSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#4a5258" emissive="#14181b" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#a2aab0" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Cookiecutter Shark · Isistius brasiliensis — PLACEHOLDER
+export const CookiecutterSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#4d3b40" emissive="#16100f" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#8a6f74" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Epaulette Shark · Hemiscyllium ocellatum — PLACEHOLDER
+export const EpauletteSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#a8935f" emissive="#281f10" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#e0d2ac" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Angel Shark · Squatina squatina — PLACEHOLDER
+export const AngelSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#9a9174" emissive="#24200f" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#ccc6ac" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// Port Jackson Shark · Heterodontus portusjacksoni — PLACEHOLDER
+export const PortJacksonSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 2.2) * 0.45;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#8a7f70" emissive="#211c14" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const bellyMat = <meshStandardMaterial color="#c8bfae" flatShading roughness={0.6} />;
+  return (
+    <group>
+      <mesh scale={[0.5, 0.55, 1.75]}><sphereGeometry args={[1, 12, 9]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.02, 1.5]} scale={[0.32, 0.34, 0.6]}><sphereGeometry args={[1, 10, 8]} />{bodyMat}</mesh>
+      <mesh position={[0, -0.2, 0.15]} scale={[0.38, 0.32, 0.95]}><sphereGeometry args={[1, 10, 8]} />{bellyMat}</mesh>
+      <mesh position={[0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[-0.26, 0.1, 1.4]} scale={0.055}><sphereGeometry args={[1, 8, 6]} /><meshStandardMaterial color="#0d1216" roughness={0.35} /></mesh>
+      <mesh position={[0, 0.68, -0.05]} rotation-x={-0.45} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[0.55, -0.2, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>{bodyMat}</mesh>
+      <group ref={tail} position={[0, 0, -1.6]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}><coneGeometry args={[0.24, 0.7, 6]} />{bodyMat}</mesh>
+        <mesh position={[0, 0.3, -0.42]} rotation-x={-2.45} geometry={finGeometry} scale={1.1}>{bodyMat}</mesh>
+        <mesh position={[0, -0.2, -0.38]} rotation-x={2.65} geometry={finGeometry} scale={0.65}>{bodyMat}</mesh>
+      </group>
+    </group>
+  );
+};
+
+// ===========================================================================
 // Scene wrappers — carry a model along an orbit through the dive.
 // ===========================================================================
 

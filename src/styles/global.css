@@ -150,9 +150,16 @@ a {
   top: 11px;
 }
 
+.panel__links {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 6px;
+}
+
 .panel__link {
   display: inline-block;
-  margin-top: 6px;
   font-weight: 600;
   font-size: 14.5px;
   text-decoration: none;
