@@ -21,6 +21,8 @@ import {
   GulperEel,
   DumboOctopus,
   DolphinPod,
+  SpermWhale,
+  Swordfish,
 } from "./Creatures";
 import { Seabed } from "./Seabed";
 
@@ -122,6 +124,8 @@ const Scene = () => (
     <Sunfish center={[-6, -22, 8]} radius={13} speed={0.06} />
     <FishSchool center={[8, -26, -8]} count={28} radius={6} speed={0.45} color="#e8b46a" scale={0.7} direction={-1} />
     <FishSchool center={[-2, -22, 26]} count={24} radius={6} speed={0.36} color="#b9d3a8" scale={0.8} />
+    {/* a swordfish flashing past on the edge of the blue */}
+    <Swordfish center={[4, -32, -2]} radius={16} speed={0.38} />
     <FishSchool center={[-6, -38, -12]} count={36} radius={8} speed={0.28} color="#7fa8d9" scale={0.9} />
     <FishSchool center={[7, -42, 24]} count={18} radius={5} speed={0.4} color="#d9c17f" scale={0.7} direction={-1} />
     {/* twilight zone — big predators cruising wide, slow circles */}
@@ -134,6 +138,8 @@ const Scene = () => (
     <FishSchool center={[6, -75, -9]} count={22} radius={5.5} speed={0.3} color="#6f8898" scale={0.75} />
     <FishSchool center={[-4, -80, 25]} count={14} radius={4.5} speed={0.26} color="#5f7484" scale={0.6} direction={-1} />
     {/* the deep dark — squid, anglerfish, gulper eel, dumbo octopus */}
+    {/* the sperm whale hunts a wide circle above the giant squid */}
+    <SpermWhale center={[-4, -74, -14]} radius={18} speed={0.045} />
     <GiantSquid center={[5, -82, -7]} radius={9} speed={0.07} />
     <Anglerfish center={[-4, -86, -8]} radius={6.5} speed={0.16} />
     <GulperEel center={[-5, -92, 6]} radius={8} speed={0.09} />
