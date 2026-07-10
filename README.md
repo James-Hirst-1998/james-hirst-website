@@ -34,6 +34,24 @@ all content stays fully readable without the 3D scene.
 
 ## Deployment
 
-Hosted on [Azure Static Web Apps](https://learn.microsoft.com/en-us/azure/static-web-apps/overview).
-Merging to `main` triggers the workflow in `.github/workflows/`, which builds the
-site and serves `dist/`. No manual steps required.
+Hosted on [Vercel](https://vercel.com/), connected to this GitHub repo. Pushing to
+`Main` auto-deploys to production; every pull request gets its own preview URL. Vercel
+auto-detects the Vite preset (`npm run build` → `dist/`), so no manual steps are needed.
+
+`vercel.json` rewrites all paths to `/index.html` so client-side routes (`react-router`
+`BrowserRouter`, e.g. `/creatures`) resolve on direct load and refresh.
+
+### Domain
+
+`jamesjhirst.com` is registered and its DNS is managed at **Squarespace** (a former
+Google Domains registration, so its zone still runs on Google's nameservers —
+`ns-cloud-*.googledomains.com`. Vercel refers to this as "Google Cloud DNS", but it's
+edited from the Squarespace DNS panel). Two records point it at Vercel:
+
+| Type  | Name  | Value                                  |
+| ----- | ----- | -------------------------------------- |
+| A     | `@`   | `76.76.21.21`                          |
+| CNAME | `www` | `316a946600c09e33.vercel-dns-017.com`  |
+
+`www.jamesjhirst.com` is the canonical domain; the apex `jamesjhirst.com` 308-redirects
+to `www` (configured in Vercel → Settings → Domains).
