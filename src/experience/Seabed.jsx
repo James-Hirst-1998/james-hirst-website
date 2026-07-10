@@ -104,7 +104,10 @@ export const Seabed = () => {
       <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
       {/* behind the camera — reward for a look back at the bottom */}
       <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
-      <Octopus position={[7, FLOOR_Y - 1.1, 15]} />
+      {/* Out ahead on the open floor, not tucked directly underfoot where the
+          camera can't tilt down to it. A soft fill lifts it from the gloom. */}
+      <pointLight position={[-5, FLOOR_Y + 2, -16]} color="#c98a94" intensity={6} distance={11} />
+      <Octopus position={[-5, FLOOR_Y - 0.1, -16]} />
       <Fishbowl />
     </group>
   );
