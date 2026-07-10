@@ -42,9 +42,10 @@ export const initAnalytics = () => {
     capture_pageview: false,
     capture_pageleave: true,
     autocapture: true,
-    // Records scrolling, clicks and the UI overlays. Note: the WebGL <canvas>
-    // itself isn't captured (replay records the DOM, not rendered pixels).
-    disable_session_recording: false,
+    // Session replay stays OFF: its recorder watches the DOM through a
+    // MutationObserver and periodically serialises/flushes on the main
+    // thread, which froze the dive for ~a second at a time.
+    disable_session_recording: true,
   });
 };
 

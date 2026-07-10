@@ -1,9 +1,14 @@
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Octopus, CrabModel } from "./Creatures";
+import { Octopus, CrabModel, CULL_RANGE } from "./Creatures";
 
 const FLOOR_Y = -107;
+
+// The whole seabed sits in fog until the last stretch of the dive; while the
+// camera is too far above it the root group is hidden (see Seabed below) and
+// the swaying/scuttling animations early-out with this check.
+const seabedInView = (state) => state.camera.position.y < FLOOR_Y + CULL_RANGE;
 
 // The floor plane's vertex displacement, mapped to world space (the plane is
 // rotated -90° about x, so plane-local y runs along world -z). Lets props sit
@@ -14,6 +19,7 @@ const floorHeight = (x, z) =>
 const Kelp = ({ position, height, phase }) => {
   const ref = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     ref.current.rotation.z = Math.sin(t * 0.55 + phase) * 0.09;
     ref.current.rotation.x = Math.cos(t * 0.4 + phase) * 0.05;
@@ -61,6 +67,7 @@ const Starfish = ({ position, scale = 1, color = "#d97b52", spin = 0 }) => (
 const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
   const crown = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     crown.current.rotation.z = Math.sin(t * 0.7 + phase) * 0.08;
     const breathe = 1 + Math.sin(t * 1.3 + phase) * 0.06;
@@ -91,6 +98,7 @@ const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
 const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }) => {
   const group = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     const cx = x + Math.sin(t * speed) * range;
     const skitter = Math.abs(Math.sin(t * 6)) * 0.03;
@@ -107,6 +115,7 @@ const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }
 const Fishbowl = () => {
   const fish = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     fish.current.position.set(Math.cos(t * 1.4) * 0.32, 0.15 + Math.sin(t * 2.2) * 0.08, Math.sin(t * 1.4) * 0.32);
     fish.current.rotation.y = -t * 1.4 + Math.PI / 2;
@@ -133,6 +142,12 @@ const Fishbowl = () => {
 };
 
 export const Seabed = () => {
+  const root = useRef();
+  useFrame((state) => {
+    const visible = seabedInView(state);
+    if (root.current.visible !== visible) root.current.visible = visible;
+  });
+
   const floorGeometry = useMemo(() => {
     // Big enough that a full 360° look-around never reveals an edge.
     const geo = new THREE.PlaneGeometry(220, 220, 56, 56);
@@ -161,7 +176,7 @@ export const Seabed = () => {
   }, []);
 
   return (
-    <group>
+    <group ref={root}>
       <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
         <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
       </mesh>

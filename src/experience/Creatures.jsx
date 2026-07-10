@@ -27,6 +27,18 @@ const getFishGeometry = () => {
   return fishGeometry;
 };
 
+// The dive's fog swallows everything ~58 units out (the background is the fog
+// colour, so a fully-fogged mesh vanishes into it). Creatures far enough
+// above or below the camera therefore can't be seen, and their wrappers use
+// this to skip animation work and drop the draw calls entirely. The margin
+// over fog.far covers orbit bob, body size and the horizontal orbit radius.
+export const CULL_RANGE = 80;
+export const cullByDepth = (object, cameraY, y) => {
+  const visible = Math.abs(cameraY - y) < CULL_RANGE;
+  if (object.visible !== visible) object.visible = visible;
+  return visible;
+};
+
 // A school of instanced fish circling a centre point with individual wobble.
 export const FishSchool = ({
   center = [0, -20, -8],
@@ -56,6 +68,7 @@ export const FishSchool = ({
   }, [count, radius, scale]);
 
   useFrame((state) => {
+    if (!cullByDepth(mesh.current, state.camera.position.y, center[1])) return;
     const t = state.clock.elapsedTime;
     for (let i = 0; i < fish.length; i++) {
       const f = fish[i];
@@ -3110,6 +3123,7 @@ const Orbiter = ({
   const group = useRef();
   const target = useMemo(() => new THREE.Vector3(), []);
   useFrame((state) => {
+    if (!cullByDepth(group.current, state.camera.position.y, center[1])) return;
     const t = state.clock.elapsedTime;
     const a = t * speed;
     const x = center[0] + Math.cos(a) * radius;
@@ -3135,6 +3149,7 @@ const Orbiter = ({
 const Drifter = ({ position, speed = 0.3, scale = 1, children }) => {
   const group = useRef();
   useFrame((state) => {
+    if (!cullByDepth(group.current, state.camera.position.y, position[1])) return;
     const t = state.clock.elapsedTime;
     group.current.position.set(
       position[0] + Math.sin(t * 0.2 * speed * 3) * 1.4,
@@ -3168,6 +3183,7 @@ export const Shark = ({ center = [0, -58, -10], radius = 15, speed = 0.14 }) => 
   const group = useRef();
   const target = useMemo(() => new THREE.Vector3(), []);
   useFrame((state) => {
+    if (!cullByDepth(group.current, state.camera.position.y, center[1])) return;
     const t = state.clock.elapsedTime;
     const a = t * speed;
     const x = center[0] + Math.cos(a) * radius;
@@ -3307,8 +3323,15 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
   };
 
   const here = useMemo(() => new THREE.Vector3(), []);
+  const root = useRef();
 
   useFrame((state) => {
+    if (!cullByDepth(root.current, state.camera.position.y, center[1])) {
+      // Clear the surface-crossing tracker while hidden, otherwise resuming
+      // compares against a minutes-old position and fires phantom splashes.
+      for (const d of pod) d.prevY = null;
+      return;
+    }
     const t = state.clock.elapsedTime;
     pod.forEach((d) => {
       if (!d.ref.current) return;
@@ -3385,7 +3408,7 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
   });
 
   return (
-    <group>
+    <group ref={root}>
       {pod.map((d, i) => (
         <group key={i} ref={d.ref} scale={d.size}>
           <DolphinModel />
@@ -3430,6 +3453,13 @@ export const Whale = ({ y = -40, z = -32, span = 110, speed = 3.2 }) => {
     const cycle = (span * 2) / speed;
     const phase = (t % cycle) / cycle;
     const x = -span + phase * span * 2;
+    // Culled on both axes: the whale spends most of each pass far off to the
+    // side, hidden in the fog, before crossing the visible window.
+    const visible =
+      Math.abs(state.camera.position.y - y) < CULL_RANGE &&
+      Math.abs(x) < CULL_RANGE;
+    if (group.current.visible !== visible) group.current.visible = visible;
+    if (!visible) return;
     group.current.position.set(x, y + Math.sin(t * 0.3) * 2.2, z);
     group.current.rotation.z = Math.sin(t * 0.3) * 0.05;
   });
@@ -3446,6 +3476,7 @@ const Jellyfish = ({ position, phase, tint }) => {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const y = position[1] + ((t * 0.5 + phase * 6) % 26);
+    if (!cullByDepth(group.current, state.camera.position.y, y)) return;
     group.current.position.set(
       position[0] + Math.sin(t * 0.25 + phase) * 1.6,
       y,
@@ -3480,6 +3511,7 @@ export const Anglerfish = ({ center = [0, -86, -8], radius = 6, speed = 0.16 }) 
 
 // An octopus perched on the seabed, tentacles swaying in the current.
 export const Octopus = ({ position = [7, 0, 15] }) => {
+  const root = useRef();
   const body = useRef();
   const tentacles = useMemo(
     () =>
@@ -3492,6 +3524,7 @@ export const Octopus = ({ position = [7, 0, 15] }) => {
   );
 
   useFrame((state) => {
+    if (!cullByDepth(root.current, state.camera.position.y, position[1])) return;
     const t = state.clock.elapsedTime;
     if (body.current) {
       const breathe = 1 + Math.sin(t * 1.1) * 0.05;
@@ -3505,7 +3538,7 @@ export const Octopus = ({ position = [7, 0, 15] }) => {
   });
 
   return (
-    <group position={position}>
+    <group ref={root} position={position}>
       <mesh ref={body} position={[0, 0.55, 0]}>
         <sphereGeometry args={[1, 10, 8]} />
         <meshStandardMaterial color="#8a4250" emissive="#2b0f16" emissiveIntensity={0.4} flatShading roughness={0.7} />

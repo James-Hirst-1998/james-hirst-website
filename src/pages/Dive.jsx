@@ -68,13 +68,26 @@ const DepthMeter = () => {
   const fillRef = useRef(null);
   useEffect(() => {
     let raf;
+    // Only touch the DOM when the displayed value actually changes — writing
+    // textContent replaces the text node even for an identical string, which
+    // is per-frame layout work (and fed PostHog's recorder a mutation storm).
+    const last = { depth: NaN, zone: "", height: NaN };
     const tick = () => {
       const depth = Math.round(depthAtProgress(scroll.progress));
-      if (valueRef.current)
+      if (depth !== last.depth && valueRef.current) {
+        last.depth = depth;
         valueRef.current.textContent = `-${depth.toLocaleString("en-GB")} m`;
-      if (zoneRef.current) zoneRef.current.textContent = zoneAtDepth(depth);
-      if (fillRef.current)
-        fillRef.current.style.height = `${scroll.progress * 100}%`;
+      }
+      const zone = zoneAtDepth(depth);
+      if (zone !== last.zone && zoneRef.current) {
+        last.zone = zone;
+        zoneRef.current.textContent = zone;
+      }
+      const height = Math.round(scroll.progress * 1000) / 10;
+      if (height !== last.height && fillRef.current) {
+        last.height = height;
+        fillRef.current.style.height = `${height}%`;
+      }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
