@@ -22,13 +22,13 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 - To add a creature: add a `XxxModel` in `src/experience/Creatures.jsx`, import it + add a `CREATURES` entry in `src/pages/Creatures.jsx`, and optionally place its scene wrapper in `Scene` in `OceanCanvas.jsx` to have it swim in the dive.
 
 ## Interaction model
-- Dive look-around: desktop steers by cursor position (`pointer`), mobile by touch swipes + gyroscope — both write to `look` and the camera follows in `CameraRig` (`OceanCanvas.jsx`).
-- Creature viewer: pointer events (mouse + touch) drag to rotate; idle auto-spin when not dragging (`CreatureStage` / `Turntable`).
+- Dive look-around: desktop steers by cursor position (`pointer`), mobile by moving the phone (gyroscope only — swipes are left to page scroll); both write to `look` and the camera follows in `CameraRig` (`OceanCanvas.jsx`).
+- Creature viewer: mouse drags via pointer events, mobile drags via native touch listeners; idle auto-spin when not dragging (`CreatureStage` / `Turntable`).
 
 ## Web + mobile gotchas
 - `touch-action: none` is required on any element a touch-drag starts on (including the R3F `<canvas>`, not just its wrapper) or the browser eats the gesture as a scroll on mobile.
 - Don't trust pointer events for touch drags — real devices cancel the stream mid-drag; use native touch listeners (`addEventListener`, `{ passive: false }` + `preventDefault`) and skip `pointerType === "touch"` in the pointer handlers.
 - React's synthetic `onTouchMove` is registered passive — `preventDefault` inside it does nothing; native listeners only.
-- Gyroscope input must be applied as per-event deltas, never absolute values, or it stomps whatever a swipe set and the view rubber-bands; pause gyro while a finger is down.
-- Touch/gyro already move smoothly — apply their values to the camera directly; extra `useFrame` easing on top just adds visible lag.
-- Mobile touch listeners on the dive are `{ passive: true }` so vertical swipes still scroll/dive the page (the creature stage is the exception — it never scrolls).
+- Gyroscope input must be applied as per-event deltas, never absolute values (absolute overrides rubber-band the view); don't mix it with swipe steering — the two fight and the loser is whoever the user was using.
+- Raw gyro readings jitter — ease the camera onto the `look` target with a very short (~70 ms) time constant; long easing (~300 ms) reads as lag, none reads as shake.
+- iOS needs `DeviceOrientationEvent.requestPermission()` from a user gesture (we ask on first `touchend`); only set `look.active` once the sensor actually reports.
