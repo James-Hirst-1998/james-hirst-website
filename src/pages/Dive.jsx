@@ -397,7 +397,9 @@ const DivePage = () => {
     // drag also tilts it. Vertical drags fall through to the page scroll. ---
     let lastX = null;
     let lastY = null;
+    let touching = false; // the gyro yields while a finger is steering
     const onTouchStart = (e) => {
+      touching = true;
       lastX = e.touches[0].clientX;
       lastY = e.touches[0].clientY;
     };
@@ -413,7 +415,8 @@ const DivePage = () => {
       if (Math.abs(dx) > Math.abs(dy))
         look.pitch = clamp(look.pitch + dy * 0.003);
     };
-    const onTouchEnd = () => {
+    const onTouchEnd = (e) => {
+      touching = e.touches.length > 0;
       lastX = null;
       lastY = null;
     };
@@ -421,23 +424,30 @@ const DivePage = () => {
     window.addEventListener("touchmove", onTouchMove, { passive: true });
     window.addEventListener("touchend", onTouchEnd, { passive: true });
 
-    // --- Gyroscope: layered on top of swipes, relative to where you started
-    // so the view begins facing forward rather than at some compass heading. ---
+    // --- Gyroscope: layered on top of swipes. Both axes are incremental
+    // (deltas since the last reading) so the sensor nudges the view rather
+    // than owning it — an absolute pitch would stomp whatever a swipe set,
+    // making the view rubber-band back after every drag. ---
     let lastAlpha = null;
-    let baseBeta = null;
+    let lastBeta = null;
     const onOrientation = (e) => {
       if (e.alpha == null || e.beta == null) return;
       if (lastAlpha === null) {
         lastAlpha = e.alpha;
-        baseBeta = e.beta;
+        lastBeta = e.beta;
       }
       // Unwrap alpha so turning right around keeps rotating instead of snapping.
       let step = e.alpha - lastAlpha;
       if (step > 180) step -= 360;
       if (step < -180) step += 360;
+      const pitchStep = e.beta - lastBeta;
       lastAlpha = e.alpha;
+      lastBeta = e.beta;
+      // Keep the baselines fresh while a finger steers, but let the swipe win —
+      // gyro and touch fighting over the same target reads as lag.
+      if (touching) return;
       look.yaw += (step * Math.PI) / 180;
-      look.pitch = clamp(((e.beta - baseBeta) * Math.PI) / 180);
+      look.pitch = clamp(look.pitch + (pitchStep * Math.PI) / 180);
     };
 
     const listen = () =>
