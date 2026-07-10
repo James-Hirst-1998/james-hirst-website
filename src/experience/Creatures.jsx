@@ -113,8 +113,9 @@ export const SharkModel = () => {
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
       </mesh>
-      {/* tapered snout */}
-      <mesh position={[0, -0.02, 1.55]} scale={[0.3, 0.32, 0.55]}>
+      {/* tapered snout — tucked inside the body line so it runs straight out
+          to a point instead of bulging past the head */}
+      <mesh position={[0, -0.02, 1.45]} scale={[0.24, 0.26, 0.76]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
       </mesh>
@@ -467,6 +468,98 @@ export const WhaleModel = () => {
         <mesh position={[-0.42, 0, -0.68]} rotation-y={-0.45} scale={[0.52, 0.05, 0.28]}>
           <sphereGeometry args={[1, 8, 6]} />
           {darkMat}
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+// A sperm whale — a third of it is that great squared-off head. Dark grey
+// all over, a narrow pale underslung jaw, stubby paddle fins, and no true
+// dorsal — just a low hump and knuckles running down to broad flukes.
+export const SpermWhaleModel = () => {
+  const tail = useRef();
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.x = Math.sin(t * 0.9) * 0.16;
+  });
+  const grey = "#57616c";
+  const greyMat = (
+    <meshStandardMaterial color={grey} emissive="#1a222b" emissiveIntensity={0.45} flatShading roughness={0.7} />
+  );
+  return (
+    <group scale={2.4}>
+      {/* body, sitting behind the head block */}
+      <mesh position={[0, 0, -0.5]} scale={[0.52, 0.6, 1.6]}>
+        <sphereGeometry args={[1, 14, 10]} />
+        {greyMat}
+      </mesh>
+      {/* the huge blunt head — a third of the whale. A cylinder gives the
+          squared-off front without box corners; world y/z swap under the
+          rotation, so scale-y runs along the body. */}
+      <mesh position={[0, 0.05, 1.15]} rotation-x={Math.PI / 2} scale={[1.12, 1, 1.32]}>
+        <cylinderGeometry args={[0.5, 0.54, 1.5, 12]} />
+        {greyMat}
+      </mesh>
+      {/* rounded brow easing the front edge */}
+      <mesh position={[0, 0.18, 1.5]} scale={[0.42, 0.44, 0.44]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {greyMat}
+      </mesh>
+      {/* rounded shoulders easing the box into the body */}
+      <mesh position={[0, 0.04, 0.55]} scale={[0.46, 0.56, 0.7]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {greyMat}
+      </mesh>
+      {/* narrow pale lower jaw hanging just below the head line */}
+      <mesh position={[0, -0.64, 1.35]} scale={[0.14, 0.07, 0.58]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#b9c6cb" flatShading roughness={0.65} />
+      </mesh>
+      {/* eyes low on the head sides, just proud of the curve */}
+      <mesh position={[0.5, -0.3, 1.45]} scale={0.05}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0b1216" roughness={0.35} />
+      </mesh>
+      <mesh position={[-0.5, -0.3, 1.45]} scale={0.05}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0b1216" roughness={0.35} />
+      </mesh>
+      {/* stubby paddle pectorals */}
+      <mesh position={[0.52, -0.36, 0.2]} rotation-z={-0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      <mesh position={[-0.52, -0.36, 0.2]} rotation-z={0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      {/* low dorsal hump, then knuckles stepping down the tail stock */}
+      <mesh position={[0, 0.56, -0.85]} scale={[0.1, 0.15, 0.32]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      <mesh position={[0, 0.44, -1.35]} scale={[0.07, 0.09, 0.16]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      <mesh position={[0, 0.31, -1.75]} scale={[0.06, 0.07, 0.13]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      {/* tail stock tapering into broad flukes */}
+      <group ref={tail} position={[0, 0.05, -2.0]}>
+        <mesh position={[0, 0, -0.15]} rotation-x={-Math.PI / 2} scale={[0.6, 1, 1]}>
+          <coneGeometry args={[0.22, 0.7, 6]} />
+          {greyMat}
+        </mesh>
+        <mesh position={[0.38, 0, -0.52]} rotation-y={0.45} scale={[0.48, 0.05, 0.26]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          {greyMat}
+        </mesh>
+        <mesh position={[-0.38, 0, -0.52]} rotation-y={-0.45} scale={[0.48, 0.05, 0.26]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          {greyMat}
         </mesh>
       </group>
     </group>
@@ -1061,6 +1154,182 @@ export const DumboOctopusModel = () => {
           );
         })}
       </group>
+    </group>
+  );
+};
+
+// A swordfish — a streamlined steel-blue sprinter: long flattened bill, a
+// tall sickle of a first dorsal, keeled tail stock and a big crescent tail.
+export const SwordfishModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 3.4) * 0.32;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#3d5570" emissive="#15202e" emissiveIntensity={0.45} flatShading roughness={0.45} metalness={0.3} />
+  );
+  return (
+    <group scale={1.1}>
+      {/* body */}
+      <mesh scale={[0.3, 0.44, 1.45]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {bodyMat}
+      </mesh>
+      {/* silvery belly */}
+      <mesh position={[0, -0.15, 0.05]} scale={[0.2, 0.28, 1.1]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#c3d1d9" flatShading roughness={0.4} metalness={0.35} />
+      </mesh>
+      {/* head tapering toward the bill */}
+      <mesh position={[0, 0.02, 1.35]} scale={[0.18, 0.26, 0.55]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        {bodyMat}
+      </mesh>
+      {/* the sword — a long flattened bill */}
+      <mesh position={[0, 0.05, 2.45]} rotation-x={Math.PI / 2} scale={[1.6, 1, 1]}>
+        <cylinderGeometry args={[0.012, 0.05, 1.5, 5]} />
+        {bodyMat}
+      </mesh>
+      {/* big eyes for hunting in the dim */}
+      <mesh position={[0.16, 0.06, 1.42]} scale={0.07}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0d1216" roughness={0.3} />
+      </mesh>
+      <mesh position={[-0.16, 0.06, 1.42]} scale={0.07}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0d1216" roughness={0.3} />
+      </mesh>
+      {/* tall sickle dorsal swept hard back */}
+      <mesh position={[0, 0.72, 0.35]} rotation-x={-0.6} geometry={finGeometry} scale={[1, 1.25, 1]}>
+        {bodyMat}
+      </mesh>
+      {/* small second dorsal near the tail */}
+      <mesh position={[0, 0.32, -1.15]} rotation-x={-0.7} geometry={finGeometry} scale={0.35}>
+        {bodyMat}
+      </mesh>
+      {/* long swept pectorals held low */}
+      <mesh position={[0.3, -0.16, 0.5]} rotation-z={-2.2} rotation-x={0.7} geometry={finGeometry} scale={0.85}>
+        {bodyMat}
+      </mesh>
+      <mesh position={[-0.3, -0.16, 0.5]} rotation-z={2.2} rotation-x={0.7} geometry={finGeometry} scale={0.85}>
+        {bodyMat}
+      </mesh>
+      {/* caudal keels either side of the tail stock */}
+      <mesh position={[0.1, 0, -1.42]} scale={[0.08, 0.03, 0.2]}>
+        <sphereGeometry args={[1, 6, 5]} />
+        {bodyMat}
+      </mesh>
+      <mesh position={[-0.1, 0, -1.42]} scale={[0.08, 0.03, 0.2]}>
+        <sphereGeometry args={[1, 6, 5]} />
+        {bodyMat}
+      </mesh>
+      {/* tail: slim peduncle into a big near-symmetric crescent */}
+      <group ref={tail} position={[0, 0, -1.5]}>
+        <mesh position={[0, 0, -0.05]} rotation-x={-Math.PI / 2} scale={[0.5, 1, 1]}>
+          <coneGeometry args={[0.16, 0.5, 6]} />
+          {bodyMat}
+        </mesh>
+        <mesh position={[0, 0.3, -0.35]} rotation-x={-2.4} geometry={finGeometry} scale={1.15}>
+          {bodyMat}
+        </mesh>
+        <mesh position={[0, -0.3, -0.35]} rotation-x={2.4} geometry={finGeometry} scale={1.05}>
+          {bodyMat}
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+// A crab — a flat oval shell, stalked eyes, two claws held up ready, and four
+// pairs of skittering legs. Faces +z; walking sideways is the wrapper's job.
+export const CrabModel = () => {
+  const clawL = useRef();
+  const clawR = useRef();
+  const legs = useMemo(
+    () =>
+      Array.from({ length: 8 }, (_, i) => ({
+        ref: React.createRef(),
+        side: i < 4 ? 1 : -1,
+        idx: i % 4,
+      })),
+    []
+  );
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (clawL.current) clawL.current.rotation.x = -0.5 + Math.sin(t * 1.6) * 0.18;
+    if (clawR.current) clawR.current.rotation.x = -0.5 + Math.sin(t * 1.6 + 1.1) * 0.18;
+    legs.forEach((l) => {
+      if (l.ref.current) l.ref.current.rotation.z = l.side * (0.55 + Math.sin(t * 5 + l.idx * 1.3 + l.side) * 0.12);
+    });
+  });
+  const shell = "#c05a3e";
+  const shellMat = (
+    <meshStandardMaterial color={shell} emissive="#38140b" emissiveIntensity={0.4} flatShading roughness={0.7} />
+  );
+  return (
+    <group>
+      {/* carapace, wider than it is long, with a paler underside */}
+      <mesh scale={[0.62, 0.24, 0.46]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {shellMat}
+      </mesh>
+      <mesh position={[0, -0.1, 0]} scale={[0.5, 0.16, 0.36]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#e0a583" flatShading roughness={0.75} />
+      </mesh>
+      {/* stalked eyes peering forward */}
+      {[0.14, -0.14].map((x) => (
+        <group key={x} position={[x, 0.16, 0.36]}>
+          <mesh rotation-x={0.5}>
+            <cylinderGeometry args={[0.025, 0.035, 0.18, 5]} />
+            {shellMat}
+          </mesh>
+          <mesh position={[0, 0.1, 0.06]} scale={0.055}>
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshStandardMaterial color="#12161b" roughness={0.3} />
+          </mesh>
+        </group>
+      ))}
+      {/* claws held up in front, hinged at the shoulder */}
+      {[
+        { x: 0.42, ref: clawL, flip: 1 },
+        { x: -0.42, ref: clawR, flip: -1 },
+      ].map(({ x, ref, flip }) => (
+        <group key={flip} position={[x, 0, 0.32]} rotation-y={flip * 0.5}>
+          <group ref={ref} rotation-x={-0.5}>
+            <mesh position={[0, 0, 0.16]} rotation-x={Math.PI / 2}>
+              <cylinderGeometry args={[0.04, 0.055, 0.3, 5]} />
+              {shellMat}
+            </mesh>
+            <mesh position={[0, 0.02, 0.38]} scale={[0.11, 0.09, 0.16]}>
+              <sphereGeometry args={[1, 8, 6]} />
+              {shellMat}
+            </mesh>
+            {/* the pincer's fixed finger */}
+            <mesh position={[0, 0.06, 0.52]} rotation-x={Math.PI / 2} scale={[0.5, 1, 1]}>
+              <coneGeometry args={[0.045, 0.16, 4]} />
+              {shellMat}
+            </mesh>
+          </group>
+        </group>
+      ))}
+      {/* four walking legs per side, kicked out and down */}
+      {legs.map((l, i) => (
+        <group key={i} position={[l.side * 0.5, -0.04, 0.24 - l.idx * 0.18]}>
+          <group ref={l.ref} rotation-z={l.side * 0.55}>
+            <mesh position={[l.side * 0.2, -0.08, 0]} rotation-z={l.side * 1.2}>
+              <cylinderGeometry args={[0.02, 0.035, 0.42, 4]} />
+              {shellMat}
+            </mesh>
+          </group>
+        </group>
+      ))}
     </group>
   );
 };
@@ -2715,6 +2984,114 @@ export const PortJacksonSharkModel = () => {
   );
 };
 
+// Basking Shark · Cetorhinus maximus — the second-largest fish alive:
+// grey-brown, a cavernous gaping mouth, gill slits that nearly ring the
+// head, and a tall crescent tail pushing it slowly through the plankton.
+export const BaskingSharkModel = () => {
+  const tail = useRef();
+  const finGeometry = useMemo(() => {
+    const geo = new THREE.ConeGeometry(0.5, 1.1, 4);
+    geo.scale(0.18, 1, 1);
+    return geo;
+  }, []);
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 0.9) * 0.3;
+  });
+  const bodyMat = (
+    <meshStandardMaterial color="#6a6157" emissive="#241f19" emissiveIntensity={0.4} flatShading roughness={0.7} />
+  );
+  return (
+    <group scale={1.2}>
+      {/* heavy barrel body */}
+      <mesh scale={[0.52, 0.55, 1.8]}>
+        <sphereGeometry args={[1, 14, 10]} />
+        {bodyMat}
+      </mesh>
+      {/* pale belly */}
+      <mesh position={[0, -0.22, -0.1]} scale={[0.4, 0.32, 1.15]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#b0aa9c" flatShading roughness={0.7} />
+      </mesh>
+      {/* the head mid-gulp is two bulbs: the rounded snout above, the dropped
+          lower jaw below, the dark gape stretched between them, and a strut
+          either side where the jaw hinges join at the mouth corners */}
+      <mesh position={[0, 0.16, 1.45]} scale={[0.34, 0.26, 0.62]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {bodyMat}
+      </mesh>
+      <mesh position={[0, -0.38, 1.35]} scale={[0.28, 0.16, 0.5]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        {bodyMat}
+      </mesh>
+      {/* the gape itself, proud of the tapering body at the front */}
+      <mesh position={[0, -0.11, 1.42]} scale={[0.3, 0.24, 0.38]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        <meshStandardMaterial color="#12100d" roughness={0.9} />
+      </mesh>
+      {/* mouth-corner struts bridging snout and jaw */}
+      <mesh position={[0.27, -0.12, 1.12]} scale={[0.07, 0.24, 0.2]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {bodyMat}
+      </mesh>
+      <mesh position={[-0.27, -0.12, 1.12]} scale={[0.07, 0.24, 0.2]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {bodyMat}
+      </mesh>
+      {/* small eyes on the snout, above the mouth corners */}
+      <mesh position={[0.28, 0.16, 1.78]} scale={0.04}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0d1216" roughness={0.35} />
+      </mesh>
+      <mesh position={[-0.28, 0.16, 1.78]} scale={0.04}>
+        <sphereGeometry args={[1, 8, 6]} />
+        <meshStandardMaterial color="#0d1216" roughness={0.35} />
+      </mesh>
+      {/* five gill collars wrapping the body just behind the head, sized to
+          the body's cross-section so they hug the skin — on a basking shark
+          they nearly meet under the throat */}
+      {[0.45, 0.6, 0.75, 0.9, 1.05].map((z) => {
+        const f = Math.sqrt(1 - (z / 1.8) ** 2);
+        return (
+          <mesh
+            key={z}
+            position={[0, 0, z]}
+            rotation-z={-Math.PI / 2 - Math.PI * 0.55}
+            scale={[0.52 * f + 0.01, 0.55 * f + 0.01, 1]}
+          >
+            <torusGeometry args={[1, 0.04, 6, 24, Math.PI * 1.1]} />
+            <meshStandardMaterial color="#332d26" roughness={0.85} />
+          </mesh>
+        );
+      })}
+      {/* tall triangular dorsal */}
+      <mesh position={[0, 0.68, -0.2]} rotation-x={-0.35} geometry={finGeometry} scale={1.2}>
+        {bodyMat}
+      </mesh>
+      {/* broad pectorals */}
+      <mesh position={[0.55, -0.22, 0.45]} rotation-z={-2.1} rotation-x={0.5} geometry={finGeometry} scale={1.15}>
+        {bodyMat}
+      </mesh>
+      <mesh position={[-0.55, -0.22, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry} scale={1.15}>
+        {bodyMat}
+      </mesh>
+      {/* tail: thick peduncle into a tall crescent */}
+      <group ref={tail} position={[0, 0, -1.65]}>
+        <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}>
+          <coneGeometry args={[0.26, 0.7, 6]} />
+          {bodyMat}
+        </mesh>
+        <mesh position={[0, 0.34, -0.45]} rotation-x={-2.4} geometry={finGeometry} scale={[1, 1.5, 1]}>
+          {bodyMat}
+        </mesh>
+        <mesh position={[0, -0.26, -0.4]} rotation-x={2.55} geometry={finGeometry} scale={0.95}>
+          {bodyMat}
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
 // ===========================================================================
 // Scene wrappers — carry a model along an orbit through the dive.
 // ===========================================================================
@@ -2829,6 +3206,21 @@ export const Orca = ({ center = [-2, -44, -6], radius = 18, speed = 0.1 }) => (
 export const Sunfish = ({ center = [-4, -20, 7], radius = 12, speed = 0.07 }) => (
   <Orbiter center={center} radius={radius} speed={speed} squish={0.85} bob={0.7} bobSpeed={0.3}>
     <SunfishModel />
+  </Orbiter>
+);
+
+// The sperm whale patrols a huge slow circle above the giant squid's haunt,
+// mostly a silhouette drifting in and out of the fog.
+export const SpermWhale = ({ center = [-4, -74, -14], radius = 18, speed = 0.045 }) => (
+  <Orbiter center={center} radius={radius} speed={speed} squish={0.75} bob={1.8} bobSpeed={0.25}>
+    <SpermWhaleModel />
+  </Orbiter>
+);
+
+// The swordfish is the opposite: a small, fast blade flashing past.
+export const Swordfish = ({ center = [4, -32, -2], radius = 16, speed = 0.38 }) => (
+  <Orbiter center={center} radius={radius} speed={speed} squish={0.75} bob={1.2} bobSpeed={0.5}>
+    <SwordfishModel />
   </Orbiter>
 );
 

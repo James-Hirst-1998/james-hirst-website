@@ -31,7 +31,12 @@ import {
   EpauletteSharkModel,
   AngelSharkModel,
   PortJacksonSharkModel,
+  SpermWhaleModel,
+  SwordfishModel,
+  BaskingSharkModel,
+  CrabModel,
 } from "../experience/Creatures";
+import { track } from "../analytics";
 import "../styles/creatures.css";
 
 // Each entry pairs a model with the camera distance that frames it and a
@@ -82,6 +87,22 @@ const CREATURES = [
       "It sleeps with one half of its brain at a time, so it never stops breathing.",
       "Each dolphin invents a signature whistle — a name it answers to for life.",
       "It hunts using echolocation, building a sound-picture of the world around it.",
+    ],
+  },
+  {
+    id: "swordfish",
+    emoji: "🗡️",
+    name: "Swordfish",
+    latin: "Xiphias gladius",
+    zone: "Sunlit to twilight",
+    Model: SwordfishModel,
+    distance: 7,
+    offset: [0, 0, -0.4],
+    tagline: "An ocean sprinter that slashes through schools with its blade.",
+    facts: [
+      "It doesn't spear its prey — it slashes sideways through schools, then circles back for the stunned.",
+      "Special organs warm its eyes and brain, sharpening its vision on cold, deep hunts.",
+      "Adults lose every scale and every tooth — pure streamlining.",
     ],
   },
   {
@@ -144,6 +165,21 @@ const CREATURES = [
       "Their haunting songs travel for miles — and the whole population updates the tune each year.",
       "They blow spiralling 'bubble nets' to herd fish into a tight ball.",
       "Their flippers are the longest limbs in nature, up to a third of their body length.",
+    ],
+  },
+  {
+    id: "spermwhale",
+    emoji: "🐋",
+    name: "Sperm Whale",
+    latin: "Physeter macrocephalus",
+    zone: "The midnight deep",
+    Model: SpermWhaleModel,
+    distance: 16,
+    tagline: "The largest toothed predator on Earth — and a third of it is head.",
+    facts: [
+      "Dives more than two kilometres down, holding its breath for over an hour to hunt giant squid.",
+      "Its clicks reach 230 decibels — the loudest sound made by any animal.",
+      "Pods sleep bobbing bolt upright, dozing nose-up just beneath the surface.",
     ],
   },
   {
@@ -240,6 +276,21 @@ const CREATURES = [
     ],
   },
   {
+    id: "crab",
+    emoji: "🦀",
+    name: "Crab",
+    latin: "Brachyura",
+    zone: "The sea floor",
+    Model: CrabModel,
+    distance: 3.2,
+    tagline: "The seabed's armoured caretaker, scuttling sideways through the gloom.",
+    facts: [
+      "Crabs taste the world through tiny hairs on their claws and feet.",
+      "To grow, one must climb out of its own shell — then hide while the new one hardens.",
+      "The famous sideways scuttle comes from knees that only bend one way.",
+    ],
+  },
+  {
     id: "tigershark",
     emoji: "🦈",
     name: "Tiger Shark",
@@ -269,6 +320,22 @@ const CREATURES = [
       "Can grow to 18 metres, yet filter-feeds on some of the ocean's tiniest life.",
       "Each one has a unique pattern of spots, like a fingerprint.",
       "Completely harmless to humans despite its enormous size.",
+    ],
+  },
+  {
+    id: "baskingshark",
+    emoji: "🦈",
+    name: "Basking Shark",
+    latin: "Cetorhinus maximus",
+    zone: "Sunlit shallows",
+    category: "shark",
+    Model: BaskingSharkModel,
+    distance: 6.2,
+    tagline: "The second-largest fish in the sea, cruising open-mouthed for plankton.",
+    facts: [
+      "Filters around 1.5 million litres of seawater an hour through a mouth a metre wide.",
+      "The size of a bus, yet it eats nothing bigger than a fingernail.",
+      "Named for 'basking' at the sunny surface — and it can leap clear out of the water.",
     ],
   },
   {
@@ -532,6 +599,21 @@ const CreatureStage = ({ creature }) => {
   const last = useRef({ x: 0, y: 0 });
   const stageRef = useRef(null);
   const [hint, setHint] = useState(true);
+  // Kept fresh each render so the native (mount-bound) touch handlers below
+  // report the creature currently on the turntable, not the first one.
+  const creatureIdRef = useRef(creature.id);
+  creatureIdRef.current = creature.id;
+  const interacted = useRef(false);
+
+  // First time the user grabs the model — tells us whether people realise it
+  // spins. Fires once for the whole session.
+  const markInteracted = () => {
+    setHint(false);
+    if (!interacted.current) {
+      interacted.current = true;
+      track("creature_interacted", { id: creatureIdRef.current });
+    }
+  };
 
   // Reset the turntable each time a new creature is chosen.
   useEffect(() => {
@@ -549,7 +631,7 @@ const CreatureStage = ({ creature }) => {
     const onStart = (e) => {
       rot.current.dragging = true;
       last.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      setHint(false);
+      markInteracted();
     };
     const onMove = (e) => {
       if (!rot.current.dragging) return;
@@ -582,7 +664,7 @@ const CreatureStage = ({ creature }) => {
     if (e.pointerType === "touch") return;
     rot.current.dragging = true;
     last.current = { x: e.clientX, y: e.clientY };
-    setHint(false);
+    markInteracted();
     e.currentTarget.setPointerCapture?.(e.pointerId);
   };
   const onPointerMove = (e) => {
@@ -648,12 +730,23 @@ const CreaturesPage = () => {
     [activeId]
   );
 
+  // Which creatures people actually open (includes the first one shown / any
+  // deep-linked via /creatures#<id>).
+  useEffect(() => {
+    track("creature_viewed", {
+      id: creature.id,
+      name: creature.name,
+      category: creature.category || "creature",
+    });
+  }, [creature.id]);
+
   const list = filter === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
 
   // Switching filter keeps the current pick if it belongs to the new list,
   // otherwise jumps to the first creature of that list.
   const chooseFilter = (next) => {
     if (next === filter) return;
+    track("creature_filter_changed", { filter: next });
     setFilter(next);
     const nextList = next === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
     if (!nextList.some((c) => c.id === activeId)) setActiveId(nextList[0].id);
