@@ -458,11 +458,12 @@ a {
 .look-hint {
   position: fixed;
   left: 50%;
-  bottom: 96px;
+  top: calc(14px + env(safe-area-inset-top));
   transform: translateX(-50%);
   z-index: 6;
   padding: 9px 18px;
   font-size: 12px;
+  font-family: inherit;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: rgba(240, 252, 255, 0.92);
@@ -476,10 +477,19 @@ a {
   animation: lookHintIn 0.5s ease both, lookHintOut 0.6s ease 5.2s forwards;
 }
 
+/* The iOS permission variant is a real button, so taps land on it (never on
+   whatever sits underneath) and it hangs around longer before fading. */
+.look-hint--tap {
+  pointer-events: auto;
+  cursor: pointer;
+  background: rgba(8, 30, 44, 0.72);
+  animation: lookHintIn 0.5s ease both, lookHintOut 0.6s ease 11.2s forwards;
+}
+
 @keyframes lookHintIn {
   from {
     opacity: 0;
-    transform: translate(-50%, 10px);
+    transform: translate(-50%, -12px);
   }
   to {
     opacity: 1;
@@ -661,6 +671,14 @@ a {
 
   .dive-section {
     padding: 12vh 16px;
+  }
+
+  /* A little more open water between the cards so the creatures swimming
+     behind them get seen (hero excluded — extra padding would push its
+     dive-in cue below the fold). */
+  .dive-section:not(.hero) {
+    padding-top: 18vh;
+    padding-bottom: 18vh;
   }
 }
 
