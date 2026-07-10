@@ -5,6 +5,7 @@ import { scroll } from "./scrollState";
 
 // The underside of the water surface: a shimmering plane of moving ripples.
 export const WaterSurface = () => {
+  const mesh = useRef();
   const material = useMemo(
     () =>
       new THREE.ShaderMaterial({
@@ -44,12 +45,18 @@ export const WaterSurface = () => {
   );
 
   useFrame((state) => {
+    // Once faded out the plane would still rasterise as a huge invisible
+    // quad every frame — stop drawing it instead.
+    const fade = THREE.MathUtils.clamp(1 - scroll.progress * 3.2, 0, 1);
+    const visible = fade > 0;
+    if (mesh.current.visible !== visible) mesh.current.visible = visible;
+    if (!visible) return;
     material.uniforms.uTime.value = state.clock.elapsedTime;
-    material.uniforms.uFade.value = THREE.MathUtils.clamp(1 - scroll.progress * 3.2, 0, 1);
+    material.uniforms.uFade.value = fade;
   });
 
   return (
-    <mesh position={[0, 9, -10]} rotation-x={Math.PI / 2} material={material}>
+    <mesh ref={mesh} position={[0, 9, -10]} rotation-x={Math.PI / 2} material={material}>
       <planeGeometry args={[220, 160]} />
     </mesh>
   );
@@ -109,6 +116,11 @@ export const GodRays = () => {
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const fade = THREE.MathUtils.clamp(1 - scroll.progress * 2.4, 0, 1);
+    const visible = fade > 0;
+    if (group.current && group.current.visible !== visible) {
+      group.current.visible = visible;
+    }
+    if (!visible) return;
     rays.forEach((ray) => {
       ray.material.uniforms.uTime.value = t;
       ray.material.uniforms.uFade.value = fade;

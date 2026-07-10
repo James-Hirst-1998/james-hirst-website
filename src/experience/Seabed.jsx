@@ -1,9 +1,14 @@
 import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
-import { Octopus, CrabModel } from "./Creatures";
+import { Octopus, CrabModel, CULL_RANGE } from "./Creatures";
 
 const FLOOR_Y = -107;
+
+// The whole seabed sits in fog until the last stretch of the dive; while the
+// camera is too far above it the root group is hidden (see Seabed below) and
+// the swaying/scuttling animations early-out with this check.
+const seabedInView = (state) => state.camera.position.y < FLOOR_Y + CULL_RANGE;
 
 // The floor plane's vertex displacement, mapped to world space (the plane is
 // rotated -90° about x, so plane-local y runs along world -z). Lets props sit
@@ -14,6 +19,7 @@ const floorHeight = (x, z) =>
 const Kelp = ({ position, height, phase }) => {
   const ref = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     ref.current.rotation.z = Math.sin(t * 0.55 + phase) * 0.09;
     ref.current.rotation.x = Math.cos(t * 0.4 + phase) * 0.05;
@@ -61,6 +67,7 @@ const Starfish = ({ position, scale = 1, color = "#d97b52", spin = 0 }) => (
 const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
   const crown = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     crown.current.rotation.z = Math.sin(t * 0.7 + phase) * 0.08;
     const breathe = 1 + Math.sin(t * 1.3 + phase) * 0.06;
@@ -91,6 +98,7 @@ const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
 const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }) => {
   const group = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     const cx = x + Math.sin(t * speed) * range;
     const skitter = Math.abs(Math.sin(t * 6)) * 0.03;
@@ -107,13 +115,13 @@ const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }
 const Fishbowl = () => {
   const fish = useRef();
   useFrame((state) => {
+    if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
     fish.current.position.set(Math.cos(t * 1.4) * 0.32, 0.15 + Math.sin(t * 2.2) * 0.08, Math.sin(t * 1.4) * 0.32);
     fish.current.rotation.y = -t * 1.4 + Math.PI / 2;
   });
   return (
     <group position={[4.5, FLOOR_Y + 0.85, -2]}>
-      <pointLight color="#ffb45e" intensity={6} distance={7} />
       <mesh>
         <sphereGeometry args={[0.85, 16, 12]} />
         <meshStandardMaterial color="#bfe8f0" transparent opacity={0.18} roughness={0.1} />
@@ -133,6 +141,12 @@ const Fishbowl = () => {
 };
 
 export const Seabed = () => {
+  const root = useRef();
+  useFrame((state) => {
+    const visible = seabedInView(state);
+    if (root.current.visible !== visible) root.current.visible = visible;
+  });
+
   const floorGeometry = useMemo(() => {
     // Big enough that a full 360° look-around never reveals an edge.
     const geo = new THREE.PlaneGeometry(220, 220, 56, 56);
@@ -161,34 +175,41 @@ export const Seabed = () => {
   }, []);
 
   return (
-    <group>
-      <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
-        <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
-      </mesh>
-      {kelp.map((k, i) => (
-        <Kelp key={i} {...k} />
-      ))}
-      <Rock position={[-8, FLOOR_Y + 0.4, -6]} scale={[1.8, 1.1, 1.4]} tone="#4a5a63" />
-      <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
-      <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
-      <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
-      {/* behind the camera — reward for a look back at the bottom */}
-      <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
-      {/* Out ahead on the open floor, not tucked directly underfoot where the
-          camera can't tilt down to it. A soft fill lifts it from the gloom. */}
+    <>
+      {/* Both seabed lights live outside the culled group: removing a light
+          from the scene changes the light count and three.js recompiles
+          every shader program — a visible freeze. They stay on always. */}
       <pointLight position={[-5, FLOOR_Y + 2, -16]} color="#c98a94" intensity={6} distance={11} />
-      <Octopus position={[-5, FLOOR_Y - 0.1, -16]} />
-      <Fishbowl />
-      {/* a crab patrolling the sand near the fishbowl's glow */}
-      <ScuttlingCrab x={2.6} z={-3.5} range={1.4} speed={0.5} />
-      {/* starfish scattered where the two seabed lights reach */}
-      <Starfish position={[6.6, FLOOR_Y + floorHeight(6.6, -0.8) + 0.02, -0.8]} scale={0.9} spin={0.7} />
-      <Starfish position={[-3.6, FLOOR_Y + floorHeight(-3.6, -13) + 0.02, -13]} scale={1.15} color="#c96a8e" spin={2.1} />
-      <Starfish position={[0.6, FLOOR_Y + floorHeight(0.6, -6.5) + 0.02, -6.5]} scale={0.7} color="#d9a052" spin={4} />
-      {/* anemone gardens swaying by the octopus and the bowl */}
-      <Anemone position={[-7.2, FLOOR_Y + floorHeight(-7.2, -15), -15]} tint="#d98ca8" scale={1.1} phase={0.6} />
-      <Anemone position={[-6.2, FLOOR_Y + floorHeight(-6.2, -13.6), -13.6]} tint="#8cc7d9" scale={0.8} phase={2.4} />
-      <Anemone position={[5.9, FLOOR_Y + floorHeight(5.9, -4), -4]} tint="#a0d9a5" scale={0.9} phase={4.1} />
-    </group>
+      <pointLight position={[4.5, FLOOR_Y + 0.85, -2]} color="#ffb45e" intensity={6} distance={7} />
+      <group ref={root}>
+        <mesh geometry={floorGeometry} rotation-x={-Math.PI / 2} position={[0, FLOOR_Y, 0]}>
+          <meshStandardMaterial color="#8d8368" flatShading roughness={1} />
+        </mesh>
+        {kelp.map((k, i) => (
+          <Kelp key={i} {...k} />
+        ))}
+        <Rock position={[-8, FLOOR_Y + 0.4, -6]} scale={[1.8, 1.1, 1.4]} tone="#4a5a63" />
+        <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
+        <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
+        <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
+        {/* behind the camera — reward for a look back at the bottom */}
+        <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
+        {/* Out ahead on the open floor, not tucked directly underfoot where the
+            camera can't tilt down to it. The soft fill above lifts it from the
+            gloom. */}
+        <Octopus position={[-5, FLOOR_Y - 0.1, -16]} />
+        <Fishbowl />
+        {/* a crab patrolling the sand near the fishbowl's glow */}
+        <ScuttlingCrab x={2.6} z={-3.5} range={1.4} speed={0.5} />
+        {/* starfish scattered where the two seabed lights reach */}
+        <Starfish position={[6.6, FLOOR_Y + floorHeight(6.6, -0.8) + 0.02, -0.8]} scale={0.9} spin={0.7} />
+        <Starfish position={[-3.6, FLOOR_Y + floorHeight(-3.6, -13) + 0.02, -13]} scale={1.15} color="#c96a8e" spin={2.1} />
+        <Starfish position={[0.6, FLOOR_Y + floorHeight(0.6, -6.5) + 0.02, -6.5]} scale={0.7} color="#d9a052" spin={4} />
+        {/* anemone gardens swaying by the octopus and the bowl */}
+        <Anemone position={[-7.2, FLOOR_Y + floorHeight(-7.2, -15), -15]} tint="#d98ca8" scale={1.1} phase={0.6} />
+        <Anemone position={[-6.2, FLOOR_Y + floorHeight(-6.2, -13.6), -13.6]} tint="#8cc7d9" scale={0.8} phase={2.4} />
+        <Anemone position={[5.9, FLOOR_Y + floorHeight(5.9, -4), -4]} tint="#a0d9a5" scale={0.9} phase={4.1} />
+      </group>
+    </>
   );
 };

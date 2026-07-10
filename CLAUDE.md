@@ -32,3 +32,8 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 - Gyroscope input must be applied as per-event deltas, never absolute values (absolute overrides rubber-band the view); don't mix it with swipe steering — the two fight and the loser is whoever the user was using.
 - Raw gyro readings jitter — ease the camera onto the `look` target with a very short (~70 ms) time constant; long easing (~300 ms) reads as lag, none reads as shake.
 - iOS needs `DeviceOrientationEvent.requestPermission()` from a user gesture (we ask on first `touchend`); only set `look.active` once the sensor actually reports.
+
+## Performance gotchas
+- Never hide/show a light (or a group containing one) at runtime — changing the scene's light count makes three.js recompile every shader program, which freezes the page for a beat. The depth culling in `Creatures.jsx` (`cullByDepth`) exempts light-carrying creatures (`cull={false}`) and the seabed keeps its two lamps outside the culled group.
+- Depth-culled objects render for the first ~1.5 s of the dive (`WARMUP_S`) so all geometry uploads to the GPU during the hero; without it each creature hitches on first un-cull mid-scroll.
+- Only write to the DOM from rAF loops when the displayed value changed (see `DepthMeter`) — same-value `textContent` writes still replace the text node, forcing layout work and (before we disabled it) flooding PostHog's session recorder into periodic main-thread stalls. Keep `disable_session_recording: true` in `analytics.js`.
