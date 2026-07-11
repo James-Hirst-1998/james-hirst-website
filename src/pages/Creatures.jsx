@@ -67,10 +67,10 @@ const CREATURES = [
     Model: SunfishModel,
     distance: 6.4,
     offset: [0, 0, 0],
-    tagline: "The heaviest bony fish alive — basically a giant swimming head.",
+    tagline: "The heaviest bony fish alive - basically a giant swimming head.",
     facts: [
       "Can weigh up to 2.3 tonnes, yet drifts along eating jellyfish.",
-      "A single female may carry 300 million eggs — more than any other vertebrate.",
+      "A single female may carry 300 million eggs - more than any other vertebrate.",
       "Basks on its side at the surface to warm up after deep, cold dives.",
     ],
   },
@@ -82,10 +82,10 @@ const CREATURES = [
     zone: "Sunlit shallows",
     Model: DolphinModel,
     distance: 5.2,
-    tagline: "A playful acrobat that leaps clear of the water just to travel — and, it seems, for fun.",
+    tagline: "A playful acrobat that leaps clear of the water just to travel - and, it seems, for fun.",
     facts: [
       "It sleeps with one half of its brain at a time, so it never stops breathing.",
-      "Each dolphin invents a signature whistle — a name it answers to for life.",
+      "Each dolphin invents a signature whistle - a name it answers to for life.",
       "It hunts using echolocation, building a sound-picture of the world around it.",
     ],
   },
@@ -100,9 +100,9 @@ const CREATURES = [
     offset: [0, 0, -0.4],
     tagline: "An ocean sprinter that slashes through schools with its blade.",
     facts: [
-      "It doesn't spear its prey — it slashes sideways through schools, then circles back for the stunned.",
+      "It doesn't spear its prey - it slashes sideways through schools, then circles back for the stunned.",
       "Special organs warm its eyes and brain, sharpening its vision on cold, deep hunts.",
-      "Adults lose every scale and every tooth — pure streamlining.",
+      "Adults lose every scale and every tooth - pure streamlining.",
     ],
   },
   {
@@ -118,7 +118,7 @@ const CREATURES = [
     facts: [
       "Detects a single drop of blood in ten billion drops of water.",
       "Reads the faint electric fields of hidden prey through jelly-filled pores.",
-      "Must keep swimming to breathe — stop, and it would sink.",
+      "Must keep swimming to breathe - stop, and it would sink.",
     ],
   },
   {
@@ -145,10 +145,10 @@ const CREATURES = [
     zone: "Twilight zone",
     Model: OrcaModel,
     distance: 8,
-    tagline: "Not a whale at all — the ocean's largest dolphin, and its smartest hunter.",
+    tagline: "Not a whale at all - the ocean's largest dolphin, and its smartest hunter.",
     facts: [
       "Each pod speaks its own dialect of clicks and calls, passed down for generations.",
-      "They hunt in coordinated packs — which earned them the name 'killer whale'.",
+      "They hunt in coordinated packs - which earned them the name 'killer whale'.",
       "Found in every ocean on Earth, from the tropics to the poles.",
     ],
   },
@@ -162,7 +162,7 @@ const CREATURES = [
     distance: 20,
     tagline: "A singer the size of a bus, felt more than seen in the haze.",
     facts: [
-      "Their haunting songs travel for miles — and the whole population updates the tune each year.",
+      "Their haunting songs travel for miles - and the whole population updates the tune each year.",
       "They blow spiralling 'bubble nets' to herd fish into a tight ball.",
       "Their flippers are the longest limbs in nature, up to a third of their body length.",
     ],
@@ -175,10 +175,10 @@ const CREATURES = [
     zone: "The midnight deep",
     Model: SpermWhaleModel,
     distance: 16,
-    tagline: "The largest toothed predator on Earth — and a third of it is head.",
+    tagline: "The largest toothed predator on Earth - and a third of it is head.",
     facts: [
       "Dives more than two kilometres down, holding its breath for over an hour to hunt giant squid.",
-      "Its clicks reach 230 decibels — the loudest sound made by any animal.",
+      "Its clicks reach 230 decibels - the loudest sound made by any animal.",
       "Pods sleep bobbing bolt upright, dozing nose-up just beneath the surface.",
     ],
   },
@@ -209,7 +209,7 @@ const CREATURES = [
     tagline: "Older than dinosaurs, trees, and even bones.",
     facts: [
       "They've drifted the oceans for over 500 million years.",
-      "No brain, no heart, no bones — a jellyfish is about 95% water.",
+      "No brain, no heart, no bones - a jellyfish is about 95% water.",
       "One species can age backwards to its youth, making it effectively immortal.",
     ],
   },
@@ -255,7 +255,7 @@ const CREATURES = [
     offset: [0, 0, -0.3],
     tagline: "A deep-sea legend with the largest eyes in the animal kingdom.",
     facts: [
-      "Its eyes are the size of dinner plates — perfect for catching faint deep-sea light.",
+      "Its eyes are the size of dinner plates - perfect for catching faint deep-sea light.",
       "It can grow past 12 metres, yet was never filmed alive until 2004.",
       "It duels sperm whales in the dark; the whales surface with ring-shaped sucker scars.",
     ],
@@ -271,7 +271,7 @@ const CREATURES = [
     tagline: "The deepest-living octopus, flapping ear-like fins to fly.",
     facts: [
       "It 'flies' through the water by flapping the two fins above its eyes.",
-      "It's the deepest-dwelling octopus known — found nearly 6,000 m down.",
+      "It's the deepest-dwelling octopus known - found nearly 6,000 m down.",
       "Instead of biting, it swallows its prey whole.",
     ],
   },
@@ -286,7 +286,7 @@ const CREATURES = [
     tagline: "The seabed's armoured caretaker, scuttling sideways through the gloom.",
     facts: [
       "Crabs taste the world through tiny hairs on their claws and feet.",
-      "To grow, one must climb out of its own shell — then hide while the new one hardens.",
+      "To grow, one must climb out of its own shell - then hide while the new one hardens.",
       "The famous sideways scuttle comes from knees that only bend one way.",
     ],
   },
@@ -299,7 +299,7 @@ const CREATURES = [
     category: "shark",
     Model: TigerSharkModel,
     distance: 5.8,
-    tagline: "The ocean's rubbish bin — a curious hunter that eats almost anything.",
+    tagline: "The ocean's rubbish bin - a curious hunter that eats almost anything.",
     facts: [
       "Juveniles wear dark vertical stripes that fade with age.",
       "License plates, tyres and even armour have been found in their stomachs.",
@@ -315,7 +315,7 @@ const CREATURES = [
     category: "shark",
     Model: WhaleSharkModel,
     distance: 6.2,
-    tagline: "The largest fish alive — a gentle giant that eats only plankton.",
+    tagline: "The largest fish alive - a gentle giant that eats only plankton.",
     facts: [
       "Can grow to 18 metres, yet filter-feeds on some of the ocean's tiniest life.",
       "Each one has a unique pattern of spots, like a fingerprint.",
@@ -335,7 +335,7 @@ const CREATURES = [
     facts: [
       "Filters around 1.5 million litres of seawater an hour through a mouth a metre wide.",
       "The size of a bus, yet it eats nothing bigger than a fingernail.",
-      "Named for 'basking' at the sunny surface — and it can leap clear out of the water.",
+      "Named for 'basking' at the sunny surface - and it can leap clear out of the water.",
     ],
   },
   {
@@ -347,7 +347,7 @@ const CREATURES = [
     category: "shark",
     Model: BullSharkModel,
     distance: 5.8,
-    tagline: "The shark that swims up rivers — thriving in fresh water and salt.",
+    tagline: "The shark that swims up rivers - thriving in fresh water and salt.",
     facts: [
       "Has been found hundreds of miles up the Amazon and Mississippi.",
       "Special kidneys let it move between the sea and fresh water.",
@@ -379,7 +379,7 @@ const CREATURES = [
     category: "shark",
     Model: MakoSharkModel,
     distance: 5.8,
-    tagline: "The fastest shark in the sea — a metallic-blue torpedo.",
+    tagline: "The fastest shark in the sea - a metallic-blue torpedo.",
     facts: [
       "Can burst to speeds of around 45 mph in pursuit of prey.",
       "Warm-blooded muscles let it stay active in cold water.",
@@ -427,7 +427,7 @@ const CREATURES = [
     category: "shark",
     Model: ZebraSharkModel,
     distance: 5.8,
-    tagline: "Born with stripes, grown into spots — a gentle reef-floor dweller.",
+    tagline: "Born with stripes, grown into spots - a gentle reef-floor dweller.",
     facts: [
       "Juveniles are striped like a zebra; adults are spotted like a leopard.",
       "Rests on the seabed by day and hunts through reef crevices by night.",
@@ -447,7 +447,7 @@ const CREATURES = [
     facts: [
       "Its jaws slingshot forward to snatch prey, then retract.",
       "Pinkish skin comes from blood vessels close to the surface.",
-      "A 'living fossil' — the last of a family 125 million years old.",
+      "A 'living fossil' - the last of a family 125 million years old.",
     ],
   },
   {
@@ -459,7 +459,7 @@ const CREATURES = [
     category: "shark",
     Model: WobbegongModel,
     distance: 5.8,
-    tagline: "A living carpet — a master of camouflage fringed with tassels.",
+    tagline: "A living carpet - a master of camouflage fringed with tassels.",
     facts: [
       "A beard of skin flaps breaks up its outline against the reef.",
       "Lies motionless on the seabed, ambushing fish that stray too close.",
@@ -479,7 +479,7 @@ const CREATURES = [
     facts: [
       "Its long, snake-like body coils through the deep sea.",
       "Rows of trident-shaped teeth trap soft-bodied prey like squid.",
-      "Rarely seen alive — another 'living fossil' of ancient lineage.",
+      "Rarely seen alive - another 'living fossil' of ancient lineage.",
     ],
   },
   {
@@ -491,7 +491,7 @@ const CREATURES = [
     category: "shark",
     Model: GreenlandSharkModel,
     distance: 5.8,
-    tagline: "The longest-living vertebrate — some alive for 400 years.",
+    tagline: "The longest-living vertebrate - some alive for 400 years.",
     facts: [
       "May not reach maturity until around 150 years old.",
       "Cruises the frigid Arctic deep at a famously sluggish pace.",
@@ -507,7 +507,7 @@ const CREATURES = [
     category: "shark",
     Model: CookiecutterSharkModel,
     distance: 5.8,
-    tagline: "Small but fierce — it bites round plugs from far larger animals.",
+    tagline: "Small but fierce - it bites round plugs from far larger animals.",
     facts: [
       "Latches on and twists to gouge a neat, cookie-shaped chunk of flesh.",
       "Its glowing belly lures big predators within striking range.",
@@ -523,7 +523,7 @@ const CREATURES = [
     category: "shark",
     Model: EpauletteSharkModel,
     distance: 5.8,
-    tagline: "The shark that walks — strolling across reef flats on its fins.",
+    tagline: "The shark that walks - strolling across reef flats on its fins.",
     facts: [
       "Uses its paddle-like fins to 'walk' between tide pools.",
       "Can survive hours of low oxygen by slowing its own brain.",
@@ -605,7 +605,7 @@ const CreatureStage = ({ creature }) => {
   creatureIdRef.current = creature.id;
   const interacted = useRef(false);
 
-  // First time the user grabs the model — tells us whether people realise it
+  // First time the user grabs the model - tells us whether people realise it
   // spins. Fires once for the whole session.
   const markInteracted = () => {
     setHint(false);
@@ -658,7 +658,7 @@ const CreatureStage = ({ creature }) => {
     };
   }, []);
 
-  // Desktop drag. Touch pointers are skipped — the native handlers above own
+  // Desktop drag. Touch pointers are skipped - the native handlers above own
   // them, and handling both would double every movement.
   const onPointerDown = (e) => {
     if (e.pointerType === "touch") return;

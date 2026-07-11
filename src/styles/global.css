@@ -674,7 +674,7 @@ a {
   }
 
   /* A little more open water between the cards so the creatures swimming
-     behind them get seen (hero excluded — extra padding would push its
+     behind them get seen (hero excluded - extra padding would push its
      dive-in cue below the fold). */
   .dive-section:not(.hero) {
     padding-top: 18vh;

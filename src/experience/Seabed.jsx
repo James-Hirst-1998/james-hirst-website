@@ -93,7 +93,7 @@ const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
   );
 };
 
-// A crab scuttling sideways along the sand — it faces +z and runs along x,
+// A crab scuttling sideways along the sand - it faces +z and runs along x,
 // which is exactly how a crab would do it. Follows the floor bumps.
 const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }) => {
   const group = useRef();
@@ -178,7 +178,7 @@ export const Seabed = () => {
     <>
       {/* Both seabed lights live outside the culled group: removing a light
           from the scene changes the light count and three.js recompiles
-          every shader program — a visible freeze. They stay on always. */}
+          every shader program - a visible freeze. They stay on always. */}
       <pointLight position={[-5, FLOOR_Y + 2, -16]} color="#c98a94" intensity={6} distance={11} />
       <pointLight position={[4.5, FLOOR_Y + 0.85, -2]} color="#ffb45e" intensity={6} distance={7} />
       <group ref={root}>
@@ -192,7 +192,7 @@ export const Seabed = () => {
         <Rock position={[10, FLOOR_Y + 0.3, -9]} scale={[1.2, 0.8, 1]} tone="#41505a" />
         <Rock position={[-16, FLOOR_Y + 0.5, -14]} scale={[2.4, 1.5, 1.8]} tone="#3c4a52" />
         <Rock position={[1, FLOOR_Y + 0.25, -4]} scale={[0.8, 0.5, 0.7]} tone="#4a5a63" />
-        {/* behind the camera — reward for a look back at the bottom */}
+        {/* behind the camera - reward for a look back at the bottom */}
         <Rock position={[9, FLOOR_Y - 0.9, 16]} scale={[1.6, 1, 1.3]} tone="#41505a" />
         {/* Out ahead on the open floor, not tucked directly underfoot where the
             camera can't tilt down to it. The soft fill above lifts it from the

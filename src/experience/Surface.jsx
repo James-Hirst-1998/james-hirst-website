@@ -46,7 +46,7 @@ export const WaterSurface = () => {
 
   useFrame((state) => {
     // Once faded out the plane would still rasterise as a huge invisible
-    // quad every frame — stop drawing it instead.
+    // quad every frame - stop drawing it instead.
     const fade = THREE.MathUtils.clamp(1 - scroll.progress * 3.2, 0, 1);
     const visible = fade > 0;
     if (mesh.current.visible !== visible) mesh.current.visible = visible;

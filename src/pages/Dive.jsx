@@ -68,7 +68,7 @@ const DepthMeter = () => {
   const fillRef = useRef(null);
   useEffect(() => {
     let raf;
-    // Only touch the DOM when the displayed value actually changes — writing
+    // Only touch the DOM when the displayed value actually changes - writing
     // textContent replaces the text node even for an identical string, which
     // is per-frame layout work (and fed PostHog's recorder a mutation storm).
     const last = { depth: NaN, zone: "", height: NaN };
@@ -147,7 +147,7 @@ const NavDots = () => {
 
 // One-off nudge on phones that the view can be steered, pinned to the top of
 // the screen so it stays clear of the hero buttons. On iOS ("ask") it's a real
-// button that opens the motion-permission dialog — Safari only accepts the
+// button that opens the motion-permission dialog - Safari only accepts the
 // request from a tap; elsewhere ("hint") it's passive and fades on its own.
 const LookHint = ({ state, onEnable }) => {
   const [expired, setExpired] = useState(false);
@@ -350,9 +350,9 @@ const SeabedFooter = () => {
         <p className="panel__kicker">-10,935 m · Challenger Deep</p>
         <h2 className="panel__title">You've hit the bottom</h2>
         <p className="panel__body">
-          This is Challenger Deep — the deepest point in any ocean — and you
-          dived the whole way. If anything up there caught your eye — an
-          opportunity, a conservation project, or just to say hi — I'd love to
+          This is Challenger Deep - the deepest point in any ocean - and you
+          dived the whole way. If anything up there caught your eye - an
+          opportunity, a conservation project, or just to say hi - I'd love to
           hear from you.
         </p>
         <div className="hero__buttons">
@@ -371,7 +371,7 @@ const SeabedFooter = () => {
         </div>
         <p className="seabed__egg">
           See anything you liked on the way down? <br /> Meet the{" "}
-          <Link to="/creatures">sea creatures</Link> up close — and wait, is
+          <Link to="/creatures">sea creatures</Link> up close - and wait, is
           that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
         <p className="seabed__credits">
@@ -411,7 +411,7 @@ const DivePage = () => {
     const onPointer = (e) => {
       // iOS fires pointer events for touches too. Without this, a scroll
       // swipe that ends near a screen edge parks pointer.x past the yaw
-      // deadzone and the desktop steering path spins the camera forever —
+      // deadzone and the desktop steering path spins the camera forever -
       // touch steering is gyro-only.
       if (e.pointerType === "touch") return;
       pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
@@ -438,7 +438,7 @@ const DivePage = () => {
     };
   }, []);
 
-  // Phone look-around: gyroscope only — pan or tilt the phone to look.
+  // Phone look-around: gyroscope only - pan or tilt the phone to look.
   // Swipes used to steer too, but they fought page scrolling (a vertical
   // scroll leaked wobble into yaw), so touches are left entirely to the
   // browser and the sensor owns the view.
@@ -451,7 +451,7 @@ const DivePage = () => {
     // Where the back of the phone points, from the full device rotation
     // R = Rz(alpha)·Rx(beta)·Ry(gamma) applied to (0, 0, -1). Yaw/pitch are
     // read off this vector rather than raw alpha/beta: held upright in
-    // portrait — exactly how people browse — the device sits at the Euler
+    // portrait - exactly how people browse - the device sits at the Euler
     // gimbal lock, where alpha and gamma trade sudden 180° flips (raw-alpha
     // deltas read as violent yaw spikes, and tilting up past vertical fought
     // back). The forward vector stays continuous through all of it, and it's
@@ -471,14 +471,14 @@ const DivePage = () => {
     };
 
     // Both axes are incremental (deltas since the last reading), relative to
-    // wherever the phone was pointing on the first report — so the dive
+    // wherever the phone was pointing on the first report - so the dive
     // always starts facing forward, not at some compass heading.
     let last = null;
     const onOrientation = (e) => {
       if (e.alpha == null || e.beta == null || e.gamma == null) return;
       const f = forward(e.alpha * RAD, e.beta * RAD, e.gamma * RAD);
       const pitch = Math.asin(clamp(f.z, 1));
-      // Yaw is undefined with the phone pointed straight at sky or floor —
+      // Yaw is undefined with the phone pointed straight at sky or floor -
       // hold the previous heading through that cone.
       const yaw =
         Math.hypot(f.x, f.y) > 0.05
@@ -498,7 +498,7 @@ const DivePage = () => {
       if (now - last.at > 200) {
         // iOS parks sensor events for the length of a scroll. Applying the
         // rotation accumulated across that gap snapped the view the moment a
-        // free scroll ended — re-baseline instead, so the view stays put and
+        // free scroll ended - re-baseline instead, so the view stays put and
         // tracking resumes from wherever the phone is pointing now.
         last = { yaw, pitch, at: now };
         return;
@@ -523,7 +523,7 @@ const DivePage = () => {
       typeof DeviceOrientationEvent.requestPermission === "function"
     ) {
       // iOS: the sensor sits behind a permission dialog that Safari will only
-      // open from a real tap — a scroll swipe's touchend rejects the request.
+      // open from a real tap - a scroll swipe's touchend rejects the request.
       // Asking once on the first touchend and giving up left motion dead
       // whenever the visit started with a swipe (i.e. almost always), so keep
       // retrying on every genuine tap until the dialog actually answers.
@@ -543,12 +543,12 @@ const DivePage = () => {
             }
           })
           .catch(() => {
-            // Not a tap Safari accepts — wait for the next one.
+            // Not a tap Safari accepts - wait for the next one.
             inFlight = false;
           });
       };
       requestGyro.current = request;
-      // The hint button asks, but so does any real tap anywhere — while a
+      // The hint button asks, but so does any real tap anywhere - while a
       // swipe's touchend must not (it would fail the gesture test and pop
       // the dialog mid-scroll).
       let start = null;
@@ -561,7 +561,7 @@ const DivePage = () => {
         const moved = Math.hypot(t.clientX - start.x, t.clientY - start.y);
         start = null;
         // Taps on links/buttons carry their own intent (the hint button asks
-        // via its onClick) — don't stack the dialog on top of them.
+        // via its onClick) - don't stack the dialog on top of them.
         if (moved < 12 && !e.target.closest?.("a, button")) request();
       };
       window.addEventListener("touchstart", onTouchStart, { passive: true });

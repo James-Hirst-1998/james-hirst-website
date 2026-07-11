@@ -6,7 +6,7 @@ import posthog from "posthog-js";
 import { inject } from "@vercel/analytics";
 
 // The PostHog project key is a *public* client-side token (it ships in the
-// browser bundle no matter what), so a hardcoded default is fine — set
+// browser bundle no matter what), so a hardcoded default is fine - set
 // VITE_POSTHOG_KEY / VITE_POSTHOG_HOST on Vercel only if you want to override.
 const POSTHOG_KEY =
   import.meta.env.VITE_POSTHOG_KEY ||
@@ -19,7 +19,7 @@ let ready = false;
 export const initAnalytics = () => {
   if (ready || typeof window === "undefined") return;
 
-  // Only record real visits on the deployed site — never local dev or a
+  // Only record real visits on the deployed site - never local dev or a
   // locally-served production build. Keeps localhost out of the data, and
   // leaves track()/trackPageview() as no-ops here (ready stays false).
   const host = window.location.hostname;
@@ -31,14 +31,14 @@ export const initAnalytics = () => {
 
   // Vercel Web Analytics. Framework-agnostic; auto-tracks SPA navigations by
   // patching history. Only actually reports once deployed on Vercel with
-  // Analytics enabled — a harmless no-op in local dev.
+  // Analytics enabled - a harmless no-op in local dev.
   inject();
 
   if (!POSTHOG_KEY) return;
   posthog.init(POSTHOG_KEY, {
     api_host: POSTHOG_HOST,
     // We send $pageview ourselves on each react-router navigation (see
-    // RouteAnalytics in App.jsx) — the default only fires on hard loads.
+    // RouteAnalytics in App.jsx) - the default only fires on hard loads.
     capture_pageview: false,
     capture_pageleave: true,
     autocapture: true,
@@ -55,7 +55,7 @@ export const track = (event, props) => {
   posthog.capture(event, props);
 };
 
-// Manual SPA pageview — called on every route change.
+// Manual SPA pageview - called on every route change.
 export const trackPageview = () => {
   if (!ready || !POSTHOG_KEY) return;
   posthog.capture("$pageview");
