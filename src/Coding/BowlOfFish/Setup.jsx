@@ -117,7 +117,7 @@ const Setup = ({ onStartGameClick }) => {
                     </button>
                 </div>
                 {wordCount === maxNumberOfWords && (
-                    <p className="bof-hint">You've hit the word limit — start the game!</p>
+                    <p className="bof-hint">You've hit the word limit - start the game!</p>
                 )}
                 {!canStart && (
                     <p className="bof-hint bof-hint--muted">

@@ -212,7 +212,7 @@ const Game = ({ onExitClick, gameComplete, gameSettings, setWinner }) => {
 
             <div className="bof-word">
                 <span className="bof-word__label">Word</span>
-                <span className="bof-word__value">{currentWord || "—"}</span>
+                <span className="bof-word__value">{currentWord || "-"}</span>
                 <span className="bof-word__left">{wordsLeft} left in the bowl</span>
             </div>
 

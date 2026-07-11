@@ -28,10 +28,10 @@ const Rules = ({ onExitClick }) => {
                 The round themes are:
             </p>
             <ol className="bof-rules-list">
-                <li><b>Describe</b> — you can use any words (except the word you have) to try to get your team to guess</li>
-                <li><b>Act</b> — try to act out the word this time</li>
-                <li><b>Single word</b> — you can only use one word to hint at what your team needs to guess</li>
-                <li><b>Be creative</b> — think of any theme you want</li>
+                <li><b>Describe</b> - you can use any words (except the word you have) to try to get your team to guess</li>
+                <li><b>Act</b> - try to act out the word this time</li>
+                <li><b>Single word</b> - you can only use one word to hint at what your team needs to guess</li>
+                <li><b>Be creative</b> - think of any theme you want</li>
             </ol>
             <p>
                 During your turn you can skip as many times as you like, but any that you do skip will go back into the bowl at the
@@ -41,16 +41,16 @@ const Rules = ({ onExitClick }) => {
             <p>
                 Divide yourselves into two teams, then pass round the device and begin to enter the words that will be used
                 in the game (note there are up to 60 words allowed so divide it equally between the players). The words can be
-                whatever you like — dog, the Eiffel Tower, collywobbles… Remember at some point you
+                whatever you like - dog, the Eiffel Tower, collywobbles… Remember at some point you
                 may be the one describing the word, so maybe don't make them too unusual on your first game.
             </p>
             <p>
-                Finally select your settings — the default values are 30 second turns and 3 rounds, but feel free to change it around.
+                Finally select your settings - the default values are 30 second turns and 3 rounds, but feel free to change it around.
                 You'll need to input at least 10 words before you can start the game and there is a maximum of 60 allowed.
                 Now close these instructions and go have some fun <span role="img" aria-label="smile">😊</span>
             </p>
             <button className="bof-btn bof-btn--solid bof-btn--full" onClick={() => onExitClick()}>
-                Got it — set up the game
+                Got it - set up the game
             </button>
         </div>
     );

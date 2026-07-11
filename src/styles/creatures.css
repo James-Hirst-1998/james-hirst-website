@@ -68,7 +68,7 @@
 }
 
 /* The touch lands on the canvas, not the stage div, and touch-action isn't
-   inherited — so the canvas needs it too or mobile drags get eaten as scrolls. */
+   inherited - so the canvas needs it too or mobile drags get eaten as scrolls. */
 .cv-stage canvas {
   display: block;
   touch-action: none;
@@ -233,7 +233,7 @@
   line-height: 1;
 }
 
-/* Filter toggle in the header — switches the picker between the full sea-
+/* Filter toggle in the header - switches the picker between the full sea-
    creature collection and James's sharks. */
 .cv-filter {
   margin-left: auto;

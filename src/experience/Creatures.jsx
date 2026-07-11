@@ -36,10 +36,10 @@ const getFishGeometry = () => {
 // Two rules keep the culling itself hitch-free:
 // - Everything stays visible for the first moment of the dive, so the GPU
 //   uploads every creature's buffers while the visitor is still reading the
-//   hero. Otherwise each creature uploads the first time it un-culls —
+//   hero. Otherwise each creature uploads the first time it un-culls -
 //   a stutter mid-scroll.
 // - Never cull anything that carries a light (the anglerfish's lure, the
-//   gulper eel's tail tip — they set cull={false}): hiding a light changes
+//   gulper eel's tail tip - they set cull={false}): hiding a light changes
 //   the scene's light count and three.js recompiles every shader program in
 //   response, freezing the page for a beat.
 export const CULL_RANGE = 80;
@@ -113,7 +113,7 @@ export const FishSchool = ({
 };
 
 // ===========================================================================
-// Models — origin-centred, nose along +z, self-contained idle animation.
+// Models - origin-centred, nose along +z, self-contained idle animation.
 // ===========================================================================
 
 // A stylised shark: stretched body, pale belly, a fan of cone fins.
@@ -139,7 +139,7 @@ export const SharkModel = () => {
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
       </mesh>
-      {/* tapered snout — tucked inside the body line so it runs straight out
+      {/* tapered snout - tucked inside the body line so it runs straight out
           to a point instead of bulging past the head */}
       <mesh position={[0, -0.02, 1.45]} scale={[0.24, 0.26, 0.76]}>
         <sphereGeometry args={[1, 10, 8]} />
@@ -223,7 +223,7 @@ export const HammerheadModel = () => {
         <sphereGeometry args={[1, 10, 8]} />
         <meshStandardMaterial color={bellyColor} flatShading roughness={0.65} />
       </mesh>
-      {/* cephalofoil — the flattened head bar, rounded caps and eyes at the tips */}
+      {/* cephalofoil - the flattened head bar, rounded caps and eyes at the tips */}
       <mesh position={[0, -0.02, 1.28]} scale={[1.1, 0.14, 0.3]}>
         <boxGeometry args={[1, 1, 1]} />
         {mat}
@@ -351,7 +351,7 @@ export const OrcaModel = () => {
   );
 };
 
-// A bottlenose dolphin — sleek grey body, hooked dorsal, a beak up front and
+// A bottlenose dolphin - sleek grey body, hooked dorsal, a beak up front and
 // horizontal flukes it beats as it swims.
 export const DolphinModel = () => {
   const flukes = useRef();
@@ -432,7 +432,7 @@ export const DolphinModel = () => {
   );
 };
 
-// A humpback whale — long dark body, pale grooved throat, the signature long
+// A humpback whale - long dark body, pale grooved throat, the signature long
 // white flippers, and a broad two-lobed fluke on a tapering tail stock.
 export const WhaleModel = () => {
   const tail = useRef();
@@ -500,9 +500,9 @@ export const WhaleModel = () => {
   );
 };
 
-// A sperm whale — a third of it is that great squared-off head. Dark grey
+// A sperm whale - a third of it is that great squared-off head. Dark grey
 // all over, a narrow pale underslung jaw, stubby paddle fins, and no true
-// dorsal — just a low hump and knuckles running down to broad flukes.
+// dorsal - just a low hump and knuckles running down to broad flukes.
 export const SpermWhaleModel = () => {
   const tail = useRef();
   useFrame((state) => {
@@ -513,63 +513,76 @@ export const SpermWhaleModel = () => {
   const greyMat = (
     <meshStandardMaterial color={grey} emissive="#1a222b" emissiveIntensity={0.45} flatShading roughness={0.7} />
   );
+  const paleMat = <meshStandardMaterial color="#b9c6cb" flatShading roughness={0.65} />;
   return (
     <group scale={2.4}>
-      {/* body, sitting behind the head block */}
-      <mesh position={[0, 0, -0.5]} scale={[0.52, 0.6, 1.6]}>
+      {/* the huge blunt head - a third of the whale. A cylinder gives the
+          squared-off front without box corners; world y/z swap under the
+          rotation, so scale-y runs along the body. Sized flush with the
+          forebody so the topline reads as one unbroken profile. */}
+      <mesh position={[0, 0.05, 1.08]} rotation-x={Math.PI / 2} scale={[1, 1, 1.22]}>
+        <cylinderGeometry args={[0.45, 0.5, 1.6, 14]} />
+        {greyMat}
+      </mesh>
+      {/* softly rounded nose sized to the front face, so the blunt snout
+          reads as one domed surface instead of a capped rim */}
+      <mesh position={[0, 0.05, 1.86]} scale={[0.45, 0.55, 0.17]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {greyMat}
+      </mesh>
+      {/* blowhole bump, skewed to the whale's left at the very front of the head */}
+      <mesh position={[0.13, 0.6, 1.68]} scale={[0.08, 0.05, 0.13]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      {/* forebody at its fattest right where the head joins, hiding the seam */}
+      <mesh position={[0, 0.02, 0.28]} scale={[0.5, 0.6, 1.15]}>
         <sphereGeometry args={[1, 14, 10]} />
         {greyMat}
       </mesh>
-      {/* the huge blunt head — a third of the whale. A cylinder gives the
-          squared-off front without box corners; world y/z swap under the
-          rotation, so scale-y runs along the body. */}
-      <mesh position={[0, 0.05, 1.15]} rotation-x={Math.PI / 2} scale={[1.12, 1, 1.32]}>
-        <cylinderGeometry args={[0.5, 0.54, 1.5, 12]} />
+      {/* rear body tapering away toward the tail stock */}
+      <mesh position={[0, 0.05, -0.9]} scale={[0.34, 0.46, 1.15]}>
+        <sphereGeometry args={[1, 14, 10]} />
         {greyMat}
       </mesh>
-      {/* rounded brow easing the front edge */}
-      <mesh position={[0, 0.18, 1.5]} scale={[0.42, 0.44, 0.44]}>
-        <sphereGeometry args={[1, 12, 9]} />
-        {greyMat}
-      </mesh>
-      {/* rounded shoulders easing the box into the body */}
-      <mesh position={[0, 0.04, 0.55]} scale={[0.46, 0.56, 0.7]}>
-        <sphereGeometry args={[1, 12, 9]} />
-        {greyMat}
-      </mesh>
-      {/* narrow pale lower jaw hanging just below the head line */}
-      <mesh position={[0, -0.64, 1.35]} scale={[0.14, 0.07, 0.58]}>
+      {/* narrow pale underslung jaw, hugging the head's underside and
+          stopping short of the snout so the brow overhangs it */}
+      <mesh position={[0, -0.54, 1.05]} scale={[0.12, 0.07, 0.62]}>
         <sphereGeometry args={[1, 10, 8]} />
-        <meshStandardMaterial color="#b9c6cb" flatShading roughness={0.65} />
+        {paleMat}
       </mesh>
-      {/* eyes low on the head sides, just proud of the curve */}
-      <mesh position={[0.5, -0.3, 1.45]} scale={0.05}>
+      {/* eyes low and far back on the head, just above the corner of the gape */}
+      <mesh position={[0.46, -0.3, 0.55]} scale={0.05}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0b1216" roughness={0.35} />
       </mesh>
-      <mesh position={[-0.5, -0.3, 1.45]} scale={0.05}>
+      <mesh position={[-0.46, -0.3, 0.55]} scale={0.05}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0b1216" roughness={0.35} />
       </mesh>
       {/* stubby paddle pectorals */}
-      <mesh position={[0.52, -0.36, 0.2]} rotation-z={-0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
+      <mesh position={[0.48, -0.42, 0.3]} rotation-z={-0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
         <sphereGeometry args={[1, 8, 6]} />
         {greyMat}
       </mesh>
-      <mesh position={[-0.52, -0.36, 0.2]} rotation-z={0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
+      <mesh position={[-0.48, -0.42, 0.3]} rotation-z={0.5} rotation-x={0.3} scale={[0.3, 0.05, 0.17]}>
         <sphereGeometry args={[1, 8, 6]} />
         {greyMat}
       </mesh>
-      {/* low dorsal hump, then knuckles stepping down the tail stock */}
-      <mesh position={[0, 0.56, -0.85]} scale={[0.1, 0.15, 0.32]}>
+      {/* low dorsal hump two-thirds back, then knuckles stepping down the tail stock */}
+      <mesh position={[0, 0.48, -0.85]} scale={[0.09, 0.12, 0.28]}>
         <sphereGeometry args={[1, 8, 6]} />
         {greyMat}
       </mesh>
-      <mesh position={[0, 0.44, -1.35]} scale={[0.07, 0.09, 0.16]}>
+      <mesh position={[0, 0.38, -1.3]} scale={[0.07, 0.08, 0.15]}>
         <sphereGeometry args={[1, 8, 6]} />
         {greyMat}
       </mesh>
-      <mesh position={[0, 0.31, -1.75]} scale={[0.06, 0.07, 0.13]}>
+      <mesh position={[0, 0.27, -1.7]} scale={[0.06, 0.07, 0.12]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {greyMat}
+      </mesh>
+      <mesh position={[0, 0.16, -1.98]} scale={[0.05, 0.05, 0.1]}>
         <sphereGeometry args={[1, 8, 6]} />
         {greyMat}
       </mesh>
@@ -592,7 +605,7 @@ export const SpermWhaleModel = () => {
   );
 };
 
-// A manta ray — flat diamond body with wings that beat gently.
+// A manta ray - flat diamond body with wings that beat gently.
 export const MantaModel = () => {
   const wingL = useRef();
   const wingR = useRef();
@@ -723,7 +736,7 @@ export const TurtleModel = () => {
   );
 };
 
-// An ocean sunfish — a tall laterally-flattened disc with towering dorsal and
+// An ocean sunfish - a tall laterally-flattened disc with towering dorsal and
 // anal fins it sculls side to side, and a stubby rudder for a tail.
 export const SunfishModel = () => {
   const dorsal = useRef();
@@ -737,7 +750,7 @@ export const SunfishModel = () => {
   const body = "#9aa7ad";
   return (
     <group scale={1.3}>
-      {/* disc body — thin across x, tall in y */}
+      {/* disc body - thin across x, tall in y */}
       <mesh scale={[0.17, 0.95, 0.8]}>
         <sphereGeometry args={[1, 14, 12]} />
         <meshStandardMaterial color={body} flatShading roughness={0.7} />
@@ -761,7 +774,7 @@ export const SunfishModel = () => {
           <meshStandardMaterial color={body} flatShading roughness={0.7} />
         </mesh>
       </group>
-      {/* clavus — a vertical rudder band merged into the body's rear edge */}
+      {/* clavus - a vertical rudder band merged into the body's rear edge */}
       <mesh position={[0, 0, -0.58]} scale={[0.11, 0.68, 0.32]}>
         <sphereGeometry args={[1, 6, 6]} />
         <meshStandardMaterial color="#8b989e" flatShading roughness={0.75} />
@@ -792,7 +805,7 @@ export const SunfishModel = () => {
   );
 };
 
-// Softly pulsing jellyfish body — bell breathes, tentacles sway. Drift is the
+// Softly pulsing jellyfish body - bell breathes, tentacles sway. Drift is the
 // wrapper's job.
 export const JellyfishModel = ({ tint = "#c9a2e8", phase = 0 }) => {
   const bell = useRef();
@@ -897,7 +910,7 @@ export const AnglerfishModel = () => {
         <sphereGeometry args={[1, 8, 6]} />
         {hideMat}
       </mesh>
-      {/* needle teeth — a row hanging from the lip, a row rising off the jaw */}
+      {/* needle teeth - a row hanging from the lip, a row rising off the jaw */}
       {[-0.21, -0.07, 0.07, 0.21].map((x) => (
         <mesh key={`ut-${x}`} position={[x, -0.14, 0.74]} rotation-x={Math.PI - 0.25}>
           <coneGeometry args={[0.022, 0.17, 5]} />
@@ -955,7 +968,7 @@ export const AnglerfishModel = () => {
   );
 };
 
-// A gulper eel — two long pelican jaws hinged wide open, a tiny head, and a
+// A gulper eel - two long pelican jaws hinged wide open, a tiny head, and a
 // body that tapers away to a whip tail tipped with a bioluminescent glow.
 export const GulperEelModel = () => {
   const tail = useRef();
@@ -989,14 +1002,14 @@ export const GulperEelModel = () => {
         <sphereGeometry args={[1, 6, 5]} />
         <meshStandardMaterial color="#cbe6e0" emissive="#8fd6c8" emissiveIntensity={0.8} />
       </mesh>
-      {/* upper jaw — a long thin blade hinged upward */}
+      {/* upper jaw - a long thin blade hinged upward */}
       <group ref={jawTop} rotation-x={-0.3}>
         <mesh position={[0, 0.03, 0.62]} scale={[0.26, 0.06, 0.68]}>
           <sphereGeometry args={[1, 10, 6]} />
           {darkMat}
         </mesh>
       </group>
-      {/* lower jaw — the huge pouch hinged down */}
+      {/* lower jaw - the huge pouch hinged down */}
       <group ref={jawBottom} rotation-x={0.55}>
         <mesh position={[0, -0.08, 0.6]} scale={[0.32, 0.18, 0.72]}>
           <sphereGeometry args={[1, 10, 8]} />
@@ -1031,7 +1044,7 @@ export const GulperEelModel = () => {
   );
 };
 
-// A giant squid — long mantle with a fin flick at the tail, an outsized eye,
+// A giant squid - long mantle with a fin flick at the tail, an outsized eye,
 // and a crown of arms with two longer feeding tentacles reaching ahead.
 export const GiantSquidModel = () => {
   const arms = useRef();
@@ -1114,7 +1127,7 @@ export const GiantSquidModel = () => {
   );
 };
 
-// A dumbo octopus — a soft bell with two ear-like fins it flaps, and a fringe
+// A dumbo octopus - a soft bell with two ear-like fins it flaps, and a fringe
 // of stubby webbed arms below. Sits upright; forward is +z (its eyes).
 export const DumboOctopusModel = () => {
   const earL = useRef();
@@ -1184,7 +1197,7 @@ export const DumboOctopusModel = () => {
   );
 };
 
-// A swordfish — a streamlined steel-blue sprinter: long flattened bill, a
+// A swordfish - a streamlined steel-blue sprinter: long flattened bill, a
 // tall sickle of a first dorsal, keeled tail stock and a big crescent tail.
 export const SwordfishModel = () => {
   const tail = useRef();
@@ -1217,7 +1230,7 @@ export const SwordfishModel = () => {
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
       </mesh>
-      {/* the sword — a long flattened bill */}
+      {/* the sword - a long flattened bill */}
       <mesh position={[0, 0.05, 2.45]} rotation-x={Math.PI / 2} scale={[1.6, 1, 1]}>
         <cylinderGeometry args={[0.012, 0.05, 1.5, 5]} />
         {bodyMat}
@@ -1272,7 +1285,7 @@ export const SwordfishModel = () => {
   );
 };
 
-// A crab — a flat oval shell, stalked eyes, two claws held up ready, and four
+// A crab - a flat oval shell, stalked eyes, two claws held up ready, and four
 // pairs of skittering legs. Faces +z; walking sideways is the wrapper's job.
 export const CrabModel = () => {
   const clawL = useRef();
@@ -1361,13 +1374,13 @@ export const CrabModel = () => {
 };
 
 // ===========================================================================
-// Shark collection — species-specific builds in the same primitive style as
+// Shark collection - species-specific builds in the same primitive style as
 // the great white and hammerhead: origin-centred, nose along +z, tail sway.
 // They appear only in the /creatures viewer (grouped under "Sharks"), never
 // in the dive.
 // ===========================================================================
 
-// Tiger Shark · Galeocerdo cuvier — blunt squared-off snout, dark vertical
+// Tiger Shark · Galeocerdo cuvier - blunt squared-off snout, dark vertical
 // bars over the back that fade toward the tail, long upper caudal lobe.
 export const TigerSharkModel = () => {
   const tail = useRef();
@@ -1385,7 +1398,7 @@ export const TigerSharkModel = () => {
   );
   const bellyMat = <meshStandardMaterial color="#cdd1c2" flatShading roughness={0.6} />;
   const stripeMat = <meshStandardMaterial color="#333d2b" flatShading roughness={0.7} />;
-  // [z, x, y] — each bar is a thin ring sized to hug the body's taper there.
+  // [z, x, y] - each bar is a thin ring sized to hug the body's taper there.
   const stripes = [
     [0.85, 0.47, 0.5],
     [0.5, 0.51, 0.55],
@@ -1401,7 +1414,7 @@ export const TigerSharkModel = () => {
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
       </mesh>
-      {/* broad, squared-off snout — far blunter than a great white's */}
+      {/* broad, squared-off snout - far blunter than a great white's */}
       <mesh position={[0, -0.04, 1.52]} scale={[0.4, 0.3, 0.5]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
@@ -1446,7 +1459,7 @@ export const TigerSharkModel = () => {
       <mesh position={[-0.55, -0.2, 0.45]} rotation-z={2.1} rotation-x={0.5} geometry={finGeometry}>
         {bodyMat}
       </mesh>
-      {/* strongly asymmetric tail — the long upper lobe is the tiger's cruiser */}
+      {/* strongly asymmetric tail - the long upper lobe is the tiger's cruiser */}
       <group ref={tail} position={[0, 0, -1.6]}>
         <mesh position={[0, 0, -0.1]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}>
           <coneGeometry args={[0.24, 0.7, 6]} />
@@ -1463,7 +1476,7 @@ export const TigerSharkModel = () => {
   );
 };
 
-// Whale Shark · Rhincodon typus — broad flattened head with a wide terminal
+// Whale Shark · Rhincodon typus - broad flattened head with a wide terminal
 // mouth, a chequerboard of pale spots, ridged flanks and a tall crescent tail.
 export const WhaleSharkModel = () => {
   const tail = useRef();
@@ -1472,7 +1485,7 @@ export const WhaleSharkModel = () => {
     geo.scale(0.18, 1, 1);
     return geo;
   }, []);
-  // Spots laid out in loose staggered rows over the back — every whale shark's
+  // Spots laid out in loose staggered rows over the back - every whale shark's
   // pattern is unique, this one included.
   const spots = useMemo(() => {
     const pts = [];
@@ -1579,7 +1592,7 @@ export const WhaleSharkModel = () => {
   );
 };
 
-// Bull Shark · Carcharhinus leucas — stocky and thick-set with a short blunt
+// Bull Shark · Carcharhinus leucas - stocky and thick-set with a short blunt
 // snout, small eyes and a big broad first dorsal fin.
 export const BullSharkModel = () => {
   const tail = useRef();
@@ -1660,7 +1673,7 @@ export const BullSharkModel = () => {
   );
 };
 
-// Blue Shark · Prionace glauca — slender indigo body, long conical snout,
+// Blue Shark · Prionace glauca - slender indigo body, long conical snout,
 // big eyes and hugely elongated sickle-shaped pectoral fins.
 export const BlueSharkModel = () => {
   const tail = useRef();
@@ -1718,7 +1731,7 @@ export const BlueSharkModel = () => {
       <mesh position={[0, 0.56, -0.25]} rotation-x={-0.45} geometry={finGeometry} scale={0.85}>
         {bodyMat}
       </mesh>
-      {/* the sickle pectorals — nearly half the body length, swept hard back */}
+      {/* the sickle pectorals - nearly half the body length, swept hard back */}
       <mesh position={[0.4, -0.16, 0.6]} rotation-z={-2.3} rotation-x={0.7} geometry={longFinGeometry}>
         {bodyMat}
       </mesh>
@@ -1742,7 +1755,7 @@ export const BlueSharkModel = () => {
   );
 };
 
-// Shortfin Mako · Isurus oxyrinchus — metallic-blue torpedo: sharp conical
+// Shortfin Mako · Isurus oxyrinchus - metallic-blue torpedo: sharp conical
 // snout, short pectorals, caudal keels and a near-symmetric crescent tail.
 export const MakoSharkModel = () => {
   const tail = useRef();
@@ -1768,7 +1781,7 @@ export const MakoSharkModel = () => {
   const bellyMat = <meshStandardMaterial color="#eef3f8" flatShading roughness={0.55} />;
   return (
     <group>
-      {/* perfect spindle body — built for speed */}
+      {/* perfect spindle body - built for speed */}
       <mesh scale={[0.46, 0.5, 1.7]}>
         <sphereGeometry args={[1, 12, 9]} />
         {bodyMat}
@@ -1805,7 +1818,7 @@ export const MakoSharkModel = () => {
       <mesh position={[0, 0.42, -1.2]} rotation-x={-0.5} geometry={finGeometry} scale={0.3}>
         {bodyMat}
       </mesh>
-      {/* the "shortfin" — noticeably stubby pectorals */}
+      {/* the "shortfin" - noticeably stubby pectorals */}
       <mesh position={[0.5, -0.2, 0.5]} rotation-z={-2.15} rotation-x={0.45} geometry={finGeometry} scale={0.8}>
         {bodyMat}
       </mesh>
@@ -1837,7 +1850,7 @@ export const MakoSharkModel = () => {
   );
 };
 
-// Thresher Shark · Alopias vulpinus — big eyes, short snout and the show
+// Thresher Shark · Alopias vulpinus - big eyes, short snout and the show
 // piece: a scythe-like upper tail lobe nearly as long as the body itself.
 export const ThresherSharkModel = () => {
   const tail = useRef();
@@ -1860,7 +1873,7 @@ export const ThresherSharkModel = () => {
   );
   const bellyMat = <meshStandardMaterial color="#dae2e6" flatShading roughness={0.6} />;
   return (
-    // Body sits forward so the whole shark — whip included — spins centred.
+    // Body sits forward so the whole shark - whip included - spins centred.
     <group>
       <mesh position={[0, 0, 0.65]} scale={[0.44, 0.5, 1.45]}>
         <sphereGeometry args={[1, 12, 9]} />
@@ -1918,7 +1931,7 @@ export const ThresherSharkModel = () => {
   );
 };
 
-// Oceanic Whitetip · Carcharhinus longimanus — bronze body with huge rounded
+// Oceanic Whitetip · Carcharhinus longimanus - bronze body with huge rounded
 // paddle fins, every one dipped in white at the tip.
 export const OceanicWhitetipModel = () => {
   const tail = useRef();
@@ -1974,7 +1987,7 @@ export const OceanicWhitetipModel = () => {
           {tipMat}
         </mesh>
       </group>
-      {/* long paddle pectorals — the "longimanus" — also white-tipped */}
+      {/* long paddle pectorals - the "longimanus" - also white-tipped */}
       <group position={[0.5, -0.15, 0.5]} rotation-z={-2.05} rotation-x={0.35}>
         <mesh position={[0, 0.3, 0]} scale={[0.055, 0.5, 0.2]}>
           <sphereGeometry args={[1, 10, 8]} />
@@ -2029,7 +2042,7 @@ export const OceanicWhitetipModel = () => {
   );
 };
 
-// Zebra Shark · Stegostoma tigrinum — adult colours: leopard spots on tan,
+// Zebra Shark · Stegostoma tigrinum - adult colours: leopard spots on tan,
 // ridged flanks, barbels on the snout and a very long, low caudal fin.
 export const ZebraSharkModel = () => {
   const tail = useRef();
@@ -2148,7 +2161,7 @@ export const ZebraSharkModel = () => {
   );
 };
 
-// Goblin Shark · Mitsukurina owstoni — pink flabby body, flat blade of a
+// Goblin Shark · Mitsukurina owstoni - pink flabby body, flat blade of a
 // rostrum over protruding needle-toothed jaws, low fins, long upper tail.
 export const GoblinSharkModel = () => {
   const tail = useRef();
@@ -2208,7 +2221,7 @@ export const GoblinSharkModel = () => {
         <coneGeometry args={[0.018, 0.07, 4]} />
         {toothMat}
       </mesh>
-      {/* small pale eyes — it hunts by electro-sense, not sight */}
+      {/* small pale eyes - it hunts by electro-sense, not sight */}
       <mesh position={[0.16, 0.12, 1.6]} scale={0.04}>
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#2a1c20" roughness={0.35} />
@@ -2217,7 +2230,7 @@ export const GoblinSharkModel = () => {
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#2a1c20" roughness={0.35} />
       </mesh>
-      {/* low, rounded fins — no speed needed in the deep */}
+      {/* low, rounded fins - no speed needed in the deep */}
       <mesh position={[0, 0.48, -0.1]} scale={[0.045, 0.2, 0.28]}>
         <sphereGeometry args={[1, 8, 8]} />
         {bodyMat}
@@ -2234,7 +2247,7 @@ export const GoblinSharkModel = () => {
         <sphereGeometry args={[1, 8, 8]} />
         {bodyMat}
       </mesh>
-      {/* asymmetric tail — long low upper lobe, barely any lower one */}
+      {/* asymmetric tail - long low upper lobe, barely any lower one */}
       <group ref={tail} position={[0, 0, -1.5]}>
         <mesh position={[0, 0, -0.05]} rotation-x={-Math.PI / 2} scale={[0.55, 1, 1]}>
           <coneGeometry args={[0.18, 0.55, 6]} />
@@ -2252,7 +2265,7 @@ export const GoblinSharkModel = () => {
   );
 };
 
-// Tasselled Wobbegong · Eucrossorhinus dasypogon — a flattened living carpet:
+// Tasselled Wobbegong · Eucrossorhinus dasypogon - a flattened living carpet:
 // broad fringed head, mottled camouflage and a fringe of tassels round the rim.
 export const WobbegongModel = () => {
   const tail = useRef();
@@ -2373,7 +2386,7 @@ export const WobbegongModel = () => {
   );
 };
 
-// Frilled Shark · Chlamydoselachus anguineus — an eel of a shark: long thin
+// Frilled Shark · Chlamydoselachus anguineus - an eel of a shark: long thin
 // body, blunt snake-like head, ruffled gill frills, fins pushed far back.
 export const FrilledSharkModel = () => {
   const tail = useRef();
@@ -2419,7 +2432,7 @@ export const FrilledSharkModel = () => {
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
-      {/* the frills — ruffled gill collars behind the head */}
+      {/* the frills - ruffled gill collars behind the head */}
       <mesh position={[0, 0, 1.32]} scale={[0.3, 0.27, 0.09]}>
         <sphereGeometry args={[1, 12, 9]} />
         {frillMat}
@@ -2467,7 +2480,7 @@ export const FrilledSharkModel = () => {
   );
 };
 
-// Greenland Shark · Somniosus microcephalus — a heavy, sluggish barrel with
+// Greenland Shark · Somniosus microcephalus - a heavy, sluggish barrel with
 // stunted fins, tiny eyes trailing parasitic copepods, and mottled grey skin.
 export const GreenlandSharkModel = () => {
   const tail = useRef();
@@ -2570,7 +2583,7 @@ export const GreenlandSharkModel = () => {
   );
 };
 
-// Cookiecutter Shark · Isistius brasiliensis — a small cigar of a shark:
+// Cookiecutter Shark · Isistius brasiliensis - a small cigar of a shark:
 // blunt head, big green eyes, dark collar and a glowing belly lure.
 export const CookiecutterSharkModel = () => {
   const tail = useRef();
@@ -2587,7 +2600,7 @@ export const CookiecutterSharkModel = () => {
     <meshStandardMaterial color="#6b4f3e" emissive="#1d130c" emissiveIntensity={0.45} flatShading roughness={0.6} />
   );
   return (
-    // Rendered small on purpose — it really is a ~50 cm shark.
+    // Rendered small on purpose - it really is a ~50 cm shark.
     <group scale={0.72}>
       {/* cigar-shaped body */}
       <mesh scale={[0.32, 0.32, 1.5]}>
@@ -2613,7 +2626,7 @@ export const CookiecutterSharkModel = () => {
         <sphereGeometry args={[1, 8, 6]} />
         <meshStandardMaterial color="#355e42" emissive="#2d7a4a" emissiveIntensity={0.9} roughness={0.3} />
       </mesh>
-      {/* the dark collar band — the "dog collar" behind the gills */}
+      {/* the dark collar band - the "dog collar" behind the gills */}
       <mesh position={[0, 0, 0.95]} scale={[0.26, 0.26, 0.08]}>
         <sphereGeometry args={[1, 12, 9]} />
         <meshStandardMaterial color="#241812" flatShading roughness={0.7} />
@@ -2661,7 +2674,7 @@ export const CookiecutterSharkModel = () => {
   );
 };
 
-// Epaulette Shark · Hemiscyllium ocellatum — slender little walker: paddle
+// Epaulette Shark · Hemiscyllium ocellatum - slender little walker: paddle
 // fins like legs, a bold white-ringed eyespot on each shoulder, spotted tan.
 export const EpauletteSharkModel = () => {
   const tail = useRef();
@@ -2745,7 +2758,7 @@ export const EpauletteSharkModel = () => {
           {spotMat}
         </mesh>
       ))}
-      {/* the walking paddles — muscular rounded pectorals and pelvics */}
+      {/* the walking paddles - muscular rounded pectorals and pelvics */}
       <mesh position={[0.3, -0.22, 1.05]} scale={[0.17, 0.05, 0.22]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
@@ -2769,7 +2782,7 @@ export const EpauletteSharkModel = () => {
       <mesh position={[0, 0.26, -0.9]} rotation-x={-0.55} geometry={finGeometry} scale={0.45}>
         {bodyMat}
       </mesh>
-      {/* long tail trunk — almost half the shark */}
+      {/* long tail trunk - almost half the shark */}
       <mesh position={[0, 0, -0.55]} scale={[0.19, 0.21, 0.85]}>
         <sphereGeometry args={[1, 10, 8]} />
         {bodyMat}
@@ -2784,7 +2797,7 @@ export const EpauletteSharkModel = () => {
   );
 };
 
-// Angel Shark · Squatina squatina — flattened like a ray: huge wing-like
+// Angel Shark · Squatina squatina - flattened like a ray: huge wing-like
 // pectorals, eyes on top of a broad flat head, sandy mottled camouflage.
 export const AngelSharkModel = () => {
   const tail = useRef();
@@ -2888,7 +2901,7 @@ export const AngelSharkModel = () => {
   );
 };
 
-// Port Jackson Shark · Heterodontus portusjacksoni — blunt pig-like head with
+// Port Jackson Shark · Heterodontus portusjacksoni - blunt pig-like head with
 // crests over the eyes, dark harness straps, and a spine before each dorsal.
 export const PortJacksonSharkModel = () => {
   const tail = useRef();
@@ -2948,7 +2961,7 @@ export const PortJacksonSharkModel = () => {
         <sphereGeometry args={[1, 10, 8]} />
         {bellyMat}
       </mesh>
-      {/* the harness — dark bar across the eyes, a shoulder band, and a
+      {/* the harness - dark bar across the eyes, a shoulder band, and a
           diagonal strap running down each flank */}
       <mesh position={[0, 0.34, 1.3]} scale={[0.32, 0.05, 0.06]}>
         <sphereGeometry args={[1, 10, 8]} />
@@ -3010,7 +3023,7 @@ export const PortJacksonSharkModel = () => {
   );
 };
 
-// Basking Shark · Cetorhinus maximus — the second-largest fish alive:
+// Basking Shark · Cetorhinus maximus - the second-largest fish alive:
 // grey-brown, a cavernous gaping mouth, gill slits that nearly ring the
 // head, and a tall crescent tail pushing it slowly through the plankton.
 export const BaskingSharkModel = () => {
@@ -3074,7 +3087,7 @@ export const BaskingSharkModel = () => {
         <meshStandardMaterial color="#0d1216" roughness={0.35} />
       </mesh>
       {/* five gill collars wrapping the body just behind the head, sized to
-          the body's cross-section so they hug the skin — on a basking shark
+          the body's cross-section so they hug the skin - on a basking shark
           they nearly meet under the throat */}
       {[0.45, 0.6, 0.75, 0.9, 1.05].map((z) => {
         const f = Math.sqrt(1 - (z / 1.8) ** 2);
@@ -3119,7 +3132,7 @@ export const BaskingSharkModel = () => {
 };
 
 // ===========================================================================
-// Scene wrappers — carry a model along an orbit through the dive.
+// Scene wrappers - carry a model along an orbit through the dive.
 // ===========================================================================
 
 // Generic swimmer: circles a centre, bobs, and turns to face where it's going.
@@ -3273,7 +3286,7 @@ export const DumboOctopus = ({ position = [6, -96, -5] }) => (
   </Drifter>
 );
 
-// A pod of dolphins near the surface, porpoising — arcing up out of the water
+// A pod of dolphins near the surface, porpoising - arcing up out of the water
 // and back under as they circle. Centred on the surface plane (y≈9) so they're
 // only in view near the top of the dive, when you look up.
 export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed = 0.32 }) => {

@@ -1,10 +1,10 @@
-# James Hirst — personal website
+# James Hirst - personal website
 
 An interactive CV you scroll through like a dive: the page descends from the sunlit
 surface to Challenger Deep at -10,935m, with each depth revealing a chapter (Mozaic
 Earth, Microsoft, Cambridge research, the Shark Trust, education, skills). The ocean
-is a real-time 3D scene — procedural fish schools, a cruising shark, jellyfish, a
-distant whale, an anglerfish in the abyss and a kelp-covered seabed — rendered with
+is a real-time 3D scene - procedural fish schools, a cruising shark, jellyfish, a
+distant whale, an anglerfish in the abyss and a kelp-covered seabed - rendered with
 three.js behind glass content panels, with submersible-style mouse look-around.
 
 ## Stack
@@ -24,10 +24,10 @@ npm run preview  # serve the production build locally
 
 ## Structure
 
-- `src/data/cv.js` — all CV content lives here; edit this to update the site
-- `src/experience/` — the 3D ocean (camera rig, creatures, seabed, ambience)
-- `src/pages/Dive.jsx` — page layout, glass panels, depth meter, section nav
-- `src/pages/BowlOfFish.jsx` — the Bowl of Fish game (find it on the seabed)
+- `src/data/cv.js` - all CV content lives here; edit this to update the site
+- `src/experience/` - the 3D ocean (camera rig, creatures, seabed, ambience)
+- `src/pages/Dive.jsx` - page layout, glass panels, depth meter, section nav
+- `src/pages/BowlOfFish.jsx` - the Bowl of Fish game (find it on the seabed)
 
 Users with `prefers-reduced-motion` or no WebGL get a static gradient fallback;
 all content stays fully readable without the 3D scene.
@@ -44,7 +44,7 @@ auto-detects the Vite preset (`npm run build` → `dist/`), so no manual steps a
 ### Domain
 
 `jamesjhirst.com` is registered and its DNS is managed at **Squarespace** (a former
-Google Domains registration, so its zone still runs on Google's nameservers —
+Google Domains registration, so its zone still runs on Google's nameservers -
 `ns-cloud-*.googledomains.com`. Vercel refers to this as "Google Cloud DNS", but it's
 edited from the Squarespace DNS panel). Two records point it at Vercel:
 
