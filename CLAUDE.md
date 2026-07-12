@@ -21,6 +21,12 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 - `category: "shark"` routes an entry into the "🦈 Sharks" filter tab; `offset` recentres a model so it spins about its middle.
 - To add a creature: add a `XxxModel` in `src/experience/Creatures.jsx`, import it + add a `CREATURES` entry in `src/pages/Creatures.jsx`, and optionally place its scene wrapper in `Scene` in `OceanCanvas.jsx` to have it swim in the dive.
 
+## The dive log
+- Creatures that swim in the dive are locked in `/creatures` (dark silhouette + "???") until spotted mid-dive; sightings persist in localStorage and fill the ring badge in the dive's top-right corner (`DiveLogBadge` in `Dive.jsx`). All state lives in `src/experience/diveLog.js`.
+- A sighting = the creature's whole bounding box inside the middle 85% of the viewport, within 48 world units, held for ~0.75 s (`SpotTracker` in `OceanCanvas.jsx`). Pods/blooms register each member under one id, so framing any one dolphin spots "dolphin".
+- When adding a dive-swimming creature: pass `spotId="<gallery id>"` to its `Orbiter`/`Drifter` (or call `useSpotTarget(id, ref)` in a custom wrapper) AND add the id to `DIVE_CREATURE_IDS` in `diveLog.js` - the badge total and the gallery locks both derive from that list. Gallery-only creatures need nothing and show as "Gallery exclusive".
+- `markSpotted` is called from inside `useFrame`, so its side effects (localStorage, analytics, listener re-renders) are deferred via `setTimeout` - keep it that way or spotting hitches mid-scroll.
+
 ## Interaction model
 - Dive look-around: desktop steers by cursor position (`pointer`), mobile by moving the phone (gyroscope only - swipes are left to page scroll); both write to `look` and the camera follows in `CameraRig` (`OceanCanvas.jsx`).
 - Creature viewer: mouse drags via pointer events, mobile drags via native touch listeners; idle auto-spin when not dragging (`CreatureStage` / `Turntable`).

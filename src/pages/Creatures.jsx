@@ -1,5 +1,12 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Link } from "react-router-dom";
+import * as THREE from "three";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   TurtleModel,
@@ -36,6 +43,14 @@ import {
   BaskingSharkModel,
   CrabModel,
 } from "../experience/Creatures";
+import {
+  DIVE_CREATURE_IDS,
+  diveLogAvailable,
+  getSpotVersion,
+  getSpottedCount,
+  isSpotted,
+  subscribeSpotted,
+} from "../experience/diveLog";
 import { track } from "../analytics";
 import "../styles/creatures.css";
 
@@ -564,6 +579,27 @@ const CREATURES = [
   },
 ];
 
+const IN_DIVE = new Set(DIVE_CREATURE_IDS);
+
+// Locked creatures render as a flat dark cut-out: an override material claims
+// every mesh in the stage, so all you get is the spinning shape - the actual
+// reveal stays in the dive.
+const SilhouetteOverride = () => {
+  const { scene } = useThree();
+  const material = useMemo(
+    () => new THREE.MeshBasicMaterial({ color: "#0d2436" }),
+    []
+  );
+  useEffect(() => {
+    scene.overrideMaterial = material;
+    return () => {
+      scene.overrideMaterial = null;
+    };
+  }, [scene, material]);
+  useEffect(() => () => material.dispose(), [material]);
+  return null;
+};
+
 // Frames the model: sits the camera back by `distance` whenever it changes.
 const Rig = ({ distance }) => {
   const { camera } = useThree();
@@ -593,7 +629,7 @@ const Turntable = ({ Model, offset, rot }) => {
 
 const clampPitch = (v) => Math.min(Math.max(v, -0.9), 0.9);
 
-const CreatureStage = ({ creature }) => {
+const CreatureStage = ({ creature, locked }) => {
   // Shared, ref-based rotation so pointer handlers never trigger re-renders.
   const rot = useRef({ yaw: 0.6, pitch: 0, dragging: false });
   const last = useRef({ x: 0, y: 0 });
@@ -695,6 +731,7 @@ const CreatureStage = ({ creature }) => {
         gl={{ antialias: true, alpha: true }}
       >
         <Rig distance={creature.distance} />
+        {locked && <SilhouetteOverride />}
         <ambientLight intensity={0.75} color="#cfeafc" />
         <directionalLight position={[4, 6, 6]} intensity={1.5} color="#eaf8ff" />
         <directionalLight position={[-5, -1, -4]} intensity={0.5} color="#4f9fd0" />
@@ -730,6 +767,15 @@ const CreaturesPage = () => {
     [activeId]
   );
 
+  // Dive-log locking: creatures that swim in the dive stay dark silhouettes
+  // here until they've been spotted there. Re-renders on each new sighting;
+  // without WebGL (or with reduced motion) nothing is ever spottable, so
+  // everything stays open.
+  useSyncExternalStore(subscribeSpotted, getSpotVersion);
+  const locking = useMemo(diveLogAvailable, []);
+  const lockedOf = (c) => locking && IN_DIVE.has(c.id) && !isSpotted(c.id);
+  const locked = lockedOf(creature);
+
   // Which creatures people actually open (includes the first one shown / any
   // deep-linked via /creatures#<id>).
   useEffect(() => {
@@ -737,6 +783,7 @@ const CreaturesPage = () => {
       id: creature.id,
       name: creature.name,
       category: creature.category || "creature",
+      locked,
     });
   }, [creature.id]);
 
@@ -752,18 +799,43 @@ const CreaturesPage = () => {
     if (!nextList.some((c) => c.id === activeId)) setActiveId(nextList[0].id);
   };
 
-  const renderChip = (c) => (
-    <button
-      key={c.id}
-      className={`cv-chip ${c.id === activeId ? "is-active" : ""}`}
-      onClick={() => setActiveId(c.id)}
-    >
-      <span className="cv-chip__emoji" aria-hidden="true">
-        {c.emoji}
-      </span>
-      <span className="cv-chip__name">{c.name}</span>
-    </button>
+  const renderChip = (c) => {
+    const isLocked = lockedOf(c);
+    return (
+      <button
+        key={c.id}
+        className={`cv-chip ${c.id === activeId ? "is-active" : ""} ${isLocked ? "is-locked" : ""}`}
+        onClick={() => setActiveId(c.id)}
+        aria-label={
+          isLocked ? "A mystery creature - spot it in the dive to unlock" : c.name
+        }
+      >
+        <span
+          className={`cv-chip__emoji ${isLocked ? "cv-chip__emoji--locked" : ""}`}
+          aria-hidden="true"
+        >
+          {c.emoji}
+        </span>
+        <span className="cv-chip__name">{isLocked ? "???" : c.name}</span>
+      </button>
+    );
+  };
+
+  // The little provenance pill on the info panel - it's what makes it obvious
+  // that most of the sharks never appear in the dive (nothing to hunt for).
+  const diveTag = !IN_DIVE.has(creature.id) ? (
+    <p className="cv-dive-tag cv-dive-tag--gallery">
+      Gallery exclusive · not in the dive
+    </p>
+  ) : locked ? (
+    <p className="cv-dive-tag">🤿 Spot in the dive to unlock</p>
+  ) : (
+    <p className={`cv-dive-tag ${locking && isSpotted(creature.id) ? "is-spotted" : ""}`}>
+      🤿 {locking && isSpotted(creature.id) ? "Spotted in the dive" : "Swims in the dive"}
+    </p>
   );
+
+  const spottedCount = getSpottedCount();
 
   return (
     <div className="cv-page">
@@ -795,19 +867,42 @@ const CreaturesPage = () => {
         </div>
       </header>
 
-      <div className="cv-body">
-        <CreatureStage creature={creature} />
+      {locking && (
+        <p className="cv-progress">
+          {spottedCount === 0
+            ? `🤿 ${DIVE_CREATURE_IDS.length} of these creatures swim in the dive — spot them there to unlock`
+            : `🤿 ${spottedCount} of ${DIVE_CREATURE_IDS.length} spotted in the dive`}
+        </p>
+      )}
 
-        <aside className="cv-info" key={creature.id}>
+      <div className="cv-body">
+        <CreatureStage creature={creature} locked={locked} />
+
+        <aside className="cv-info" key={`${creature.id}${locked ? "-locked" : ""}`}>
           <p className="cv-zone">{creature.zone}</p>
-          <h2 className="cv-name">{creature.name}</h2>
-          <p className="cv-latin">{creature.latin}</p>
-          <p className="cv-tagline">{creature.tagline}</p>
-          <ul className="cv-facts">
-            {creature.facts.map((fact, i) => (
-              <li key={i}>{fact}</li>
-            ))}
-          </ul>
+          {locked ? (
+            <>
+              <h2 className="cv-name cv-name--locked">???</h2>
+              <p className="cv-latin">Species incognita</p>
+              {diveTag}
+              <p className="cv-tagline">
+                It's swimming somewhere in the dive — track it down and get a
+                good, clear view to log it.
+              </p>
+            </>
+          ) : (
+            <>
+              <h2 className="cv-name">{creature.name}</h2>
+              <p className="cv-latin">{creature.latin}</p>
+              {diveTag}
+              <p className="cv-tagline">{creature.tagline}</p>
+              <ul className="cv-facts">
+                {creature.facts.map((fact, i) => (
+                  <li key={i}>{fact}</li>
+                ))}
+              </ul>
+            </>
+          )}
         </aside>
       </div>
 

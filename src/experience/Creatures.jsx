@@ -1,7 +1,8 @@
-import React, { useMemo, useRef } from "react";
+import React, { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { mergeGeometries } from "three/examples/jsm/utils/BufferGeometryUtils.js";
+import { registerSpotTarget, useSpotTarget } from "./diveLog";
 
 // ---------------------------------------------------------------------------
 // Every creature is authored twice over: a *Model* renders it at the origin
@@ -3136,6 +3137,8 @@ export const BaskingSharkModel = () => {
 // ===========================================================================
 
 // Generic swimmer: circles a centre, bobs, and turns to face where it's going.
+// `spotId` registers the moving group with the dive log so framing the
+// creature on screen counts as spotting it (see diveLog.js).
 const Orbiter = ({
   center,
   radius,
@@ -3145,9 +3148,11 @@ const Orbiter = ({
   bobSpeed = 0.45,
   scale = 1,
   cull = true,
+  spotId,
   children,
 }) => {
   const group = useRef();
+  useSpotTarget(spotId, group);
   const target = useMemo(() => new THREE.Vector3(), []);
   useFrame((state) => {
     if (cull && !cullByDepth(group.current, state, center[1])) return;
@@ -3173,8 +3178,9 @@ const Orbiter = ({
 };
 
 // Gentle floater for creatures that hang in the water rather than cruise.
-const Drifter = ({ position, speed = 0.3, scale = 1, children }) => {
+const Drifter = ({ position, speed = 0.3, scale = 1, spotId, children }) => {
   const group = useRef();
+  useSpotTarget(spotId, group);
   useFrame((state) => {
     if (!cullByDepth(group.current, state, position[1])) return;
     const t = state.clock.elapsedTime;
@@ -3193,13 +3199,13 @@ const Drifter = ({ position, speed = 0.3, scale = 1, children }) => {
 };
 
 export const Turtle = ({ center = [0, -10, 4], radius = 13, speed = 0.09 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.8} bob={0.9} bobSpeed={0.5}>
+  <Orbiter spotId="turtle" center={center} radius={radius} speed={speed} squish={0.8} bob={0.9} bobSpeed={0.5}>
     <TurtleModel />
   </Orbiter>
 );
 
 export const MantaRay = ({ center = [0, -57, 5], radius = 15, speed = 0.11 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.85} bob={1.6} bobSpeed={0.35}>
+  <Orbiter spotId="manta" center={center} radius={radius} speed={speed} squish={0.85} bob={1.6} bobSpeed={0.35}>
     <MantaModel />
   </Orbiter>
 );
@@ -3208,6 +3214,7 @@ export const MantaRay = ({ center = [0, -57, 5], radius = 15, speed = 0.11 }) =>
 // of facing its heading.
 export const Shark = ({ center = [0, -58, -10], radius = 15, speed = 0.14 }) => {
   const group = useRef();
+  useSpotTarget("shark", group);
   const target = useMemo(() => new THREE.Vector3(), []);
   useFrame((state) => {
     if (!cullByDepth(group.current, state, center[1])) return;
@@ -3235,19 +3242,19 @@ export const Shark = ({ center = [0, -58, -10], radius = 15, speed = 0.14 }) => 
 };
 
 export const Hammerhead = ({ center = [2, -46, 6], radius = 13, speed = 0.14 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.75} bob={1} bobSpeed={0.4}>
+  <Orbiter spotId="hammerhead" center={center} radius={radius} speed={speed} squish={0.75} bob={1} bobSpeed={0.4}>
     <HammerheadModel />
   </Orbiter>
 );
 
 export const Orca = ({ center = [-2, -44, -6], radius = 18, speed = 0.1 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.8} bob={1.3} bobSpeed={0.35} scale={1.2}>
+  <Orbiter spotId="orca" center={center} radius={radius} speed={speed} squish={0.8} bob={1.3} bobSpeed={0.35} scale={1.2}>
     <OrcaModel />
   </Orbiter>
 );
 
 export const Sunfish = ({ center = [-4, -20, 7], radius = 12, speed = 0.07 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.85} bob={0.7} bobSpeed={0.3}>
+  <Orbiter spotId="sunfish" center={center} radius={radius} speed={speed} squish={0.85} bob={0.7} bobSpeed={0.3}>
     <SunfishModel />
   </Orbiter>
 );
@@ -3255,33 +3262,33 @@ export const Sunfish = ({ center = [-4, -20, 7], radius = 12, speed = 0.07 }) =>
 // The sperm whale patrols a huge slow circle above the giant squid's haunt,
 // mostly a silhouette drifting in and out of the fog.
 export const SpermWhale = ({ center = [-4, -74, -14], radius = 18, speed = 0.045 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.75} bob={1.8} bobSpeed={0.25}>
+  <Orbiter spotId="spermwhale" center={center} radius={radius} speed={speed} squish={0.75} bob={1.8} bobSpeed={0.25}>
     <SpermWhaleModel />
   </Orbiter>
 );
 
 // The swordfish is the opposite: a small, fast blade flashing past.
 export const Swordfish = ({ center = [4, -32, -2], radius = 16, speed = 0.38 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.75} bob={1.2} bobSpeed={0.5}>
+  <Orbiter spotId="swordfish" center={center} radius={radius} speed={speed} squish={0.75} bob={1.2} bobSpeed={0.5}>
     <SwordfishModel />
   </Orbiter>
 );
 
 export const GiantSquid = ({ center = [3, -82, -6], radius = 8, speed = 0.08 }) => (
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.7} bob={1.1} bobSpeed={0.3} scale={1.15}>
+  <Orbiter spotId="giantsquid" center={center} radius={radius} speed={speed} squish={0.7} bob={1.1} bobSpeed={0.3} scale={1.15}>
     <GiantSquidModel />
   </Orbiter>
 );
 
 export const GulperEel = ({ center = [-3, -92, 5], radius = 7, speed = 0.09 }) => (
   // cull={false}: the tail-tip light must never leave the scene (see cullByDepth).
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.7} bob={0.8} bobSpeed={0.35} cull={false}>
+  <Orbiter spotId="gulpereel" center={center} radius={radius} speed={speed} squish={0.7} bob={0.8} bobSpeed={0.35} cull={false}>
     <GulperEelModel />
   </Orbiter>
 );
 
 export const DumboOctopus = ({ position = [6, -96, -5] }) => (
-  <Drifter position={position}>
+  <Drifter spotId="dumbo" position={position}>
     <DumboOctopusModel />
   </Drifter>
 );
@@ -3352,6 +3359,15 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
 
   const here = useMemo(() => new THREE.Vector3(), []);
   const root = useRef();
+
+  // Each dolphin is its own spot target (the pod's combined bounds are far
+  // too wide to ever sit fully on screen) - framing any one spots "dolphin".
+  useEffect(() => {
+    const unregister = pod
+      .map((d) => d.ref.current && registerSpotTarget("dolphin", d.ref.current))
+      .filter(Boolean);
+    return () => unregister.forEach((u) => u());
+  }, [pod]);
 
   useFrame((state) => {
     if (!cullByDepth(root.current, state, center[1])) {
@@ -3476,6 +3492,7 @@ export const DolphinPod = ({ center = [0, 9, -6], count = 5, radius = 16, speed 
 // back while hidden in the fog.
 export const Whale = ({ y = -40, z = -32, span = 110, speed = 3.2 }) => {
   const group = useRef();
+  useSpotTarget("whale", group);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const cycle = (span * 2) / speed;
@@ -3502,6 +3519,8 @@ export const Whale = ({ y = -40, z = -32, span = 110, speed = 3.2 }) => {
 // A drifting jellyfish rising slowly through the twilight zone.
 const Jellyfish = ({ position, phase, tint }) => {
   const group = useRef();
+  // Any jelly of the bloom counts - framing one spots "jellyfish".
+  useSpotTarget("jellyfish", group);
   useFrame((state) => {
     const t = state.clock.elapsedTime;
     const y = position[1] + ((t * 0.5 + phase * 6) % 26);
@@ -3534,7 +3553,7 @@ export const JellyfishBloom = () => (
 
 export const Anglerfish = ({ center = [0, -86, -8], radius = 6, speed = 0.16 }) => (
   // cull={false}: the lure light must never leave the scene (see cullByDepth).
-  <Orbiter center={center} radius={radius} speed={speed} squish={0.6} bob={0.8} bobSpeed={0.7} cull={false}>
+  <Orbiter spotId="anglerfish" center={center} radius={radius} speed={speed} squish={0.6} bob={0.8} bobSpeed={0.7} cull={false}>
     <AnglerfishModel />
   </Orbiter>
 );

@@ -25,6 +25,7 @@ import {
   Swordfish,
 } from "./Creatures";
 import { Seabed } from "./Seabed";
+import { getSpotTargets, isSpotted, markSpotted } from "./diveLog";
 
 // Drives the camera down the water column with scroll. Look-around works
 // like a submersible: past a central deadzone the view keeps turning, so
@@ -111,10 +112,98 @@ const Environment = () => {
   );
 };
 
+// Marks a creature as spotted once it has been properly *seen*: its whole
+// bounding box inside the middle of the viewport (no one-pixel edge clips),
+// near enough to be more than a speck in the fog, and held there for a beat.
+// Targets are checked round-robin, two per frame, so the per-frame cost stays
+// flat however many creatures register.
+const SPOT_MARGIN = 0.85; // NDC |x|,|y| limit - "comfortably on screen"
+const SPOT_MAX_DIST = 48; // beyond this it's fog-shrouded, not a sighting
+const SPOT_MIN_SPAN = 0.04; // NDC size floor - excludes distant specks
+const SPOT_DWELL_S = 0.75; // how long it must stay framed
+const SPOT_GAP_S = 1.0; // dwell forgiveness between round-robin passes
+
+const framed = (object, camera, box, corner, center) => {
+  // Depth-culled creatures (or their pod/bloom root) aren't rendered, so
+  // they can't be seen - walk up to the scene checking visibility.
+  for (let o = object; o; o = o.parent) if (o.visible === false) return false;
+  box.setFromObject(object);
+  if (box.isEmpty()) return false;
+  box.getCenter(center);
+  if (center.distanceTo(camera.position) > SPOT_MAX_DIST) return false;
+  let minX = Infinity;
+  let maxX = -Infinity;
+  let minY = Infinity;
+  let maxY = -Infinity;
+  for (let i = 0; i < 8; i++) {
+    corner
+      .set(
+        i & 1 ? box.max.x : box.min.x,
+        i & 2 ? box.max.y : box.min.y,
+        i & 4 ? box.max.z : box.min.z
+      )
+      .applyMatrix4(camera.matrixWorldInverse);
+    if (corner.z > -0.5) return false; // behind (or grazing) the camera
+    corner.applyMatrix4(camera.projectionMatrix);
+    if (Math.abs(corner.x) > SPOT_MARGIN || Math.abs(corner.y) > SPOT_MARGIN)
+      return false;
+    minX = Math.min(minX, corner.x);
+    maxX = Math.max(maxX, corner.x);
+    minY = Math.min(minY, corner.y);
+    maxY = Math.max(maxY, corner.y);
+  }
+  return Math.max(maxX - minX, maxY - minY) >= SPOT_MIN_SPAN;
+};
+
+// Only creatures within (roughly) spotting distance get the full bounding-box
+// test - squared distance straight off the world matrix costs nothing, and at
+// any given depth all but a handful of creatures fail it.
+const SPOT_PREGATE_SQ = (SPOT_MAX_DIST + 15) ** 2;
+
+const SpotTracker = () => {
+  const dwell = useMemo(() => new Map(), []);
+  const frame = useRef(0);
+  const box = useMemo(() => new THREE.Box3(), []);
+  const corner = useMemo(() => new THREE.Vector3(), []);
+  const center = useMemo(() => new THREE.Vector3(), []);
+
+  useFrame(({ camera, clock }, delta) => {
+    const targets = getSpotTargets();
+    if (!targets.length) return;
+    const now = clock.elapsedTime;
+    frame.current += 1;
+    // Dropped frames must not break a dwell: the forgiveness window scales
+    // with the actual frame delta so slow devices can still complete one.
+    const gap = Math.max(SPOT_GAP_S, delta * 8);
+    for (let i = 0; i < targets.length; i++) {
+      const { id, object } = targets[i];
+      if (isSpotted(id)) continue;
+      const e = object.matrixWorld.elements;
+      const dx = e[12] - camera.position.x;
+      const dy = e[13] - camera.position.y;
+      const dz = e[14] - camera.position.z;
+      if (dx * dx + dy * dy + dz * dz > SPOT_PREGATE_SQ) continue;
+      // In-range targets take the full bounding-box test on every third
+      // frame, staggered so they don't all land on the same one.
+      if ((frame.current + i) % 3 !== 0) continue;
+      if (!framed(object, camera, box, corner, center)) continue;
+      const d = dwell.get(id);
+      if (!d || now - d.last > gap) {
+        dwell.set(id, { since: now, last: now });
+      } else {
+        d.last = now;
+        if (now - d.since >= SPOT_DWELL_S) markSpotted(id);
+      }
+    }
+  });
+  return null;
+};
+
 const Scene = () => (
   <>
     <CameraRig />
     <Environment />
+    <SpotTracker />
     <WaterSurface />
     <GodRays />
     <MarineSnow />

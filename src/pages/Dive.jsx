@@ -5,10 +5,17 @@ import React, {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
 } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { scroll, pointer, look } from "../experience/scrollState";
 import { sections, age, EMAIL, depthAtProgress, zoneAtDepth } from "../data/cv";
+import {
+  DIVE_CREATURE_IDS,
+  getSpotVersion,
+  getSpottedCount,
+  subscribeSpotted,
+} from "../experience/diveLog";
 import { track } from "../analytics";
 
 const OceanCanvas = lazy(() => import("../experience/OceanCanvas"));
@@ -105,6 +112,84 @@ const DepthMeter = () => {
         the surface
       </span>
     </div>
+  );
+};
+
+// The dive log badge: a small ring in the top corner that fills as creatures
+// are spotted. It doesn't exist until the first sighting - the scale-in and
+// pulse of that moment is the whole tutorial. Hover (or a first tap on touch)
+// slides out the count; committing goes to the gallery, where sightings
+// unlock the locked silhouettes.
+const RING_R = 21.5;
+const RING_C = 2 * Math.PI * RING_R;
+
+const DiveLogBadge = () => {
+  useSyncExternalStore(subscribeSpotted, getSpotVersion);
+  const count = getSpottedCount();
+  const total = DIVE_CREATURE_IDS.length;
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [pulsing, setPulsing] = useState(false);
+  const closeTimer = useRef();
+  const prevCount = useRef(count);
+
+  // One soft pulse per new sighting. The first sighting mounts the badge, so
+  // its arrival is announced by the appear animation instead.
+  useEffect(() => {
+    if (count > prevCount.current) {
+      setPulsing(true);
+      const timer = setTimeout(() => setPulsing(false), 900);
+      prevCount.current = count;
+      return () => clearTimeout(timer);
+    }
+    prevCount.current = count;
+    return undefined;
+  }, [count]);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  if (count === 0) return null;
+
+  const onClick = () => {
+    // Desktop hover already shows the count, so a click commits straight to
+    // the gallery. On touch the first tap only peeks the count and the second
+    // commits - a stray thumb never teleports anyone off the dive.
+    if (window.matchMedia("(hover: hover)").matches || open) {
+      track("dive_log_opened", { count, total });
+      navigate("/creatures");
+      return;
+    }
+    setOpen(true);
+    clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 3000);
+  };
+
+  return (
+    <button
+      className={`dive-log ${open ? "is-open" : ""} ${pulsing ? "is-pulsing" : ""} ${
+        count === total ? "is-complete" : ""
+      }`}
+      onClick={onClick}
+      aria-label={`Creatures spotted: ${count} of ${total}. Open the gallery.`}
+    >
+      <span className="dive-log__count">{`${count} / ${total} spotted`}</span>
+      <span className="dive-log__circle">
+        <svg viewBox="0 0 48 48" aria-hidden="true">
+          <circle className="dive-log__track" cx="24" cy="24" r={RING_R} />
+          <circle
+            className="dive-log__fill"
+            cx="24"
+            cy="24"
+            r={RING_R}
+            strokeDasharray={RING_C}
+            strokeDashoffset={RING_C * (1 - count / total)}
+          />
+        </svg>
+        <span className="dive-log__fish" aria-hidden="true">
+          🐟
+        </span>
+      </span>
+    </button>
   );
 };
 
@@ -625,6 +710,7 @@ const DivePage = () => {
       )}
       <DepthMeter />
       <NavDots />
+      {show3D && <DiveLogBadge />}
       {show3D && (
         <LookHint state={gyroState} onEnable={() => requestGyro.current()} />
       )}

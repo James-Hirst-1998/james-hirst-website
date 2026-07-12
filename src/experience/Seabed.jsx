@@ -2,6 +2,7 @@ import React, { useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 import { Octopus, CrabModel, CULL_RANGE } from "./Creatures";
+import { useSpotTarget } from "./diveLog";
 
 const FLOOR_Y = -107;
 
@@ -97,6 +98,7 @@ const Anemone = ({ position, tint = "#d98ca8", scale = 1, phase = 0 }) => {
 // which is exactly how a crab would do it. Follows the floor bumps.
 const ScuttlingCrab = ({ x = 3, z = -3, range = 1.4, speed = 0.5, scale = 0.55 }) => {
   const group = useRef();
+  useSpotTarget("crab", group);
   useFrame((state) => {
     if (!seabedInView(state)) return;
     const t = state.clock.elapsedTime;
