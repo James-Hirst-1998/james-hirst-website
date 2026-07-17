@@ -3848,6 +3848,605 @@ export const DugongModel = () => {
   );
 };
 
+// Blue Tang · Paracanthurus hepatus - a royal blue disc with a black marking
+// that loops back on itself like a painter's palette, and a scalpel folded
+// away at the base of the tail.
+const TANG_BODY = [0.085, 0.45, 0.62];
+export const BlueTangModel = () => {
+  const body = useRef();
+  const pecs = useRef();
+  const tail = useRef();
+
+  // The palette marking: a black band from the eye, back along the spine,
+  // then hooking down and forward around a window of blue. Laid as discs
+  // down a path and pressed onto the flank - the body is an ellipsoid, so
+  // each disc has to sit at that point's own surface or it floats off.
+  const markGeometry = useMemo(() => {
+    const path = [
+      [0.36, 0.08, 0.05],
+      [0.24, 0.18, 0.07],
+      [0.08, 0.23, 0.08],
+      [-0.1, 0.22, 0.08],
+      [-0.26, 0.15, 0.085],
+      [-0.36, 0.02, 0.085],
+      [-0.32, -0.12, 0.07],
+      [-0.18, -0.18, 0.06],
+      [-0.04, -0.15, 0.05],
+    ];
+    // Smoothed and resampled: spaced at the path's own control points the
+    // discs sit further apart than they are wide and read as a row of spots,
+    // not the single unbroken band the marking actually is.
+    const curve = new THREE.CatmullRomCurve3(
+      path.map(([z, y]) => new THREE.Vector3(0, y, z))
+    );
+    const parts = [];
+    const steps = 48;
+    for (let i = 0; i <= steps; i++) {
+      const u = i / steps;
+      const p = curve.getPoint(u);
+      const at = u * (path.length - 1);
+      const i0 = Math.min(path.length - 1, Math.floor(at));
+      const i1 = Math.min(path.length - 1, i0 + 1);
+      const r = THREE.MathUtils.lerp(path[i0][2], path[i1][2], at - i0);
+      const inside = 1 - (p.y / TANG_BODY[1]) ** 2 - (p.z / TANG_BODY[2]) ** 2;
+      const f = Math.sqrt(Math.max(0.05, inside));
+      [-1, 1].forEach((s) => {
+        const disc = new THREE.SphereGeometry(r, 6, 5);
+        disc.scale(0.16, 1, 1);
+        disc.translate(s * TANG_BODY[0] * f * 0.96, p.y, p.z);
+        parts.push(disc);
+      });
+    }
+    return mergeGeometries(parts);
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    if (body.current) body.current.rotation.y = Math.sin(t * 1.8) * 0.07;
+    if (pecs.current) pecs.current.rotation.y = Math.sin(t * 7) * 0.4;
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 1.8 - 0.7) * 0.3;
+  });
+
+  const blue = (
+    <meshStandardMaterial color="#1663c8" emissive="#0a2e6b" emissiveIntensity={0.5} flatShading roughness={0.5} />
+  );
+  const black = <meshStandardMaterial color="#0f1319" roughness={0.55} />;
+  const yellow = (
+    <meshStandardMaterial color="#f5c211" emissive="#6b5203" emissiveIntensity={0.45} flatShading roughness={0.5} />
+  );
+
+  return (
+    <group ref={body}>
+      <mesh scale={TANG_BODY}>
+        <sphereGeometry args={[1, 10, 14]} />
+        {blue}
+      </mesh>
+      <mesh geometry={markGeometry}>{black}</mesh>
+
+      {/* the snout it grazes algae with */}
+      <mesh position={[0, -0.08, 0.56]} scale={[0.06, 0.1, 0.14]}>
+        <sphereGeometry args={[1, 8, 8]} />
+        {blue}
+      </mesh>
+      <mesh position={[0, -0.11, 0.66]} scale={[0.03, 0.025, 0.04]}>
+        <sphereGeometry args={[1, 6, 6]} />
+        {black}
+      </mesh>
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 0.06, 0.09, 0.42]} scale={0.045}>
+          <sphereGeometry args={[1, 8, 6]} />
+          {black}
+        </mesh>
+      ))}
+
+      {/* dorsal and anal fins running most of the body, edged in blue */}
+      <mesh position={[0, 0.42, -0.06]} rotation-x={-0.05} scale={[0.016, 0.12, 0.46]}>
+        <sphereGeometry args={[1, 6, 10]} />
+        {blue}
+      </mesh>
+      <mesh position={[0, -0.4, -0.02]} rotation-x={0.05} scale={[0.016, 0.1, 0.4]}>
+        <sphereGeometry args={[1, 6, 10]} />
+        {blue}
+      </mesh>
+
+      <group ref={pecs}>
+        {[-1, 1].map((s) => (
+          <mesh key={s} position={[s * 0.09, -0.06, 0.3]} rotation-z={s * 0.4} scale={[0.11, 0.13, 0.02]}>
+            <sphereGeometry args={[1, 7, 7]} />
+            <meshStandardMaterial color="#3f8ce0" flatShading roughness={0.5} transparent opacity={0.85} side={THREE.DoubleSide} />
+          </mesh>
+        ))}
+      </group>
+
+      {/* the scalpel: a blade that folds out of the tail base. It is the
+          reason the whole family is called surgeonfish. */}
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 0.05, -0.02, -0.5]} rotation-y={s * 0.3} scale={[0.012, 0.03, 0.1]}>
+          <sphereGeometry args={[1, 6, 6]} />
+          {yellow}
+        </mesh>
+      ))}
+
+      {/* the yellow tail, swept into a crescent */}
+      <group ref={tail} position={[0, 0, -0.58]}>
+        <mesh position={[0, 0, -0.06]} rotation-x={Math.PI / 2} scale={[0.55, 1, 1]}>
+          <cylinderGeometry args={[0.07, 0.1, 0.14, 6]} />
+          {blue}
+        </mesh>
+        <mesh position={[0, 0, -0.26]} scale={[0.014, 0.26, 0.22]}>
+          <sphereGeometry args={[1, 6, 9]} />
+          {yellow}
+        </mesh>
+        <mesh position={[0, 0, -0.36]} scale={[0.014, 0.3, 0.08]}>
+          <sphereGeometry args={[1, 6, 8]} />
+          {yellow}
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+// Mandarinfish · Synchiropus splendidus - one of only two vertebrates known
+// to make its own blue pigment; every other blue animal is faking it with
+// structure and light. It hovers on two round pectoral fins like a hummingbird.
+const MANDARIN_BODY = [0.15, 0.19, 0.5];
+export const MandarinfishModel = () => {
+  const pecs = useRef();
+  const body = useRef();
+  const tail = useRef();
+
+  // The maze of orange banding, ringed round the body and sunk into it.
+  const stripeGeometry = useMemo(() => {
+    const parts = [];
+    const ring = (z, tube, squash) => {
+      const f = Math.sqrt(Math.max(0, 1 - (z / MANDARIN_BODY[2]) ** 2)) * 1.03;
+      const band = new THREE.TorusGeometry(1, tube, 4, 14);
+      band.scale(MANDARIN_BODY[0] * f, MANDARIN_BODY[1] * f * squash, 1);
+      band.translate(0, 0, z);
+      return band;
+    };
+    [
+      [0.3, 0.07, 1],
+      [0.12, 0.055, 1.05],
+      [-0.06, 0.07, 1],
+      [-0.24, 0.05, 1.05],
+    ].forEach(([z, tube, squash]) => parts.push(ring(z, tube, squash)));
+    // Blotches to break the rings up - the real pattern is a swirl, not a
+    // set of neat hoops.
+    [
+      [0.14, 0.14, 0.2],
+      [-0.14, 0.15, -0.12],
+      [0.13, -0.13, 0.02],
+      [-0.15, -0.12, -0.3],
+    ].forEach(([x, y, z]) => {
+      const blob = new THREE.SphereGeometry(0.06, 6, 5);
+      blob.scale(0.5, 1, 1.6);
+      blob.translate(x, y, z);
+      parts.push(blob);
+    });
+    return mergeGeometries(parts);
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    // It hovers rather than swims - the fans never stop.
+    if (pecs.current) pecs.current.rotation.y = Math.sin(t * 9) * 0.55;
+    if (body.current) {
+      body.current.position.y = Math.sin(t * 1.6) * 0.035;
+      body.current.rotation.z = Math.sin(t * 1.2) * 0.05;
+    }
+    if (tail.current) tail.current.rotation.y = Math.sin(t * 4) * 0.25;
+  });
+
+  const base = (
+    <meshStandardMaterial color="#123a7a" emissive="#071c42" emissiveIntensity={0.55} flatShading roughness={0.45} />
+  );
+  const orange = (
+    <meshStandardMaterial color="#e86a1c" emissive="#5e2405" emissiveIntensity={0.5} flatShading roughness={0.45} />
+  );
+  const green = (
+    <meshStandardMaterial color="#2eae72" emissive="#0c3d26" emissiveIntensity={0.5} flatShading roughness={0.45} />
+  );
+
+  return (
+    <group ref={body}>
+      <mesh scale={MANDARIN_BODY}>
+        <sphereGeometry args={[1, 12, 10]} />
+        {base}
+      </mesh>
+      <mesh geometry={stripeGeometry}>{orange}</mesh>
+
+      {/* big blunt head with the eyes set high on top */}
+      <mesh position={[0, 0.02, 0.46]} scale={[0.16, 0.17, 0.2]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        {base}
+      </mesh>
+      <mesh position={[0, -0.07, 0.57]} scale={[0.05, 0.042, 0.06]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {orange}
+      </mesh>
+      {[-1, 1].map((s) => (
+        <group key={s} position={[s * 0.1, 0.15, 0.46]}>
+          <mesh scale={0.075}>
+            <sphereGeometry args={[1, 10, 8]} />
+            {green}
+          </mesh>
+          <mesh position={[s * 0.02, 0.02, 0.045]} scale={0.045}>
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshStandardMaterial color="#0b0d12" roughness={0.25} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* the round fans it flies on */}
+      <group ref={pecs}>
+        {[-1, 1].map((s) => (
+          <mesh key={s} position={[s * 0.16, -0.02, 0.26]} rotation-z={s * 0.35} scale={[0.13, 0.15, 0.018]}>
+            <sphereGeometry args={[1, 8, 8]} />
+            <meshStandardMaterial
+              color="#3fbf86"
+              emissive="#0f4c30"
+              emissiveIntensity={0.4}
+              flatShading
+              roughness={0.45}
+              transparent
+              opacity={0.88}
+              side={THREE.DoubleSide}
+            />
+          </mesh>
+        ))}
+      </group>
+
+      {/* dorsal and anal fins, edged green */}
+      <mesh position={[0, 0.2, 0.08]} rotation-x={-0.1} scale={[0.014, 0.09, 0.24]}>
+        <sphereGeometry args={[1, 6, 8]} />
+        {green}
+      </mesh>
+      <mesh position={[0, -0.19, 0.04]} rotation-x={0.1} scale={[0.014, 0.07, 0.2]}>
+        <sphereGeometry args={[1, 6, 8]} />
+        {green}
+      </mesh>
+
+      <group ref={tail} position={[0, 0, -0.44]}>
+        <mesh rotation-x={Math.PI / 2} scale={[1, 1, 0.75]}>
+          <cylinderGeometry args={[0.05, 0.075, 0.14, 6]} />
+          {base}
+        </mesh>
+        <mesh position={[0, 0, -0.14]} scale={[0.014, 0.13, 0.13]}>
+          <sphereGeometry args={[1, 6, 8]} />
+          {orange}
+        </mesh>
+      </group>
+    </group>
+  );
+};
+
+// Broadclub Cuttlefish · Sepia latimanus - a mollusc with three hearts that
+// hunts by hypnosis, running bands of colour down its arms until the crab in
+// front of it stops running. The skirt of fin around the mantle is the tell:
+// it moves in a wave that travels the length of the body, not a flap.
+const CUTTLE_MANTLE = [0.36, 0.25, 0.82];
+const CUTTLE_FIN_SEGS = 15;
+export const CuttlefishModel = () => {
+  const finRefs = useRef([]);
+  const armRefs = useRef([]);
+  const body = useRef();
+
+  // Where each fin segment sits: down the side of the mantle, tapering to
+  // nothing at both ends. Held as data so the wave below can just index it.
+  const finSegments = useMemo(() => {
+    const out = [];
+    for (let s of [-1, 1]) {
+      for (let i = 0; i < CUTTLE_FIN_SEGS; i++) {
+        const t = i / (CUTTLE_FIN_SEGS - 1);
+        const z = 0.72 - t * 1.5;
+        const f = Math.sqrt(Math.max(0, 1 - (z / (CUTTLE_MANTLE[2] * 1.06)) ** 2));
+        // Widest amidships, pinched at nose and tail.
+        const width = 0.1 * Math.sin(Math.min(1, t * 1.08) * Math.PI) ** 0.5 + 0.02;
+        out.push({ side: s, i, z, x: s * (CUTTLE_MANTLE[0] * f + width * 0.5), width });
+      }
+    }
+    return out;
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    // The wave: each segment lags the one in front of it, so the ripple
+    // runs nose-to-tail instead of the whole skirt beating as one.
+    finSegments.forEach((seg, n) => {
+      const m = finRefs.current[n];
+      if (!m) return;
+      const phase = t * 3.4 - seg.i * 0.62;
+      m.position.y = Math.sin(phase) * 0.055;
+      m.rotation.z = Math.cos(phase) * 0.5 * seg.side;
+    });
+    armRefs.current.forEach((m, i) => {
+      if (m) m.rotation.x = -0.12 + Math.sin(t * 1.3 + i * 0.8) * 0.09;
+    });
+    if (body.current) body.current.position.y = Math.sin(t * 1.1) * 0.03;
+  });
+
+  const skin = (
+    <meshStandardMaterial color="#9c8256" emissive="#33281a" emissiveIntensity={0.4} flatShading roughness={0.6} />
+  );
+  const pale = <meshStandardMaterial color="#d8c9a6" flatShading roughness={0.6} />;
+  const finMat = (
+    <meshStandardMaterial
+      color="#e6dcc4"
+      emissive="#4a4030"
+      emissiveIntensity={0.3}
+      flatShading
+      roughness={0.45}
+      transparent
+      opacity={0.75}
+      side={THREE.DoubleSide}
+    />
+  );
+
+  return (
+    <group ref={body}>
+      <mesh scale={CUTTLE_MANTLE}>
+        <sphereGeometry args={[1, 14, 12]} />
+        {skin}
+      </mesh>
+      {/* mottled banding over the mantle */}
+      {[
+        [0, 0.28, 0.3],
+        [0, 0.3, -0.1],
+        [0, 0.26, -0.45],
+      ].map(([x, y, z], i) => (
+        <mesh key={i} position={[x, y, z]} scale={[0.22, 0.05, 0.1]}>
+          <sphereGeometry args={[1, 8, 6]} />
+          {pale}
+        </mesh>
+      ))}
+
+      {/* the fin skirt */}
+      {finSegments.map((seg, n) => (
+        <mesh
+          key={n}
+          ref={(el) => (finRefs.current[n] = el)}
+          position={[seg.x, 0, seg.z]}
+          scale={[seg.width, 0.02, 0.062]}
+        >
+          <sphereGeometry args={[1, 6, 6]} />
+          {finMat}
+        </mesh>
+      ))}
+
+      {/* head, set right on the front of the mantle */}
+      <mesh position={[0, -0.02, 0.82]} scale={[0.28, 0.26, 0.24]}>
+        <sphereGeometry args={[1, 10, 8]} />
+        {skin}
+      </mesh>
+      {/* the W-shaped pupil: a dark bar with a notch bitten out of the middle */}
+      {[-1, 1].map((s) => (
+        <group key={s} position={[s * 0.25, 0.06, 0.84]}>
+          <mesh scale={0.11}>
+            <sphereGeometry args={[1, 10, 8]} />
+            <meshStandardMaterial color="#c9b47e" emissive="#4a3d16" emissiveIntensity={0.5} roughness={0.35} />
+          </mesh>
+          <mesh position={[s * 0.05, 0, 0.02]} scale={[0.07, 0.032, 0.07]}>
+            <sphereGeometry args={[1, 8, 6]} />
+            <meshStandardMaterial color="#0c0e11" roughness={0.3} />
+          </mesh>
+          <mesh position={[s * 0.05, 0.024, 0.05]} scale={[0.02, 0.026, 0.04]}>
+            <sphereGeometry args={[1, 6, 6]} />
+            <meshStandardMaterial color="#c9b47e" roughness={0.35} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* eight arms, held in a bundle out front */}
+      {Array.from({ length: 8 }).map((_, i) => {
+        const a = (i / 8) * Math.PI * 2;
+        const r = 0.12;
+        return (
+          <group
+            key={i}
+            ref={(el) => (armRefs.current[i] = el)}
+            position={[Math.cos(a) * r, Math.sin(a) * r - 0.04, 0.98]}
+            rotation-z={Math.cos(a) * 0.25}
+          >
+            <mesh position={[0, 0, 0.19]} rotation-x={Math.PI / 2} scale={[1, 1, 0.7]}>
+              <cylinderGeometry args={[0.022, 0.05, 0.38, 5]} />
+              {skin}
+            </mesh>
+          </group>
+        );
+      })}
+      {/* and the two long feeding tentacles it fires out to grab with */}
+      {[-1, 1].map((s) => (
+        <mesh key={s} position={[s * 0.07, -0.12, 1.14]} rotation-x={Math.PI / 2} rotation-z={s * 0.08}>
+          <cylinderGeometry args={[0.016, 0.026, 0.66, 5]} />
+          {pale}
+        </mesh>
+      ))}
+    </group>
+  );
+};
+
+// Peacock Mantis Shrimp · Odontodactylus scyllarus - not a shrimp, and the
+// hardest puncher in the sea for its size: the club leaves the body as fast
+// as a bullet and boils the water on the way. The eyes sit on stalks and
+// swivel independently, each one alone seeing more colour than we do.
+export const MantisShrimpModel = () => {
+  const eyeL = useRef();
+  const eyeR = useRef();
+  const swimmerets = useRef([]);
+  const antennae = useRef();
+  const body = useRef();
+
+  // The abdomen: overlapping plates, each a little narrower than the last.
+  const shellGeometry = useMemo(() => {
+    const parts = [];
+    for (let i = 0; i < 6; i++) {
+      const t = i / 5;
+      const z = 0.24 - i * 0.2;
+      const w = 0.3 - t * 0.07;
+      const seg = new THREE.CylinderGeometry(w, w * 0.97, 0.19, 10, 1, false);
+      seg.rotateX(Math.PI / 2);
+      seg.scale(1, 0.72, 1);
+      seg.translate(0, 0, z);
+      parts.push(seg);
+      // the ridge running down each plate
+      const ridge = new THREE.BoxGeometry(0.03, 0.04, 0.19);
+      ridge.translate(0, w * 0.72, z);
+      parts.push(ridge);
+    }
+    return mergeGeometries(parts);
+  }, []);
+
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    // The two eyes are on separate stalks and genuinely do not agree with
+    // each other - different rates, so they never sync up.
+    if (eyeL.current) {
+      eyeL.current.rotation.y = Math.sin(t * 0.9) * 0.5;
+      eyeL.current.rotation.x = Math.sin(t * 1.3 + 1) * 0.3;
+    }
+    if (eyeR.current) {
+      eyeR.current.rotation.y = Math.sin(t * 0.62 + 2) * 0.5;
+      eyeR.current.rotation.x = Math.sin(t * 1.05 + 0.4) * 0.3;
+    }
+    swimmerets.current.forEach((m, i) => {
+      if (m) m.rotation.x = Math.sin(t * 7 - i * 0.7) * 0.4;
+    });
+    if (antennae.current) antennae.current.rotation.x = Math.sin(t * 2.2) * 0.12;
+    if (body.current) body.current.rotation.z = Math.sin(t * 0.8) * 0.04;
+  });
+
+  const shell = (
+    <meshStandardMaterial color="#2f9c62" emissive="#0d3a22" emissiveIntensity={0.5} flatShading roughness={0.5} />
+  );
+  const shellDark = (
+    <meshStandardMaterial color="#1f6f47" emissive="#0a2b1a" emissiveIntensity={0.5} flatShading roughness={0.55} />
+  );
+  const club = (
+    <meshStandardMaterial color="#d4462c" emissive="#5c1206" emissiveIntensity={0.55} flatShading roughness={0.45} />
+  );
+  const accent = (
+    <meshStandardMaterial color="#2f8fd4" emissive="#0b3355" emissiveIntensity={0.55} flatShading roughness={0.45} />
+  );
+  const gold = (
+    <meshStandardMaterial color="#eba31d" emissive="#5e3c02" emissiveIntensity={0.5} flatShading roughness={0.45} />
+  );
+
+  return (
+    <group ref={body}>
+      <mesh geometry={shellGeometry}>{shell}</mesh>
+
+      {/* carapace over the head end */}
+      <mesh position={[0, 0, 0.52]} scale={[0.3, 0.24, 0.34]}>
+        <sphereGeometry args={[1, 12, 9]} />
+        {shellDark}
+      </mesh>
+      <mesh position={[0, 0.12, 0.5]} scale={[0.2, 0.06, 0.3]}>
+        <sphereGeometry args={[1, 8, 6]} />
+        {accent}
+      </mesh>
+
+      {/* the clubs, cocked and folded under the head */}
+      {[-1, 1].map((s) => (
+        <group key={s} position={[s * 0.17, -0.16, 0.62]} rotation-y={s * -0.2}>
+          <mesh position={[0, 0, 0.1]} rotation-x={0.9} scale={[1, 1, 0.8]}>
+            <cylinderGeometry args={[0.045, 0.055, 0.26, 6]} />
+            {club}
+          </mesh>
+          <mesh position={[0, -0.1, 0.24]} scale={[0.075, 0.075, 0.09]}>
+            <sphereGeometry args={[1, 8, 7]} />
+            {club}
+          </mesh>
+          {/* the heel that actually lands the blow */}
+          <mesh position={[0, -0.12, 0.31]} scale={[0.05, 0.05, 0.04]}>
+            <sphereGeometry args={[1, 7, 6]} />
+            <meshStandardMaterial color="#f2e3cf" flatShading roughness={0.35} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* eye stalks */}
+      {[-1, 1].map((s) => (
+        <group key={s} ref={s === -1 ? eyeL : eyeR} position={[s * 0.13, 0.2, 0.66]}>
+          <mesh position={[0, 0.08, 0]} rotation-z={s * 0.18}>
+            <cylinderGeometry args={[0.028, 0.035, 0.17, 6]} />
+            {shellDark}
+          </mesh>
+          {/* the barrel eye, split by the midband it reads colour with */}
+          <mesh position={[s * 0.03, 0.19, 0]} rotation-z={Math.PI / 2} scale={[1, 1, 0.85]}>
+            <cylinderGeometry args={[0.062, 0.062, 0.11, 8]} />
+            {gold}
+          </mesh>
+          <mesh position={[s * 0.03, 0.19, 0]} rotation-z={Math.PI / 2} scale={[1, 1, 0.9]}>
+            <cylinderGeometry args={[0.066, 0.066, 0.032, 8]} />
+            <meshStandardMaterial color="#1a1d22" roughness={0.35} />
+          </mesh>
+          <mesh position={[s * 0.03, 0.19, 0.055]} scale={0.028}>
+            <sphereGeometry args={[1, 7, 6]} />
+            <meshStandardMaterial color="#0a0c0f" roughness={0.25} />
+          </mesh>
+        </group>
+      ))}
+
+      {/* antennal scales - the little coloured paddles it fans out front */}
+      <group ref={antennae}>
+        {[-1, 1].map((s) => (
+          <group key={s}>
+            <mesh position={[s * 0.11, 0.02, 0.82]} rotation-z={s * 0.4} scale={[0.05, 0.02, 0.12]}>
+              <sphereGeometry args={[1, 7, 7]} />
+              {gold}
+            </mesh>
+            <mesh position={[s * 0.06, 0.1, 0.86]} rotation-x={-0.3} rotation-z={s * 0.3}>
+              <cylinderGeometry args={[0.008, 0.012, 0.3, 4]} />
+              {accent}
+            </mesh>
+          </group>
+        ))}
+      </group>
+
+      {/* walking legs and the swimmerets that ripple under the abdomen */}
+      {Array.from({ length: 5 }).map((_, i) => (
+        <group
+          key={i}
+          ref={(el) => (swimmerets.current[i] = el)}
+          position={[0, -0.16, 0.1 - i * 0.19]}
+        >
+          {[-1, 1].map((s) => (
+            <mesh key={s} position={[s * 0.13, -0.06, 0]} rotation-z={s * 0.5} scale={[0.06, 0.09, 0.05]}>
+              <sphereGeometry args={[1, 6, 6]} />
+              {accent}
+            </mesh>
+          ))}
+        </group>
+      ))}
+
+      {/* the tail fan: a ridged central plate between two spread paddles */}
+      <group position={[0, 0, -1.02]}>
+        <mesh position={[0, 0, -0.12]} scale={[0.16, 0.05, 0.2]}>
+          <sphereGeometry args={[1, 8, 7]} />
+          {shellDark}
+        </mesh>
+        <mesh position={[0, 0.04, -0.1]} scale={[0.05, 0.04, 0.16]}>
+          <sphereGeometry args={[1, 6, 6]} />
+          {club}
+        </mesh>
+        {[-1, 1].map((s) => (
+          <group key={s}>
+            <mesh position={[s * 0.17, 0, -0.1]} rotation-y={s * 0.45} scale={[0.14, 0.035, 0.17]}>
+              <sphereGeometry args={[1, 8, 7]} />
+              {gold}
+            </mesh>
+            <mesh position={[s * 0.26, 0, -0.16]} rotation-y={s * 0.5} scale={[0.09, 0.03, 0.11]}>
+              <sphereGeometry args={[1, 7, 6]} />
+              {accent}
+            </mesh>
+          </group>
+        ))}
+      </group>
+    </group>
+  );
+};
+
 // ===========================================================================
 // Scene wrappers - carry a model along an orbit through the dive.
 // ===========================================================================
