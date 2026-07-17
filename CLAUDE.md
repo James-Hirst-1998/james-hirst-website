@@ -18,8 +18,9 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 - Each creature is authored twice: a `XxxModel` (sits at the origin, faces +z, only idle motion) and a scene wrapper (carries it along an orbit in the dive).
 - Models are hand-built from Three.js primitives with a `useFrame` idle animation; `SharkModel` in `src/experience/Creatures.jsx` is the reference example.
 - Gallery catalog lives in the `CREATURES` array in `src/pages/Creatures.jsx` - each entry: `{ id, emoji, name, latin, zone, Model, distance, tagline, facts[], category?, offset? }`.
-- `category: "shark"` routes an entry into the "🦈 Sharks" filter tab; `offset` recentres a model so it spins about its middle.
+- The picker's tabs come from the `CATEGORIES` array in `src/pages/Creatures.jsx`; each tab owns one `category` value off the entries (`"shark"`, `"reef"`), and the first tab is the default that takes every entry with no `category` at all. A new collection is a line in `CATEGORIES` plus `category` on its entries - nothing else is hardcoded. `offset` recentres a model so it spins about its middle.
 - To add a creature: add a `XxxModel` in `src/experience/Creatures.jsx`, import it + add a `CREATURES` entry in `src/pages/Creatures.jsx`, and optionally place its scene wrapper in `Scene` in `OceanCanvas.jsx` to have it swim in the dive.
+- The dive is an open-water descent, so shallow-water creatures are gallery-only: the reef models have no scene wrapper and never appear in it.
 
 ## Interaction model
 - Dive look-around: desktop steers by cursor position (`pointer`), mobile by moving the phone (gyroscope only - swipes are left to page scroll); both write to `look` and the camera follows in `CameraRig` (`OceanCanvas.jsx`).
