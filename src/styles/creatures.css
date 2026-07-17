@@ -277,6 +277,21 @@
     padding: 16px 18px 4px;
   }
 
+  /* The filter wraps onto its own row here, so it becomes a full-width
+     segmented control - the tabs share the width instead of overflowing the
+     screen as more collections get added. */
+  .cv-filter {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .cv-filter__btn {
+    flex: 1;
+    padding: 9px 8px;
+    font-size: 13px;
+    text-align: center;
+  }
+
   .cv-body {
     flex-direction: column;
     padding: 10px 16px;

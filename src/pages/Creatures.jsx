@@ -35,6 +35,11 @@ import {
   SwordfishModel,
   BaskingSharkModel,
   CrabModel,
+  SeahorseModel,
+  PorcupinefishModel,
+  LionfishModel,
+  ClownfishModel,
+  DugongModel,
 } from "../experience/Creatures";
 import { track } from "../analytics";
 import "../styles/creatures.css";
@@ -562,6 +567,87 @@ const CREATURES = [
       "Lays distinctive spiral-shaped egg cases wedged into rocks.",
     ],
   },
+  {
+    id: "seahorse",
+    emoji: "🌿",
+    name: "Seahorse",
+    latin: "Hippocampus kuda",
+    zone: "The coral reef",
+    Model: SeahorseModel,
+    category: "reef",
+    distance: 3.4,
+    tagline: "A fish that swims upright, and the only animal where the male gives birth.",
+    facts: [
+      "The male carries the eggs in a pouch and delivers the young himself.",
+      "Its dorsal fin beats around 35 times a second - too fast to see.",
+      "It has no stomach, so it must eat almost constantly to stay alive.",
+    ],
+  },
+  {
+    id: "porcupinefish",
+    emoji: "🐡",
+    name: "Porcupinefish",
+    latin: "Diodon holocanthus",
+    zone: "The coral reef",
+    Model: PorcupinefishModel,
+    category: "reef",
+    distance: 3.4,
+    tagline: "The spiky balloon everyone pictures when they say pufferfish.",
+    facts: [
+      "The famous spiky ball is a porcupinefish - true pufferfish stay smooth.",
+      "It inflates by swallowing water until the spines stand out on every side.",
+      "Its teeth are fused into a single beak strong enough to crack a sea urchin.",
+    ],
+  },
+  {
+    id: "lionfish",
+    emoji: "🦁",
+    name: "Lionfish",
+    latin: "Pterois volitans",
+    zone: "The coral reef",
+    Model: LionfishModel,
+    category: "reef",
+    distance: 4.2,
+    tagline: "Eighteen venomous spines, worn openly - it has nothing to hide from.",
+    facts: [
+      "Spreads its huge pectoral fans to herd prey into a corner, then swallows it whole.",
+      "The venom is defensive only: every spine is a warning, never a weapon for hunting.",
+      "Released into the Atlantic by the aquarium trade, it is now one of the worst invasive fish on record.",
+    ],
+  },
+  {
+    id: "clownfish",
+    emoji: "🐠",
+    name: "Clownfish",
+    latin: "Amphiprion ocellaris",
+    zone: "The coral reef",
+    Model: ClownfishModel,
+    category: "reef",
+    distance: 3.6,
+    offset: [0, 0.25, 0],
+    tagline: "Lives its whole life inside a stinging anemone, immune to the sting.",
+    facts: [
+      "A mucus coat makes it invisible to the anemone's stingers - safe where nothing else can follow.",
+      "It pays rent: it drives off anemone-eating fish and fans the tentacles clean.",
+      "Every clownfish is born male. When the female dies, the dominant male becomes her.",
+    ],
+  },
+  {
+    id: "dugong",
+    emoji: "🌱",
+    name: "Dugong",
+    latin: "Dugong dugon",
+    zone: "Seagrass meadow",
+    Model: DugongModel,
+    category: "reef",
+    distance: 4.8,
+    tagline: "The sea cow that never leaves the sea, mowing the meadows beside the reef.",
+    facts: [
+      "Told from a manatee by its fluked, dolphin-like tail - a manatee's is one round paddle.",
+      "It is a strict vegetarian, ploughing furrows through seagrass beds it can graze for decades.",
+      "Sailors mistook dugongs for mermaids, which says more about the voyages than the animal.",
+    ],
+  },
 ];
 
 // Frames the model: sits the camera back by `distance` whenever it changes.
@@ -706,10 +792,25 @@ const CreatureStage = ({ creature }) => {
   );
 };
 
-// Sharks get their own labelled section in the picker; everything else keeps
-// the original flat order.
-const MAIN_CREATURES = CREATURES.filter((c) => c.category !== "shark");
-const SHARK_CREATURES = CREATURES.filter((c) => c.category === "shark");
+// The picker's tabs. Each owns one `category` off the entries above; the
+// first is the default and takes everything the others don't claim. Adding a
+// collection (mangroves, kelp) is a line here plus `category` on its entries.
+const CATEGORIES = [
+  { id: "creatures", label: "Sea creatures", category: null },
+  { id: "sharks", label: "🦈 Sharks", category: "shark" },
+  { id: "reef", label: "🪸 Reef", category: "reef" },
+];
+
+const CATEGORY_LISTS = Object.fromEntries(
+  CATEGORIES.map((tab) => [
+    tab.id,
+    CREATURES.filter((c) => (tab.category ? c.category === tab.category : !c.category)),
+  ])
+);
+
+const tabHolding = (creatureId) =>
+  CATEGORIES.find((tab) => CATEGORY_LISTS[tab.id].some((c) => c.id === creatureId))?.id ||
+  CATEGORIES[0].id;
 
 // Lets other pages deep-link straight to a creature via /creatures#<id>.
 const initialCreatureId = () => {
@@ -720,11 +821,9 @@ const initialCreatureId = () => {
 
 const CreaturesPage = () => {
   const [activeId, setActiveId] = useState(initialCreatureId);
-  // Which collection the picker is showing. Starts on "sharks" when the page
-  // was deep-linked to a shark (e.g. from the Shark Trust section).
-  const [filter, setFilter] = useState(() =>
-    SHARK_CREATURES.some((c) => c.id === initialCreatureId()) ? "sharks" : "creatures"
-  );
+  // Which collection the picker is showing. Opens on whichever tab holds the
+  // deep-linked creature (e.g. a shark from the Shark Trust section).
+  const [filter, setFilter] = useState(() => tabHolding(initialCreatureId()));
   const creature = useMemo(
     () => CREATURES.find((c) => c.id === activeId) || CREATURES[0],
     [activeId]
@@ -740,7 +839,7 @@ const CreaturesPage = () => {
     });
   }, [creature.id]);
 
-  const list = filter === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
+  const list = CATEGORY_LISTS[filter];
 
   // Switching filter keeps the current pick if it belongs to the new list,
   // otherwise jumps to the first creature of that list.
@@ -748,7 +847,7 @@ const CreaturesPage = () => {
     if (next === filter) return;
     track("creature_filter_changed", { filter: next });
     setFilter(next);
-    const nextList = next === "sharks" ? SHARK_CREATURES : MAIN_CREATURES;
+    const nextList = CATEGORY_LISTS[next];
     if (!nextList.some((c) => c.id === activeId)) setActiveId(nextList[0].id);
   };
 
@@ -776,22 +875,17 @@ const CreaturesPage = () => {
           <h1 className="cv-title">Sea Creatures</h1>
         </div>
         <div className="cv-filter" role="tablist" aria-label="Filter the collection">
-          <button
-            role="tab"
-            aria-selected={filter === "creatures"}
-            className={`cv-filter__btn ${filter === "creatures" ? "is-active" : ""}`}
-            onClick={() => chooseFilter("creatures")}
-          >
-            Sea creatures
-          </button>
-          <button
-            role="tab"
-            aria-selected={filter === "sharks"}
-            className={`cv-filter__btn ${filter === "sharks" ? "is-active" : ""}`}
-            onClick={() => chooseFilter("sharks")}
-          >
-            🦈 Sharks
-          </button>
+          {CATEGORIES.map((tab) => (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={filter === tab.id}
+              className={`cv-filter__btn ${filter === tab.id ? "is-active" : ""}`}
+              onClick={() => chooseFilter(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
       </header>
 
