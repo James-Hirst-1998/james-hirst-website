@@ -94,17 +94,101 @@ const DepthMeter = () => {
     return () => cancelAnimationFrame(raf);
   }, []);
   return (
-    <div className="depth-meter" aria-hidden="true">
-      <span className="depth-meter__value" ref={valueRef}>
-        -0 m
-      </span>
-      <div className="depth-meter__track">
-        <div className="depth-meter__fill" ref={fillRef} />
+    <div className="depth-meter">
+      <CreatureLure />
+      <div className="depth-meter__readout" aria-hidden="true">
+        <span className="depth-meter__value" ref={valueRef}>
+          -0 m
+        </span>
+        <div className="depth-meter__track">
+          <div className="depth-meter__fill" ref={fillRef} />
+        </div>
+        <span className="depth-meter__zone" ref={zoneRef}>
+          the surface
+        </span>
       </div>
-      <span className="depth-meter__zone" ref={zoneRef}>
-        the surface
-      </span>
     </div>
+  );
+};
+
+// Small liquid-fill orb at the top of the depth meter: the water inside
+// rises with the dive and the orb unlocks into a "Meet the creatures" link
+// at the seabed. Clicked before then it only makes the promise - it
+// deliberately won't navigate or scroll them down, so reaching the bottom
+// stays the reason to keep diving.
+const LURE_UNLOCK_AT = 0.97;
+const LOCKED_LABEL = "Unlock at the bottom";
+
+const CreatureLure = () => {
+  const waterRef = useRef(null);
+  const unlockedRef = useRef(false);
+  const [unlocked, setUnlocked] = useState(false);
+  // Pointers reveal the label on hover, so this only tracks the touch case,
+  // where a tap is the one way to open it - and to shut it again.
+  const [open, setOpen] = useState(false);
+  // Hitting the seabed announces itself once. A pointer can park the label
+  // open afterwards (it sits clear of the copy), but on a phone it covers
+  // the panel text, so there it only flashes.
+  const [flashing, setFlashing] = useState(false);
+  useEffect(() => {
+    if (!unlocked) return undefined;
+    // Drop any tap-opened hint - left set, it would pin the label over the
+    // seabed copy for good, which is exactly what the flash avoids.
+    setOpen(false);
+    setFlashing(true);
+    const timer = setTimeout(() => setFlashing(false), 1400);
+    return () => clearTimeout(timer);
+  }, [unlocked]);
+  useEffect(() => {
+    let raf;
+    // Same rAF-polling discipline as the meter below: only touch the DOM
+    // when the rendered value actually changes.
+    let lastHeight = NaN;
+    const tick = () => {
+      const height = Math.round(scroll.progress * 200) / 2;
+      if (height !== lastHeight && waterRef.current) {
+        lastHeight = height;
+        waterRef.current.style.height = `${height}%`;
+      }
+      const isUnlocked = scroll.progress >= LURE_UNLOCK_AT;
+      if (isUnlocked !== unlockedRef.current) {
+        unlockedRef.current = isUnlocked;
+        setUnlocked(isUnlocked);
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, []);
+  const onClick = (e) => {
+    track("creatures_lure_clicked", { unlocked: unlockedRef.current });
+    if (unlockedRef.current) return;
+    e.preventDefault();
+    // Hover already opens the label wherever there's a real pointer - only
+    // touch needs the tap toggle (and it must not stick open on desktop).
+    if (window.matchMedia("(hover: none)").matches) setOpen((v) => !v);
+  };
+  return (
+    <Link
+      className={`creature-lure ${unlocked ? "is-unlocked" : ""} ${
+        open ? "is-open" : ""
+      } ${flashing ? "is-flashing" : ""}`}
+      to="/creatures"
+      onClick={onClick}
+      aria-label={
+        unlocked
+          ? "Meet the creatures"
+          : "Meet the creatures - unlocks at the bottom of the dive"
+      }
+    >
+      <span className="creature-lure__label">
+        {unlocked ? "Meet the creatures" : LOCKED_LABEL}
+      </span>
+      <span className="creature-lure__orb">
+        <span className="creature-lure__water" ref={waterRef} />
+        <span className="creature-lure__fish">🐡</span>
+      </span>
+    </Link>
   );
 };
 
@@ -370,9 +454,8 @@ const SeabedFooter = () => {
           </a>
         </div>
         <p className="seabed__egg">
-          See anything you liked on the way down? <br /> Meet the{" "}
-          <Link to="/creatures">sea creatures</Link> up close - and wait, is
-          that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
+          See anything you liked on the way down? <br /> And wait, is that a{" "}
+          <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
         <p className="seabed__credits">
           © {new Date().getFullYear()} James Hirst
