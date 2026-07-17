@@ -454,8 +454,9 @@ const SeabedFooter = () => {
           </a>
         </div>
         <p className="seabed__egg">
-          See anything you liked on the way down? <br /> And wait, is that a{" "}
-          <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
+          See anything you liked on the way down? <br /> Meet the{" "}
+          <Link to="/creatures">sea creatures</Link> up close - and wait, is
+          that a <Link to="/BowlOfFish">bowl of fish</Link> glowing in the sand?
         </p>
         <p className="seabed__credits">
           © {new Date().getFullYear()} James Hirst
