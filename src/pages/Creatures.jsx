@@ -46,6 +46,7 @@ import {
   MantisShrimpModel,
 } from "../experience/Creatures";
 import { track } from "../analytics";
+import { EMAIL } from "../data/cv";
 import "../styles/creatures.css";
 
 // Each entry pairs a model with the camera distance that frames it and a
@@ -121,6 +122,7 @@ const CREATURES = [
     latin: "Carcharodon carcharias",
     zone: "Sunlit to twilight",
     category: "shark",
+    inDive: true,
     Model: SharkModel,
     distance: 5.8,
     tagline: "A 400-million-year-old design that senses prey by its heartbeat.",
@@ -137,6 +139,7 @@ const CREATURES = [
     latin: "Sphyrna mokarran",
     zone: "Twilight zone",
     category: "shark",
+    inDive: true,
     Model: HammerheadModel,
     distance: 7.2,
     tagline: "That strange head is a giant sensor array for hunting.",
@@ -864,11 +867,21 @@ const CreatureStage = ({ creature }) => {
 // The picker's tabs. Each owns one `category` off the entries above; the
 // first is the default and takes everything the others don't claim. Adding a
 // collection (mangroves, kelp) is a line here plus `category` on its entries.
+// `inDive: false` marks a collection whose creatures don't swim in the dive
+// itself - their info panel gets a badge (so nobody scrolls the dive hunting
+// for a clownfish) and an invitation to request more. An entry can override
+// with its own `inDive` (the great white and hammerhead do swim).
 const CATEGORIES = [
   { id: "creatures", label: "Sea creatures", category: null },
-  { id: "sharks", label: "🦈 Sharks", category: "shark" },
-  { id: "reef", label: "🪸 Reef", category: "reef" },
+  { id: "sharks", label: "🦈 Sharks", category: "shark", inDive: false },
+  { id: "reef", label: "🪸 Reef", category: "reef", inDive: false },
 ];
+
+const GALLERY_ONLY = new Set(
+  CATEGORIES.filter((tab) => tab.inDive === false).map((tab) => tab.category)
+);
+
+const isInDive = (c) => c.inDive ?? !GALLERY_ONLY.has(c.category);
 
 const CATEGORY_LISTS = Object.fromEntries(
   CATEGORIES.map((tab) => [
@@ -962,7 +975,12 @@ const CreaturesPage = () => {
         <CreatureStage creature={creature} />
 
         <aside className="cv-info" key={creature.id}>
-          <p className="cv-zone">{creature.zone}</p>
+          <p className="cv-zone">
+            {creature.zone}
+            {!isInDive(creature) && (
+              <span className="cv-gallery-only">Not in the dive</span>
+            )}
+          </p>
           <h2 className="cv-name">{creature.name}</h2>
           <p className="cv-latin">{creature.latin}</p>
           <p className="cv-tagline">{creature.tagline}</p>
@@ -971,6 +989,19 @@ const CreaturesPage = () => {
               <li key={i}>{fact}</li>
             ))}
           </ul>
+          {!isInDive(creature) && (
+            <p className="cv-request">
+              Added because a visitor asked for it. Want a creature in the
+              collection?{" "}
+              <a
+                href={`mailto:${EMAIL}?subject=Creature request`}
+                onClick={() => track("creature_requested", { from: creature.id })}
+              >
+                Email me
+              </a>
+              .
+            </p>
+          )}
         </aside>
       </div>
 

@@ -20,7 +20,7 @@ James Hirst's personal site: a scroll-driven 3D underwater "dive" built with Rea
 - Gallery catalog lives in the `CREATURES` array in `src/pages/Creatures.jsx` - each entry: `{ id, emoji, name, latin, zone, Model, distance, tagline, facts[], category?, offset? }`.
 - The picker's tabs come from the `CATEGORIES` array in `src/pages/Creatures.jsx`; each tab owns one `category` value off the entries (`"shark"`, `"reef"`), and the first tab is the default that takes every entry with no `category` at all. A new collection is a line in `CATEGORIES` plus `category` on its entries - nothing else is hardcoded. `offset` recentres a model so it spins about its middle.
 - To add a creature: add a `XxxModel` in `src/experience/Creatures.jsx`, import it + add a `CREATURES` entry in `src/pages/Creatures.jsx`, and optionally place its scene wrapper in `Scene` in `OceanCanvas.jsx` to have it swim in the dive.
-- The dive is an open-water descent, so shallow-water creatures are gallery-only: the reef models have no scene wrapper and never appear in it.
+- The dive is an open-water descent, so most extra creatures are gallery-only (no scene wrapper). `inDive: false` on a `CATEGORIES` tab marks its whole collection gallery-only; an entry's own `inDive` overrides the tab (the great white and hammerhead swim in the dive, the other sharks don't). Gallery-only creatures get a "Not in the dive" badge plus a mailto invitation to request more - keep the flags in sync with what `Scene` (`OceanCanvas.jsx`) actually places.
 
 ## Interaction model
 - Dive look-around: desktop steers by cursor position (`pointer`), mobile by moving the phone (gyroscope only - swipes are left to page scroll); both write to `look` and the camera follows in `CameraRig` (`OceanCanvas.jsx`).
